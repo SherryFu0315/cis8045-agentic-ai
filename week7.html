@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 7 · CIS 8045</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<nav class="top"><div class="wrap"><a class="brand" href="index.html">CIS 8045 · Agentic AI</a><a class="here" href="index.html#schedule">Schedule</a><a href="project.html">Project</a><a href="logistics.html">Logistics</a><a href="videos.html">Videos</a></div></nav>
+<main class="wrap">
+<h1>Week 7: More agents, more autonomy, more ways to fail</h1>
+<p class="meta">Module III, How do we run it, and when do we stop? · The question this week: when do more agents and longer horizons help, and how do we design for failure?</p>
+
+<h2 id="before">Before class</h2>
+<ul>
+<li>Watch <a href="videos.html#w7v1">7.1 Multi-agent systems and when not to build them</a>, <a href="videos.html#w7v2">7.2 Long-running, coding and computer-use agents</a> and <a href="videos.html#w7v3">7.3 What the benchmarks say about the limits</a>. The quiz at the start of class has five questions on them.</li>
+<li>Read Anthropic, <a href="https://www.anthropic.com/engineering/multi-agent-research-system">How we built our multi-agent research system</a>, and Cemri et al., <a href="https://arxiv.org/abs/2503.13657">Why do multi-agent LLM systems fail?</a>. Note which of the fourteen failure modes you have seen in your own traces.</li>
+<li>Bring your service in a state another team can run without you: the endpoint or the Fleet agent, the golden set with expected outputs, the trace view, and the draft decision memo. Another team reviews it tonight.</li>
+</ul>
+
+<h2 id="tonight">Tonight</h2>
+<table class="run plain">
+<tr><td>5:30</td><td>Quiz on the videos, then the last trace of the week, then the ideas below, with the room.</td></tr>
+<tr><td>6:10</td><td>Lab 7, Clinic. Two paths, one output sheet.</td></tr>
+<tr><td>7:50</td><td>Break.</td></tr>
+<tr><td>8:05</td><td>Studio. The final build and the final report. I sit with two teams at a time.</td></tr>
+<tr><td>9:15</td><td>Synthesis, the draw for presentation order, and what to do before week 8.</td></tr>
+</table>
+
+<h2 id="shapes">Two shapes, and when a second agent pays off</h2>
+<p>Multi-agent systems have two main shapes. An orchestrator with workers: one lead agent breaks the job up, sends pieces to worker agents, each with its own context, and assembles the results. A handoff chain: the task moves from one specialized agent to the next, triage to expert to closer, each with its own instructions and tools. Both exist because one context window cannot hold everything, and because specialized instructions beat one giant prompt. Both also multiply the ways things go wrong.</p>
+<figure>
+<svg viewBox="0 -20 1680 580" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two multi-agent shapes. Left, an orchestrator with workers: a lead agent sends pieces to three worker agents. Right, a handoff chain: the task passes from triage to expert to closer. Each box is its own loop, context and tools."><defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L10,5 L0,10 z" fill="#0039a6"/></marker></defs><text x="0" y="50" font-size="56" fill="#5a6069">Orchestrator and workers</text><text x="900" y="50" font-size="56" fill="#5a6069">Handoff chain</text><g font-size="56" fill="#16181d" text-anchor="middle"><rect x="190" y="90" width="400" height="130" rx="6" fill="none" stroke="#0039a6" stroke-width="6"/><text x="390" y="174" fill="#0039a6">Lead agent</text><rect x="0" y="330" width="240" height="130" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="120" y="414">Worker</text><rect x="270" y="330" width="240" height="130" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="390" y="414">Worker</text><rect x="540" y="330" width="240" height="130" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="660" y="414">Worker</text><rect x="900" y="210" width="250" height="130" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="1025" y="294">Triage</text><rect x="1165" y="210" width="250" height="130" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="1290" y="294">Expert</text><rect x="1430" y="210" width="250" height="130" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="1555" y="294">Closer</text></g><g stroke="#0039a6" stroke-width="5" fill="none" marker-end="url(#a)"><line x1="390" y1="220" x2="130" y2="322"/><line x1="390" y1="220" x2="390" y2="322"/><line x1="390" y1="220" x2="650" y2="322"/><line x1="1150" y1="275" x2="1158" y2="275"/><line x1="1415" y1="275" x2="1423" y2="275"/></g><text x="0" y="540" font-size="56" fill="#5a6069">Each box is its own loop, context and tools.</text></svg>
+<figcaption>Two shapes, one loop per box.</figcaption>
+</figure>
+<p>In June 2025 Anthropic described its research system: a lead agent that plans and spawns sub-agents to search in parallel, each with a fresh context (<a href="https://www.anthropic.com/engineering/multi-agent-research-system">How we built our multi-agent research system</a>). On their internal research evaluation it beat a single agent using the same top model by about 90 percent. It used roughly fifteen times the tokens of a chat. Their own conclusion was that the pattern pays off when the task is wide, parallel and valuable enough. That describes open-ended research and few capstone services.</p>
+<figure><img src="assets/shots/anthropic_multiagent.png" alt="Anthropic engineering post: How we built our multi-agent research system" loading="lazy"><figcaption><a href="https://www.anthropic.com/engineering/multi-agent-research-system">Anthropic</a>, June 13, 2025.</figcaption></figure>
+<p>One day earlier Cognition, which builds the Devin coding agent, had argued against multi-agent systems for work that produces one coherent thing, such as a codebase or a document (<a href="https://cognition.ai/blog/dont-build-multi-agents">Don't build multi-agents</a>). Sub-agents that each see part of the context make decisions that conflict, and the conflicts are plausible enough to slip through. Their two principles: share the full context, including the history of decisions, and remember that every action carries an implicit decision the next agent needs to know about. Search parallelises and construction does not, so ask which your service does.</p>
+<figure><img src="assets/shots/cognition_multiagent.png" alt="Cognition blog post: Don't build multi-agents" loading="lazy"><figcaption><a href="https://cognition.ai/blog/dont-build-multi-agents">Cognition</a>, June 12, 2025.</figcaption></figure>
+<p>Ask the room: is your service's work parallel, like search, or one artifact, like a report? What would a second agent not see?</p>
+
+<h2 id="failures">How multi-agent systems fail</h2>
+<p>A Berkeley team catalogued how multi-agent systems fail in a paper first posted in March 2025 (<a href="https://arxiv.org/abs/2503.13657">Why do multi-agent LLM systems fail?</a>). They read 150 traces from seven popular frameworks, with expert annotators, and found fourteen failure modes in three groups. Specification and design: unclear roles, missing stop conditions, violated task specifications. Inter-agent misalignment: agents ignoring each other, withholding information, talking past each other. Task verification: agents declaring work done without checking it. Most failures were design failures, the same lesson as week 4 with more agents in the trace.</p>
+<figure><img src="assets/shots/mast.png" alt="arXiv abstract page: Why Do Multi-Agent LLM Systems Fail?" loading="lazy"><figcaption><a href="https://arxiv.org/abs/2503.13657">arXiv</a>, March 17, 2025.</figcaption></figure>
+<p>Before your team adds a second agent, ask whether a workflow step would do, whether the work is parallel or one artifact, what each agent sees and who holds the record of decisions, how you will evaluate the whole and each part with the golden set you have, and what it costs per task against the single agent you have now. For most capstone projects the honest answer is one agent with good tools, and tonight each team gives its own answer in two sentences.</p>
+
+<h2 id="frontier">Agents that run for hours, write code and use a computer</h2>
+<p>A task that takes a model hours or days cannot fit one context window, so the work is split into sessions, and each session starts with no memory of the last one. Anthropic's November 2025 write-up is the model to copy (<a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents">Effective harnesses for long-running agents</a>). Continuity lives in the harness: a progress file the agent reads first and updates last, a task list with items marked done, a clean checkpoint at the end of each session, and tests that define what done means, so the agent cannot simply declare victory. All of it is week 1's harness and week 4's evaluation at a longer time scale.</p>
+<figure><img src="assets/shots/anthropic_harness.png" alt="Anthropic engineering post: Effective harnesses for long-running agents" loading="lazy"><figcaption><a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents">Anthropic</a>, November 26, 2025.</figcaption></figure>
+<p>Coding agents are agents whose tools are a file system, a shell and a test runner. They work unusually well for two reasons. Code has tests, so the agent can check its own work. Errors are cheap inside a sandbox, and version control undoes mistakes. Most business domains have neither: there is no test suite for a customer email and no undo for a payment.</p>
+<p>Computer-use agents look at the screen, move the mouse and type. They matter because much organisational work happens in systems with no API: legacy applications and vendor portals. They are slow and expensive, since every step costs a screenshot's worth of tokens, and every screen is untrusted content, so the lethal trifecta applies in full. Pass rates on long tasks are still well below human, and improving. For a capstone, a computer-use step belongs behind an approval gate, if it belongs at all.</p>
+<p>Ask the room: in your domain, what plays the role of the test, and what plays the role of the undo? If neither exists, which autonomy position is left?</p>
+
+<h2 id="benchmarks">What the benchmarks say about the limits</h2>
+<p>In March 2025 METR published a better measure of agent capability than a score: the length of a task, measured in how long it takes a skilled human, that an agent can complete with 50 percent reliability (<a href="https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/">Measuring AI ability to complete long software tasks</a>). They found that length doubling roughly every seven months since 2019, with signs of a faster pace in the most recent models. Read the fine print. These are software tasks, at 50 percent reliability, and the trend line is a forecast, which can be wrong.</p>
+<figure><img src="assets/shots/metr.png" alt="METR blog post: Measuring AI Ability to Complete Long Software Tasks" loading="lazy"><figcaption><a href="https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/">METR</a>, March 19, 2025.</figcaption></figure>
+<p>Benchmarks make three kinds of claim.</p>
+<table class="plain">
+<thead><tr><th>Kind</th><th>What it measures</th><th>What the scores do</th></tr></thead>
+<tbody>
+<tr><td>Tasks with tests</td><td>Software, maths, puzzles. A program checks the answer.</td><td>Climb fastest. The numbers in launch announcements.</td></tr>
+<tr><td>Expert-graded work</td><td><a href="https://arxiv.org/abs/2510.04374">GDPval</a>: real work products, graded blind by professionals.</td><td>Near parity, on tasks that arrive fully specified.</td></tr>
+<tr><td>Interactive tasks</td><td><a href="https://arxiv.org/abs/2406.12045">τ-bench</a>: a simulated user, real tools, rules to follow.</td><td>Lowest. Closest to your project.</td></tr>
+</tbody>
+</table>
+<p>You met <a href="https://gdpx.semianalysis.com/">GDPx</a> in week 4: partner firms wrote 206 tasks from their own work and graded the results, and the models ran with their own harnesses. The best score in November 2026 was about 16 percent, against near parity on GDPval. GDPval hands the model a complete brief and all the files. GDPx tasks look more like a job: messy inputs, judgment calls, things the brief did not say.</p>
+<p>Five questions for any benchmark claim, your own memo's included:</p>
+<ol>
+<li>Who wrote the tasks, and who graded them?</li>
+<li>Is the score from one run, or pass^k?</li>
+<li>Did the task arrive fully specified, or did the agent have to find things out?</li>
+<li>Which harness was used, and could the model have seen the test during training?</li>
+<li>What would this task look like inside your organization, with your data, your systems and your users?</li>
+</ol>
+
+<h2 id="failure">Designing for failure</h2>
+<p>Start with the stop conditions. A missing stop condition is on the Berkeley list, and an agent that may not declare victory needs something else to end it. Every loop in your service needs a step budget, a cost budget per task, and a definition of done that a test or a calibrated judge can check. An orchestrator pays for every worker and a computer-use step pays a screenshot per action, so budget the whole system and each part. When a budget fires, the agent stops and reports how far it got.</p>
+<p>Then the gates. If a worker can call a write tool, the approval gate belongs in front of the worker, and the lead agent has to know it is there. In a handoff chain the closer usually writes, so the gate goes there, and triage should not reach the write tool at all. The Replit case from <a href="week1.html#harness">week 1</a> is the picture to keep: a write tool with no gate in front of it.</p>
+<p>Last, a trace someone reads. The operations sheet names the owner and says which traces that person reads: a budget that fired, a gate refused, a case that failed twice.</p>
+<p>The frontier moves the scale of each question without changing the questions, so next week's panel asks the same four you heard in the first video.</p>
+<ol>
+<li>What tools may the loop call?</li>
+<li>What is it allowed to touch?</li>
+<li>How do we know it did the right thing, reliably, and not once in a demo?</li>
+<li>What does it cost, in money and in people's time, to find out?</li>
+</ol>
+<p>Ask the room: in tonight's trace, which stop condition fired, and which should have?</p>
+
+<h2 id="trace">Trace of the week</h2>
+<p>The last team presents tonight: ten minutes, the actual trace, never slides. Look for a stop condition that fired, or should have: a step budget reached, a gate that paused a write, a loop that declared itself done without checking, or a run that ended only because someone closed it.</p>
+
+<h2 id="lab">Lab 7: Clinic</h2>
+<p>Goal: review another team's service as the panel will, from their golden set, traces and memo, and leave with the three fixes that matter most for your own. Starter files are posted on iCollege before class. Teams are paired, with one output sheet per team at 7:50. The rubric is the <a href="project.html">project page</a>'s six requirements and the four questions above.</p>
+<div class="paths">
+<div>
+<h3>Code path</h3>
+<ol>
+<li>Open their package: endpoint, repository, golden set with expected outputs, LangSmith traces, draft decision memo. Check the six requirements, with evidence, before running anything.</li>
+<li>Run five of their golden-set cases against their endpoint, three reported passing and two failing. Record pass or fail against their expected outputs, and note every difference from their report.</li>
+<li>Read three traces from the top: one pass, one fail, one with a write tool call. Note what was called, where a stop condition or gate fired, and any memo claim the trace does not support.</li>
+<li>Write the one-page review: each requirement met or not, with evidence, then the three fixes that matter most, in order. Swap reviews and write your own fix list and multi-agent verdict.</li>
+</ol>
+</div>
+<div>
+<h3>No-code path</h3>
+<ol>
+<li>Open their package: the Fleet agent, called through their bridge application or at their machine, golden set with expected outputs, LangSmith traces, draft decision memo. Check the six requirements, with evidence, before running anything.</li>
+<li>Run five of their golden-set cases, three reported passing and two failing. Record pass or fail against their expected outputs, and note every difference from their report.</li>
+<li>Open three runs in the trace view: one pass, one fail, one that called a tool set to require approval. Note what was called, whether the approval paused the run, and any memo claim the run does not support.</li>
+<li>Write the one-page review: each requirement met or not, with evidence, then the three fixes that matter most, in order. Swap reviews and write your own fix list and multi-agent verdict.</li>
+</ol>
+</div>
+</div>
+<p>Output sheet, one page per team:</p>
+<ul>
+<li>The peer review: each of the six requirements met or not, with evidence, and the three fixes that matter most.</li>
+<li>The multi-agent verdict for your own service: one agent or several, two sentences, with tonight's evidence.</li>
+<li>Your own fix list for the final build, from the review you received, in order.</li>
+</ul>
+
+<h2 id="studio">Studio: the final build and the final report</h2>
+<p>Both are due before week 8. The panel reads the report before you present, so it has to stand without the demo. Its headings are the project's deliverables, with the numbers rerun after tonight's fixes.</p>
+<ol>
+<li>The served agent: the endpoint or the Fleet agent, its tools with their limits, and the autonomy position per action.</li>
+<li>The evaluation report: the golden set of at least twenty cases, pass^k from the latest regression run, the error analysis, and the calibrated judge.</li>
+<li>The security review: the injection surface, the lethal-trifecta check, the approval gates, and what the logs would show after an incident.</li>
+<li>The operations sheet: cost per task and per successful task, latency, what breaks, and who is responsible when it does.</li>
+<li>The decision memo: two pages for an executive. Deploy, extend the pilot, or stop, with the numbers behind the recommendation.</li>
+<li>The AI-use disclosure: which coding agents and assistants the team used, for what, and what the oral trace check covered.</li>
+</ol>
+<p>When I sit with your team I will ask what the peer review found that you had not seen, what changed in pass^k after your last fix, and what the panel will ask that you cannot yet answer.</p>
+
+<h2 id="synthesis">Synthesis</h2>
+<ul>
+<li>A second agent pays off when the work is wide, parallel and valuable enough to cover many times the tokens. One artifact wants one agent with the full context.</li>
+<li>Most multi-agent failures are design failures: unclear roles, missing stop conditions, work declared done without checking. The fix is the harness and the error analysis you already know.</li>
+<li>Long-running, coding and computer-use agents raise the scale of every question in the course without changing the questions. Ask what stands in for the test and the undo in your domain.</li>
+<li>Benchmarks make three kinds of claim. Ask who wrote and graded the tasks, one run or pass^k, fully specified or not, and which harness.</li>
+</ul>
+<p>Before week 8: no new videos. Submit the final build and the final report with tonight's fixes and the rerun numbers. Week 8 is the final presentations: ten minutes per team, in the order drawn tonight. The panel plays the buyer, has read your memo, and asks the four questions, with the trace behind any number you give. Every team scores every other team. The individual reflection, with the AI-use disclosure, is due after the session, one page per person.</p>
+
+<h2 id="sources">Sources</h2>
+<ul>
+<li>Anthropic, <a href="https://www.anthropic.com/engineering/multi-agent-research-system">How we built our multi-agent research system</a>, June 13, 2025.</li>
+<li>Cognition, <a href="https://cognition.ai/blog/dont-build-multi-agents">Don't build multi-agents</a>, June 12, 2025.</li>
+<li>Cemri et al., <a href="https://arxiv.org/abs/2503.13657">Why do multi-agent LLM systems fail?</a>, arXiv, March 2025.</li>
+<li>Anthropic, <a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents">Effective harnesses for long-running agents</a>, November 26, 2025.</li>
+<li>METR, <a href="https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/">Measuring AI ability to complete long software tasks</a>, March 19, 2025.</li>
+<li>OpenAI, <a href="https://arxiv.org/abs/2510.04374">GDPval: Evaluating AI model performance on real-world economically valuable tasks</a>, September 2025.</li>
+<li>Yao et al., <a href="https://arxiv.org/abs/2406.12045">τ-bench: A benchmark for tool-agent-user interaction in real-world domains</a>, arXiv, June 2024.</li>
+<li>SemiAnalysis, <a href="https://gdpx.semianalysis.com/">GDPx</a>, November 2026.</li>
+</ul>
+
+<div class="pager"><a href="week6.html">← Week 6: A service has an owner, a cost per task and an SLA</a><a href="week8.html">Week 8: Would you sign off on this? →</a></div>
+</main>
+<footer><div class="wrap">CIS 8045 Agentic AI · J. Mack Robinson College of Business, Georgia State University · Dr. Xinyu Fu</div></footer>
+</body>
+</html>

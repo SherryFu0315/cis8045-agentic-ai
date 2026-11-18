@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 2 · CIS 8045</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<nav class="top"><div class="wrap"><a class="brand" href="index.html">CIS 8045 · Agentic AI</a><a class="here" href="index.html#schedule">Schedule</a><a href="project.html">Project</a><a href="logistics.html">Logistics</a><a href="videos.html">Videos</a></div></nav>
+<main class="wrap">
+<h1>Week 2: Capability is designed, not prompted</h1>
+<p class="meta">Module I, What are we building? · The question this week: how do we give an agent hands, how much autonomy do we grant, and how do others call it?</p>
+
+<h2 id="before">Before class</h2>
+<ul>
+<li>Watch <a href="videos.html#w2v1">2.1 Tools and function calling in one diagram</a>, <a href="videos.html#w2v2">2.2 MCP in eight minutes</a> and <a href="videos.html#w2v3">2.3 The autonomy dial: workflows, agents and approval gates</a>. The quiz at the start of class has five questions on them.</li>
+<li>Read Anthropic, <a href="https://www.anthropic.com/engineering/writing-tools-for-agents">Writing effective tools for agents</a> (September 2025), with an eye on descriptions, arguments and results.</li>
+<li>Bring your Lab 1 loop or Fleet agent with its traces, and the opportunity audit, which the proposal builds on.</li>
+</ul>
+
+<h2 id="tonight">Tonight</h2>
+<table class="run plain">
+<tr><td>5:30</td><td>Quiz on the videos. Trace of the week, the first team, ten minutes. Then the five ideas below, with the room.</td></tr>
+<tr><td>6:10</td><td>Lab 2, Tools and harness. Two paths, one output sheet.</td></tr>
+<tr><td>7:50</td><td>Break.</td></tr>
+<tr><td>8:05</td><td>Studio. The proposal. I sit with two teams at a time.</td></tr>
+<tr><td>9:15</td><td>Synthesis, and what to do before week 3.</td></tr>
+</table>
+
+<h2 id="toolcall">The model writes the request. Your code runs it.</h2>
+<p>A tool call has four steps. Your code sends the model the prompt and a list of tool schemas, each one a tool's name, description and arguments, written as JSON. The model returns a tool call instead of prose: a tool's name and the arguments to pass. Your code, not the model, runs the function. The result goes back as a message, and the model continues, either calling another tool or writing its answer.</p>
+<figure>
+<svg viewBox="0 0 1680 660" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A tool call in four steps: your code sends the prompt and the tool schemas, the model returns a tool call with a name and arguments, your code runs the function, and the result goes back as a message, after which the model decides again. The model only writes the request. Your code runs it."><defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L10,5 L0,10 z" fill="#0039a6"/></marker></defs><g font-size="56" fill="#5a6069" text-anchor="middle"><rect x="0" y="90" width="380" height="380" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="190" y="170" font-size="60" font-weight="700" fill="#16181d">1 · Send</text><text x="190" y="258">prompt plus</text><text x="190" y="324">tool schemas</text><rect x="433" y="90" width="380" height="380" rx="6" fill="none" stroke="#0039a6" stroke-width="6"/><text x="623" y="170" font-size="60" font-weight="700" fill="#0039a6">2 · Decide</text><text x="623" y="258">model returns</text><text x="623" y="324">a tool call:</text><text x="623" y="390">name and</text><text x="623" y="456">arguments</text><rect x="866" y="90" width="380" height="380" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="1056" y="170" font-size="60" font-weight="700" fill="#16181d">3 · Run</text><text x="1056" y="258">your code calls</text><text x="1056" y="324">the function</text><rect x="1300" y="90" width="380" height="380" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="1490" y="170" font-size="60" font-weight="700" fill="#16181d">4 · Return</text><text x="1490" y="258">result sent back</text><text x="1490" y="324">as a message</text></g><g stroke="#0039a6" stroke-width="5" fill="none" marker-end="url(#a)"><line x1="380" y1="250" x2="425" y2="250"/><line x1="813" y1="250" x2="858" y2="250"/><line x1="1246" y1="250" x2="1291" y2="250"/><path d="M1490,470 L1490,560 L623,560 L623,480"/></g><text x="1056" y="540" font-size="56" fill="#0039a6" text-anchor="middle">decide again</text><text x="840" y="640" font-size="56" fill="#16181d" text-anchor="middle">The model only writes the request. Your code runs it.</text></svg>
+<figcaption>Every control in this course is built in the gap between step two and step three.</figcaption>
+</figure>
+<p>The sentence to remember: the model never runs anything. It writes a request, and your code decides whether and how to honor it. Tonight's gate, allow-list, cap and dry run all sit between the request and the function, out of the model's reach.</p>
+<p>The APIs call this function calling, and OpenAI shipped it in June 2023. Inside the agent loop it is a tool call: tool call for the event, tool for the thing called, tool schema for its definition.</p>
+<p>Ask the room: in the Lab 1 trace you annotated, which arguments did the model invent, and what would the schema have had to say to stop it?</p>
+
+<h2 id="schema">The schema is the interface, and a tool is a permission</h2>
+<p>The model chooses tools by reading their schemas, so the schema is the interface, and Anthropic's <a href="https://www.anthropic.com/engineering/writing-tools-for-agents">Writing effective tools for agents</a> (September 2025) shows how to write one. The description says when to use the tool and when not to. Arguments are few, typed, with an example. The result holds what the model needs next rather than everything the database returned, because every token goes into the context and costs money. Errors come back in words the model can act on, not found, try a shorter query, rather than a stack trace. Each tool does one thing.</p>
+<p>Anthropic's own tests showed that rewriting tool descriptions alone improved task success, with no change to the model. That is capability designed rather than prompted. Tonight you hand two schemas for your project's agent to another team. If they cannot tell from the schema alone what each tool does and when to use it, the model cannot either.</p>
+<p>A tool is also a permission. A read tool brings the outside world into the context, including things you did not intend. A write tool changes the world: it sends, pays, moves, deletes. Its limits belong in code, an allow-list, a cap, a dry-run flag, a gate, because telling the model please be careful is not a control. The Replit agent had been told, repeatedly, not to make changes without permission (<a href="https://fortune.com/2025/07/23/ai-coding-tool-replit-wiped-database-called-it-a-catastrophic-failure/">Fortune, July 23, 2025</a>). It did anyway.</p>
+<p>Skills are the other kind of designed capability. Anthropic's <a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills">Agent Skills</a> (October 2025) package procedural knowledge as a folder: a short description the agent always sees, and full instructions it loads only when a task calls for them. A tool gives the agent a hand. A skill tells it how a job is done here.</p>
+
+<h2 id="mcp">MCP: where tools come from, and what it does not do</h2>
+<p>MCP, the Model Context Protocol, is how the industry agreed to share tools: an open standard for connecting an AI application to outside systems. Anthropic released it in November 2024, OpenAI adopted it in March 2025, and Google followed. The project's own analogy is a USB-C port (<a href="https://modelcontextprotocol.io/">modelcontextprotocol.io</a>). A Jira server written once now works in any client.</p>
+<figure><img src="assets/shots/mcp.png" alt="The Model Context Protocol site: What is the Model Context Protocol (MCP)?" loading="lazy"><figcaption><a href="https://modelcontextprotocol.io/">Model Context Protocol</a>, the project site.</figcaption></figure>
+<p>Three words carry the design. The host is your agent application, which owns the model and the loop. Inside it runs an MCP client. Each outside system is exposed by an MCP server. When the host starts, the client asks each server what it offers: tools the model can call, resources the host can read, and prompts, which are reusable instructions. The client turns the servers' tools into tool schemas, the model chooses one, and the client makes the call. A server can run on your laptop or as a web service over HTTP, and a service that depends on a file on someone's laptop is not a service.</p>
+<figure>
+<svg viewBox="0 0 1680 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MCP host, client and server. The host is your agent app and holds the model and an MCP client. The client lists the tools of each MCP server, here a GitHub server and a database server, each offering tools, resources and prompts. The model picks a tool and the client calls it."><defs><marker id="b" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L10,5 L0,10 z" fill="#0039a6"/></marker></defs><rect x="4" y="60" width="720" height="460" rx="10" fill="none" stroke="#5a6069" stroke-width="4" stroke-dasharray="18 14"/><text x="32" y="124" font-size="56" fill="#5a6069">Host: your agent app</text><g font-size="60" fill="#16181d" text-anchor="middle"><rect x="40" y="200" width="280" height="160" rx="6" fill="none" stroke="#0039a6" stroke-width="6"/><text x="180" y="296" font-weight="700" fill="#0039a6">Model</text><rect x="400" y="200" width="290" height="160" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="545" y="296">MCP client</text><rect x="940" y="80" width="740" height="180" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="1310" y="152">MCP server · GitHub</text><text x="1310" y="222" font-size="56" fill="#5a6069">tools, resources, prompts</text><rect x="940" y="340" width="740" height="180" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="1310" y="412">MCP server · database</text><text x="1310" y="482" font-size="56" fill="#5a6069">tools, resources, prompts</text></g><line x1="320" y1="280" x2="400" y2="280" stroke="#5a6069" stroke-width="5"/><g stroke="#0039a6" stroke-width="5" fill="none" marker-end="url(#b)"><line x1="690" y1="250" x2="930" y2="180"/><line x1="690" y1="310" x2="930" y2="420"/></g><text x="840" y="610" font-size="56" fill="#16181d" text-anchor="middle">Client lists the tools; model picks; client calls.</text></svg>
+<figcaption>From the model's point of view nothing changed: it still sees tool schemas and returns tool calls. Someone else maintains the tools.</figcaption>
+</figure>
+<p>Now the limits. MCP does not make tools safe: a server can expose a tool that deletes things behind a friendly name. It does not vet servers: anyone can publish one, and a server you install is code running with your permissions, inside your trust boundary. It does not shrink the context: every connected server adds its schemas to the window on every call, and twenty servers can mean hundreds of tool descriptions. And it does not choose: the model still picks the tool, so a confusing server makes the agent worse.</p>
+<p>In May 2025 Invariant Labs showed that a coding agent connected to GitHub's own MCP server could be steered, by a malicious issue in a public repository, into reading a private repository and publishing its contents (<a href="https://invariantlabs.ai/blog/mcp-github-vulnerability">GitHub MCP Exploited</a>). They called it a toxic agent flow. Nothing in the protocol was broken. The agent had the tools and followed instructions it found in data. Week 5 takes the case apart.</p>
+<p>Ask the room: a ticketing system you buy ships an MCP server with forty tools. Which five does your agent need, who decides, and what can the other thirty-five touch?</p>
+
+<h2 id="dial">The autonomy dial, and how a gate is built</h2>
+<p>How much the model gets to decide is a dial rather than a switch, and the five positions are the ones from week 1.</p>
+<figure>
+<svg viewBox="0 0 1680 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The autonomy dial, five positions from left to right: Suggest, where the model proposes and a person acts. Draft, where it produces and a person approves all. Gated, where it acts and a person approves risky steps. Report, where it acts and a person reviews afterwards. Unattended, where it acts and nobody looks unless alerted. What moves the dial is who acts and when a person looks."><defs><marker id="g" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L10,5 L0,10 z" fill="#5a6069"/></marker></defs><line x1="40" y1="200" x2="1640" y2="200" stroke="#5a6069" stroke-width="5" marker-end="url(#g)"/><g stroke="#0039a6" stroke-width="6"><line x1="168" y1="176" x2="168" y2="224"/><line x1="504" y1="176" x2="504" y2="224"/><line x1="840" y1="176" x2="840" y2="224"/><line x1="1176" y1="176" x2="1176" y2="224"/><line x1="1512" y1="176" x2="1512" y2="224"/></g><g font-size="60" font-weight="700" fill="#16181d" text-anchor="middle"><text x="168" y="130">Suggest</text><text x="504" y="130">Draft</text><text x="840" y="130">Gated</text><text x="1176" y="130">Report</text><text x="1512" y="130">Unattended</text></g><g font-size="56" fill="#5a6069" text-anchor="middle"><text x="168" y="290">proposes;</text><text x="168" y="355">a person acts</text><text x="504" y="290">produces;</text><text x="504" y="355">a person</text><text x="504" y="420">approves all</text><text x="840" y="290">acts; a person</text><text x="840" y="355">approves</text><text x="840" y="420">risky steps</text><text x="1176" y="290">acts; a person</text><text x="1176" y="355">reviews</text><text x="1176" y="420">afterwards</text><text x="1512" y="290">acts; nobody</text><text x="1512" y="355">looks unless</text><text x="1512" y="420">alerted</text></g><text x="840" y="530" font-size="56" fill="#0039a6" text-anchor="middle">What moves the dial: who acts, and when a person looks.</text></svg>
+<figcaption>The same model and tools can sit anywhere on this dial. Harness design moves it: who acts, and when a person looks.</figcaption>
+</figure>
+<p>Workflows sit toward the left and agents toward the right, because a workflow fixes the steps in code and an agent lets the model choose them. Most good systems are a workflow with an agent inside, at the one step where judgment is needed.</p>
+<p>An approval gate is a specific piece of harness code. Before a named tool call, say issue refund, the loop pauses and saves its state. A person sees the proposed action with its arguments and the reasons, and approves, edits or rejects it. The loop resumes from the saved state carrying the decision, and the pause goes into the trace with who approved what and when. In LangGraph this is an interrupt on a node. In Fleet, LangSmith's no-code agent builder, it is an approval setting on a tool. Either way the gate lives in the harness, where the model cannot talk its way past it.</p>
+<table class="plain">
+<thead><tr><th>Consider</th><th>Move left when</th><th>Move right when</th></tr></thead>
+<tbody>
+<tr><td>Mistakes</td><td>Costly or irreversible.</td><td>Cheap and visible.</td></tr>
+<tr><td>Evidence</td><td>None yet on how often it fails.</td><td>A measured failure rate you can live with.</td></tr>
+<tr><td>People</td><td>The user is not the one who gets hurt.</td><td>Review is faster than doing the task.</td></tr>
+</tbody>
+</table>
+<p>Two of the three conditions on the right require measurement, which is why week 4 exists. In the proposal, state the position per tool rather than for the agent as a whole: reading the calendar can be Unattended while sending the invitation is Gated.</p>
+<p>Ask the room: for the job your team chose, which action would you gate first, who answers the gate, and how long can they take before the service is stuck?</p>
+
+<h2 id="serve">Serving the agent so other software can call it</h2>
+<p>Everything so far runs when a person types a task. A service answers when another program calls it: a ticketing system, a scheduler, a web form. It is the first <a href="project.html">project</a> deliverable.</p>
+<p>On the code path the harness becomes an endpoint: an HTTP route that accepts a task, runs the graph, and returns the result and a run id for the trace. The endpoint cannot wait while a person decides, so a run that pauses at a write tool returns a pending approval with the proposed action, and a second call carries the decision and resumes the saved state. The caller has to expect both answers.</p>
+<p>On the no-code path Fleet hosts the agent and the caller is the small bridge application from <a href="https://xinyufu.org/cis4394-agentic-ai/week2/">CIS 4394, week 2</a>, which lets another program call a Fleet agent. Both paths end in the same place: another piece of software made the request, the trace recorded it, and a person was still in charge of the write.</p>
+<p>Ask the room: when the caller is a program and nobody is at a screen, who answers the gate, and what happens to the ticket while they do?</p>
+
+<h2 id="trace">Trace of the week</h2>
+<p>The first team presents tonight: one trace from Lab 1, ten minutes. This week, look for three things. Which tool the model chose at each step and which arguments it filled in, especially one that appears nowhere in the task, because the most common tool failure is the right tool with an invented argument. What came back, and whether it was what the model needed next. And where a gate would have paused the run, and what the person at the gate would have seen.</p>
+
+<h2 id="lab">Lab 2: Tools and harness</h2>
+<p>Goal: turn the Lab 1 loop into a harness with a gate, let another program call it, and add a tool source you did not write. Starter files are posted on iCollege before class.</p>
+<div class="paths">
+<div>
+<h3>Code path</h3>
+<ol>
+<li>Grow the week 1 loop into a harness: persistent state, a step and cost budget, a definition of done, an approval gate on the write tool, and a trace per run.</li>
+<li>Write two tool schemas for your project's agent. Another team must say from the schema alone what each does and when to use it. Give the write tool a limit in code.</li>
+<li>Port the harness to LangGraph: the loop becomes a graph and the gate an interrupt on the node that calls the write tool.</li>
+<li>Expose the graph as an endpoint another program can POST to. Call it from a second program and save the request and response, including the paused run.</li>
+<li>Add one MCP server as a tool source, after the checklist from video 2.2: who maintains it, which tools you need (expose only those), read or write, how many tokens its schemas add, where it runs.</li>
+<li>Read one run end to end and mark the invented arguments and the pause.</li>
+</ol>
+</div>
+<div>
+<h3>No-code path</h3>
+<ol>
+<li>In <a href="https://docs.langchain.com/langsmith/fleet">Fleet</a>, open the week 1 agent. Set the draft-reply tool to require approval, and write instructions that say what done looks like.</li>
+<li>Write two tool schemas, the name and description Fleet shows the model, for another team to read the same way.</li>
+<li>Run the Lab 1 tasks, approving at least one action at the gate and rejecting at least one. Find the pause in the trace view.</li>
+<li>Call the agent from the small bridge application from <a href="https://xinyufu.org/cis4394-agentic-ai/week2/">CIS 4394, week 2</a>, so another program makes the request. Save the call and the reply.</li>
+<li>Add one MCP server. Answer the same checklist first, expose only the tools you need, and read in the trace how many tokens its schemas added.</li>
+<li>Read one run end to end and mark the invented arguments and the pause.</li>
+</ol>
+</div>
+</div>
+<p>Output sheet, one page per team, handed in at 7:50:</p>
+<ul>
+<li>The tool list: each tool, read or write, its limit, and whether it is gated.</li>
+<li>One trace of a gate pausing an action, with what the person saw and decided.</li>
+<li>The endpoint or bridge call and its response.</li>
+<li>Two sentences: what the MCP server added, and what it could touch.</li>
+</ul>
+
+<h2 id="studio">Studio: the proposal</h2>
+<p>The proposal, due before week 3, turns the opportunity audit into a design the four questions can be asked of, under seven headings.</p>
+<ol>
+<li>The job and the user, carried over from the opportunity audit.</li>
+<li>The architecture, as a diagram described in words: what calls the agent, what the loop calls, where the trace goes.</li>
+<li>The tool list: each tool, read or write, gated or not, and the limit in code on every write.</li>
+<li>The autonomy position for each action, with the gate named: which action pauses, who approves, and how quickly.</li>
+<li>The data pack: what data, from where, and what is synthetic or de-identified.</li>
+<li>What done looks like, in a form you can check.</li>
+<li>The team roles, and who owns which deliverable.</li>
+</ol>
+<p>When I sit with your team I will ask the four questions about the tool list, tool by tool.</p>
+<ol>
+<li>What tools may the loop call?</li>
+<li>What is it allowed to touch?</li>
+<li>How do we know it did the right thing, reliably, and not once in a demo?</li>
+<li>What does it cost, in money and in people's time, to find out?</li>
+</ol>
+<p>For a read tool the second question is about what the result can bring into the context, and for a write tool about the limit in code and the gate. I will also ask what evidence would move you one step right.</p>
+
+<h2 id="synthesis">Synthesis</h2>
+<ul>
+<li>The model writes the request and your code runs it. Every control lives in that gap.</li>
+<li>The schema is the interface. A tool is a permission, and limits on a write tool belong in code.</li>
+<li>MCP standardizes where tools come from. Whether they are safe is still your harness.</li>
+<li>Autonomy is a dial set per tool. A gate pauses the loop, saves its state and records the decision in the trace. You cannot earn a position without numbers.</li>
+</ul>
+<p>Before week 3: watch videos 3.1 to 3.3 and read Anthropic, <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Effective context engineering for AI agents</a>, and Google, <a href="https://www.kaggle.com/learn-guide/5-day-agents">Context Engineering: Sessions and Memory</a>. Submit the proposal. Next week: context, what the model sees when it decides.</p>
+
+<h2 id="sources">Sources</h2>
+<ul>
+<li>Anthropic, <a href="https://www.anthropic.com/engineering/writing-tools-for-agents">Writing effective tools for agents</a>, September 11, 2025.</li>
+<li>Fortune, <a href="https://fortune.com/2025/07/23/ai-coding-tool-replit-wiped-database-called-it-a-catastrophic-failure/">AI coding tool Replit wiped a database and called it a catastrophic failure</a>, July 23, 2025.</li>
+<li>Anthropic, <a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills">Equipping agents for the real world with Agent Skills</a>, October 16, 2025.</li>
+<li>Model Context Protocol, <a href="https://modelcontextprotocol.io/">What is the Model Context Protocol (MCP)?</a></li>
+<li>Invariant Labs, <a href="https://invariantlabs.ai/blog/mcp-github-vulnerability">GitHub MCP Exploited: Accessing private repositories via MCP</a>, May 26, 2025.</li>
+<li>LangChain, <a href="https://docs.langchain.com/langsmith/fleet">Fleet documentation</a>.</li>
+<li>CIS 4394, <a href="https://xinyufu.org/cis4394-agentic-ai/week2/">Week 2: Unpacking coding agents, then building your own</a>, 2026.</li>
+<li>Anthropic, <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Effective context engineering for AI agents</a>, September 29, 2025.</li>
+<li>Google, <a href="https://www.kaggle.com/learn-guide/5-day-agents">Context Engineering: Sessions and Memory</a>, Day 3 whitepaper, 2025.</li>
+</ul>
+
+<div class="pager"><a href="week1.html">← Week 1: The loop is the product</a><a href="week3.html">Week 3: Context is the interface →</a></div>
+</main>
+<footer><div class="wrap">CIS 8045 Agentic AI · J. Mack Robinson College of Business, Georgia State University · Dr. Xinyu Fu</div></footer>
+</body>
+</html>

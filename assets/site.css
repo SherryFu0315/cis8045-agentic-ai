@@ -46,3 +46,15 @@ footer{border-top:1px solid var(--line);margin-top:56px;padding:20px 0 44px;colo
   .sched td.wk{display:none}
   .sched td.theme::before{content:"Week " attr(data-w)}
 }
+/* Session pages (week1.html to week8.html). Same four sizes; figures and the run-of-show table are the only additions. */
+figure{margin:18px 0 28px;max-width:860px}
+figure img{display:block;width:100%;height:auto;border:1px solid var(--line)}
+figure svg{display:block;width:100%;max-width:760px;height:auto}
+figcaption{font-size:var(--fs-xs);color:var(--muted);margin-top:8px;max-width:74ch}
+table.run td:first-child{width:6.5em;color:var(--muted);white-space:nowrap}
+table.run td{font-size:var(--fs-m)}
+.paths{display:grid;grid-template-columns:1fr 1fr;gap:8px 32px}
+.paths h3{margin-top:10px}
+.pager{display:flex;justify-content:space-between;gap:16px;border-top:1px solid var(--line);margin-top:48px;padding-top:16px;font-size:var(--fs-s)}
+.pager a:last-child{text-align:right}
+@media (max-width:760px){.paths{grid-template-columns:1fr}}

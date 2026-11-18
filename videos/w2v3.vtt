@@ -58,7 +58,7 @@ A workflow fixes the steps in code and the model fills each step.
 
 15
 00:01:08.178 --> 00:01:15.141
-Its cost and behaviour are predictable and it is easy to test, because the same input follows the same path.
+Its cost and behavior are predictable and it is easy to test, because the same input follows the same path.
 
 16
 00:01:15.191 --> 00:01:17.946
@@ -74,7 +74,7 @@ Workflows naturally sit toward the left of the dial, agents toward the right.
 
 19
 00:01:30.619 --> 00:01:37.231
-Most good systems are a workflow with an agent inside it, at the one step where judgement is needed.
+Most good systems are a workflow with an agent inside it, at the one step where judgment is needed.
 
 20
 00:01:37.981 --> 00:01:42.943

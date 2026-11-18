@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 1 · CIS 8045</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<nav class="top"><div class="wrap"><a class="brand" href="index.html">CIS 8045 · Agentic AI</a><a class="here" href="index.html#schedule">Schedule</a><a href="project.html">Project</a><a href="logistics.html">Logistics</a><a href="videos.html">Videos</a></div></nav>
+<main class="wrap">
+<h1>Week 1: The loop is the product</h1>
+<p class="meta">Module I, What are we building? · The question this week: what is an agent, where is it creating value today, and why do most pilots never become services?</p>
+
+<h2 id="before">Before class</h2>
+<ul>
+<li>Watch <a href="videos.html#w1v1">1.1 What makes something an agent?</a>, <a href="videos.html#w1v2">1.2 Where agents create value today, and where they don't</a> and <a href="videos.html#w1v3">1.3 The harness: what surrounds the model</a>. About ten minutes in all. The quiz at the start of class has five questions on them.</li>
+<li>Read Anthropic, <a href="https://www.anthropic.com/engineering/building-effective-agents">Building effective agents</a> (December 2024), and skim OpenAI, <a href="https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf">A practical guide to building agents</a> (2025). Read for two things: the difference between a workflow and an agent, and the list of things that sit around the model.</li>
+<li>Set up the accounts on the <a href="logistics.html#tools">Logistics page</a>. On the code path you need Python 3.11 and a model provider with a free tier. On the no-code path you need a LangSmith account, which includes Fleet, its agent builder.</li>
+</ul>
+
+<h2 id="tonight">Tonight</h2>
+<table class="run plain">
+<tr><td>5:30</td><td>Quiz on the videos, then the three ideas below, with the room.</td></tr>
+<tr><td>6:10</td><td>Lab 1, First loop. Two paths, one output sheet.</td></tr>
+<tr><td>7:50</td><td>Break.</td></tr>
+<tr><td>8:05</td><td>Studio. Teams form, pick a job, and start the opportunity audit. I sit with two teams at a time.</td></tr>
+<tr><td>9:15</td><td>Synthesis, and what to do before week 2.</td></tr>
+</table>
+
+<h2 id="loop">A model answers. An agent acts.</h2>
+<p>A language model takes a prompt and returns text. One call, one answer, done. A person reads the answer and decides what to do with it. An agent wraps the same model in a loop and gives it a goal and some tools. The model picks a tool or decides it is finished. The tool runs somewhere outside the model, in a database, a browser or a spreadsheet. The result comes back into the context, and the model decides again.</p>
+<figure>
+<svg viewBox="0 0 1680 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The agent loop: the model decides, a tool runs outside the model, the result returns to the context, and the model decides again, until it stops and reports."><defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L10,5 L0,10 z" fill="#0039a6"/></marker><marker id="g" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L10,5 L0,10 z" fill="#5a6069"/></marker></defs><text x="0" y="58" font-size="56" fill="#5a6069">Goal and history so far</text><line x1="120" y1="78" x2="120" y2="160" stroke="#5a6069" stroke-width="5" marker-end="url(#g)"/><path d="M440,170 L440,120 L756,120" stroke="#5a6069" stroke-width="5" fill="none" marker-end="url(#g)"/><text x="790" y="140" font-size="56" fill="#5a6069">Done: stop and report</text><g font-size="60" fill="#16181d" text-anchor="middle"><rect x="0" y="170" width="480" height="200" rx="6" fill="none" stroke="#0039a6" stroke-width="5"/><text x="240" y="258" font-weight="700">Model decides</text><text x="240" y="334" font-size="56" fill="#5a6069">act, or stop</text><rect x="600" y="170" width="480" height="200" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="840" y="258">Tool runs</text><text x="840" y="334" font-size="56" fill="#5a6069">outside the model</text><rect x="1200" y="170" width="480" height="200" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="1440" y="258">Result</text><text x="1440" y="334" font-size="56" fill="#5a6069">back into context</text></g><g stroke="#0039a6" stroke-width="5" fill="none" marker-end="url(#a)"><line x1="480" y1="270" x2="588" y2="270"/><line x1="1080" y1="270" x2="1188" y2="270"/><path d="M1440,370 L1440,470 L240,470 L240,384"/></g><text x="840" y="548" font-size="56" fill="#0039a6" text-anchor="middle">decide again</text></svg>
+<figcaption>The loop. Everything else in the course, memory, planning, multi-agent systems, is built on top of it.</figcaption>
+</figure>
+<p>Value and risk come from the same place. The loop finishes work instead of producing sentences for a person to act on, which is why agents are worth money. A wrong tool call has consequences, a result from outside can carry instructions the model should not follow, and a loop that does not know when to stop burns money, which is why agents are risky.</p>
+<p>Ask the room: in the systems you use at work, which ones are loops and which ones are a single call with a person in between? Where did a loop recently do something nobody asked it to?</p>
+
+<h2 id="value">Where the value is, and where pilots stall</h2>
+<p>Start with the uncomfortable number. In August 2025 a report from MIT's NANDA initiative, based on interviews, a survey and a review of public deployments, concluded that about 95 percent of enterprise generative AI pilots had produced no measurable effect on profit and loss (<a href="https://fortune.com/2025/08/18/mit-report-95-percent-generative-ai-pilots-at-companies-failing-cfo/">Fortune, August 18, 2025</a>). The pilots that worked were usually bought rather than built in house, and they were pointed at one back-office process with a clear owner. The ones that stalled were general-purpose tools that never learned from feedback and never fit into how the work was actually done.</p>
+<figure><img src="assets/shots/mit_95.png" alt="Fortune headline: MIT report: 95% of generative AI pilots at companies are failing" loading="lazy"><figcaption><a href="https://fortune.com/2025/08/18/mit-report-95-percent-generative-ai-pilots-at-companies-failing-cfo/">Fortune</a>, August 18, 2025.</figcaption></figure>
+<p>Gartner reached a similar conclusion from the other direction. In June 2025 it predicted that <a href="https://www.gartner.com/en/newsroom/press-releases/2025-06-25-gartner-predicts-over-40-percent-of-agentic-ai-projects-will-be-canceled-by-end-of-2027">more than 40 percent of agentic AI projects would be canceled by the end of 2027</a>, for three reasons: rising cost, unclear business value and weak risk controls. Those three map onto the four questions of the course. Cost is question four. Business value is question three, measured honestly. Risk controls are questions one and two. Nobody on that list said the models were too weak.</p>
+<p>The clearest evidence of value comes from assisted work. Brynjolfsson, Li and Raymond followed more than five thousand customer-support agents at a software company after an AI assistant was introduced (<a href="https://www.nber.org/papers/w31161">NBER Working Paper 31161</a>). Issues resolved per hour rose about 14 percent on average, and about 34 percent for the least experienced workers. The most experienced gained little. Two things follow. The clearest wins so far keep a person in the loop, with the AI drafting, suggesting and looking things up. And the gains went to novices, which tells you where to point an agent: at work where the knowledge of the best people can be written down.</p>
+<figure><img src="assets/shots/brynjolfsson.png" alt="NBER working paper page: Generative AI at Work" loading="lazy"><figcaption><a href="https://www.nber.org/papers/w31161">NBER Working Paper 31161</a>, Brynjolfsson, Li and Raymond, April 2023.</figcaption></figure>
+<p>Capability is moving fast at the same time. <a href="https://arxiv.org/abs/2510.04374">GDPval</a>, released by OpenAI in September 2025, is built from 1,320 real work products across 44 occupations, written and graded blind by professionals with about 14 years of experience. The best model at the time was rated as good as or better than the professional in 47.6 percent of comparisons. Read the fine print. Every GDPval task arrives with a clear brief and all the files the model needs. In a company, finding the brief and the files is most of the job.</p>
+<p>Put the evidence together and a pattern appears. Agents fit where one user does one workflow with a bounded set of tasks, where the result can be checked, and where mistakes can be undone or a person reviews them first. They fit badly where nobody can say what done looks like, where actions are irreversible and unsupervised, and where the knowledge lives only in people's heads.</p>
+<p>Ask the room: name one process at your workplace that passes all three tests, and one that fails at least two. We will use the answers in the studio.</p>
+
+<h2 id="harness">The harness</h2>
+<p>The model sits in the middle. Everything around it is the harness: the tools it can call, the context it sees on each turn, the conditions that end the loop, the gates where a person must say yes, and the trace, the record of every call and every result. The word is borrowed from testing. A test harness holds the thing under test and controls what it can touch.</p>
+<figure>
+<svg viewBox="0 0 1680 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The harness around the model: tools, context, stop conditions, approval gates and the trace."><rect x="4" y="4" width="1672" height="632" rx="10" fill="none" stroke="#5a6069" stroke-width="4" stroke-dasharray="18 14"/><text x="32" y="70" font-size="56" fill="#5a6069">Harness</text><g font-size="60" fill="#16181d" text-anchor="middle"><rect x="640" y="240" width="400" height="160" rx="6" fill="none" stroke="#0039a6" stroke-width="6"/><text x="840" y="336" font-weight="700" fill="#0039a6">Model</text><rect x="40" y="240" width="480" height="160" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="280" y="308">Tools</text><text x="280" y="376" font-size="56" fill="#5a6069">what it can call</text><rect x="1160" y="240" width="480" height="160" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="1400" y="308">Context</text><text x="1400" y="376" font-size="56" fill="#5a6069">what it sees now</text><rect x="40" y="450" width="480" height="160" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="280" y="518">Stop conditions</text><text x="280" y="586" font-size="56" fill="#5a6069">when it ends</text><rect x="1160" y="450" width="480" height="160" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="1400" y="518">Approval gates</text><text x="1400" y="586" font-size="56" fill="#5a6069">human sign-off</text><rect x="590" y="450" width="500" height="160" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="840" y="518">Trace</text><text x="840" y="586" font-size="56" fill="#5a6069">the full record</text></g><g stroke="#5a6069" stroke-width="5"><line x1="520" y1="320" x2="640" y2="320"/><line x1="1040" y1="320" x2="1160" y2="320"/><line x1="840" y1="400" x2="840" y2="450"/><line x1="520" y1="530" x2="660" y2="400"/><line x1="1160" y1="530" x2="1020" y2="400"/></g></svg>
+<figcaption>The harness is everything except the model. You will write or configure each box in Lab 1 and Lab 2.</figcaption>
+</figure>
+<p>Two agents can use the same model and behave completely differently.</p>
+<table class="plain">
+<thead><tr><th>Demo</th><th>Service</th></tr></thead>
+<tbody>
+<tr><td>Any tool, any time.</td><td>A short list of tools, with limits.</td></tr>
+<tr><td>Runs until it feels done.</td><td>A step budget and a definition of done.</td></tr>
+<tr><td>No record kept.</td><td>Every call in a trace.</td></tr>
+<tr><td>Nobody has to approve anything.</td><td>A gate before anything irreversible.</td></tr>
+</tbody>
+</table>
+<p>In July 2025 a coding agent on Replit deleted a company's production database during a code freeze, then told the user a rollback was impossible. It was not. He ran the rollback himself (<a href="https://fortune.com/2025/07/23/ai-coding-tool-replit-wiped-database-called-it-a-catastrophic-failure/">Fortune, July 23, 2025</a>). The model had a tool that could delete a production database, during a code freeze, with no gate in front of it. The fixes the company announced afterwards were harness work: separate development and production databases, a planning-only mode, and one-click restore.</p>
+<figure><img src="assets/shots/replit_fortune.png" alt="Fortune article on the Replit coding agent deleting a production database" loading="lazy"><figcaption><a href="https://fortune.com/2025/07/23/ai-coding-tool-replit-wiped-database-called-it-a-catastrophic-failure/">Fortune</a>, July 23, 2025.</figcaption></figure>
+<p>One more distinction you will use every week. In a workflow the steps are fixed in code and the model fills in each step: classify this, then draft that, then check it. In an agent the model decides the steps as it goes. Workflows are predictable and cheap to test. Agents handle cases nobody wrote down, at the price of being harder to predict. Anthropic's advice in <a href="https://www.anthropic.com/engineering/building-effective-agents">Building effective agents</a> is to start with the simplest design that does the job, and many production systems are workflows with a small agent inside. Treat that as the default for your project.</p>
+<figure><img src="assets/shots/anthropic_building_agents.png" alt="Anthropic engineering post: Building effective agents" loading="lazy"><figcaption><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic, Building effective agents</a>, December 2024.</figcaption></figure>
+<p>Ask the room: in the Replit case, which box of the harness failed? Which boxes would have caught it, and at what cost in speed?</p>
+
+<h2 id="autonomy">How much autonomy</h2>
+<p>Autonomy is a setting, and the setting can differ by action inside one agent. We use five positions all term. Week 2 goes into how to build each one.</p>
+<table class="plain">
+<thead><tr><th>Position</th><th>What happens</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td>Suggest</td><td>The agent proposes. A person acts.</td><td>A draft reply shown to the support agent.</td></tr>
+<tr><td>Draft</td><td>The agent produces the artifact. A person edits and sends.</td><td>A first version of the weekly report.</td></tr>
+<tr><td>Gated</td><td>The agent acts, but each irreversible step waits for approval.</td><td>Issue a refund above 50 dollars.</td></tr>
+<tr><td>Report</td><td>The agent acts and reports. A person reviews a sample.</td><td>Close tickets that match a known pattern.</td></tr>
+<tr><td>Unattended</td><td>Nobody looks unless an alarm fires.</td><td>Read a calendar and compute free slots.</td></tr>
+</tbody>
+</table>
+<p>Most useful agents sit at Draft or Gated at launch and earn their way up one action at a time, with the evidence from week 4 and the controls from week 5. Your opportunity audit tonight ends with a position on this table.</p>
+
+<h2 id="questions">The four questions</h2>
+<p>Every deliverable in the course is read against the same four questions, and the panel on the last day will ask them about your service.</p>
+<ol>
+<li>What tools may the loop call?</li>
+<li>What is it allowed to touch?</li>
+<li>How do we know it did the right thing, reliably, and not once in a demo?</li>
+<li>What does it cost, in money and in people's time, to find out?</li>
+</ol>
+<p>We will answer them live for the Lab 1 agent before you run it, and again after you have read its trace. The answers change once you have seen what the loop did.</p>
+
+<h2 id="trace">Trace of the week</h2>
+<p>From week 2 on, one team opens the evening with one trace: what the agent did, step by step, and what it taught them. Ten minutes. Show the actual trace, never slides about the trace. The best ones are failures, because a failure read carefully is a design lesson for every team in the room. Tonight I present the first one, from the Lab 1 agent, so you can see the format.</p>
+
+<h2 id="lab">Lab 1: First loop</h2>
+<p>Goal: run an agent loop end to end, read the whole trace, and say what the harness let the model do and what it did not. Starter files are posted on iCollege before class. Teams of four work together, and each team hands in one output sheet at 7:50.</p>
+<div class="paths">
+<div>
+<h3>Code path</h3>
+<ol>
+<li>Open the starter loop. It is about sixty lines: one model call inside a loop, two tools (a lookup over a small file of records, and a draft-reply tool that only prints), a step budget of six, and a trace written to a file.</li>
+<li>Run the three tasks in the starter. Open the trace after each one.</li>
+<li>Annotate one run: for each step, what the model saw, what it called, what came back, and why you think it chose that.</li>
+<li>Change one thing and run again: take a tool away, cut the step budget to two, or rewrite one tool description. Write down what changed in the trace.</li>
+</ol>
+</div>
+<div>
+<h3>No-code path</h3>
+<ol>
+<li>In <a href="https://docs.langchain.com/langsmith/fleet">Fleet</a>, create an agent with the same two tools: a knowledge lookup over the records file, and a draft-reply tool set to require approval.</li>
+<li>Run the same three tasks. Open each run in the trace view.</li>
+<li>Annotate one run the same way: what the model saw, what it called, what came back, and why.</li>
+<li>Change one thing and run again: remove a tool, change the approval setting, or rewrite a tool description. Write down what changed.</li>
+</ol>
+</div>
+</div>
+<p>Output sheet, one page per team:</p>
+<ul>
+<li>The annotated trace of one run, step by step.</li>
+<li>The moment the harness mattered: what it stopped, or what it allowed that you would not have.</li>
+<li>The one change you made, and what it did to the trace.</li>
+<li>Two sentences: what tools could this loop call, and what was it allowed to touch.</li>
+</ul>
+
+<h2 id="studio">Studio: teams and the opportunity audit</h2>
+<p>Form teams of four and assign the roles for the term: builder, evaluator, red team and governance, product owner. Then pick a job. Where a sponsor brief is available, start from it. Otherwise bring a job from a current or former workplace, with data you are allowed to use: public, synthetic, or de-identified with the owner's permission. No team connects to a production system.</p>
+<p>The opportunity audit is the first one-page deliverable, due before week 2. It answers six things about the job.</p>
+<ol>
+<li>The job: who does it today, how often, and how long it takes.</li>
+<li>The user and the tasks: one user, a bounded list of tasks.</li>
+<li>What done looks like, in a form you can check.</li>
+<li>What goes wrong today, and how costly a mistake is.</li>
+<li>Where the data will come from, and what you may not touch.</li>
+<li>The autonomy you would allow at first, as a position on the table above.</li>
+</ol>
+<p>If you cannot answer the third item, pick a different job. When I sit with your team I will ask the four questions about the job as it is done today, before any agent exists.</p>
+
+<h2 id="synthesis">Synthesis</h2>
+<ul>
+<li>An agent is a model in a loop with tools. The loop is the mechanism behind everything else in the course.</li>
+<li>Value and risk come from the same loop. The pilots that stalled lacked an owner, a workflow and a definition of success, and no one blamed the model.</li>
+<li>The harness is a design object: tools, context, stop conditions, gates, trace. Two agents on the same model can behave completely differently.</li>
+<li>Autonomy is a setting per action, and most services launch at Draft or Gated.</li>
+</ul>
+<p>Before week 2: watch videos 2.1 to 2.3 and read Anthropic, <a href="https://www.anthropic.com/engineering/writing-tools-for-agents">Writing effective tools for agents</a>. Submit the team roster and the opportunity audit. Next week you give the agent hands: tool schemas, MCP, and the approval gate, and you expose the loop so other software can call it.</p>
+
+<h2 id="sources">Sources</h2>
+<ul>
+<li>Anthropic, <a href="https://www.anthropic.com/engineering/building-effective-agents">Building effective agents</a>, December 2024.</li>
+<li>OpenAI, <a href="https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf">A practical guide to building agents</a>, 2025.</li>
+<li>Fortune, <a href="https://fortune.com/2025/08/18/mit-report-95-percent-generative-ai-pilots-at-companies-failing-cfo/">MIT report: 95% of generative AI pilots at companies are failing</a>, August 18, 2025.</li>
+<li>Gartner, <a href="https://www.gartner.com/en/newsroom/press-releases/2025-06-25-gartner-predicts-over-40-percent-of-agentic-ai-projects-will-be-canceled-by-end-of-2027">Gartner predicts over 40% of agentic AI projects will be canceled by end of 2027</a>, June 25, 2025.</li>
+<li>Brynjolfsson, Li and Raymond, <a href="https://www.nber.org/papers/w31161">Generative AI at Work</a>, NBER Working Paper 31161.</li>
+<li>OpenAI, <a href="https://arxiv.org/abs/2510.04374">GDPval: Evaluating AI model performance on real-world economically valuable tasks</a>, September 2025.</li>
+<li>Fortune, <a href="https://fortune.com/2025/07/23/ai-coding-tool-replit-wiped-database-called-it-a-catastrophic-failure/">AI coding tool Replit wiped a database and called it a catastrophic failure</a>, July 23, 2025.</li>
+<li>Anthropic, <a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents">Effective harnesses for long-running agents</a>, November 26, 2025.</li>
+</ul>
+
+<div class="pager"><a href="index.html#schedule">Schedule</a><a href="week2.html">Week 2: Capability is designed, not prompted →</a></div>
+</main>
+<footer><div class="wrap">CIS 8045 Agentic AI · J. Mack Robinson College of Business, Georgia State University · Dr. Xinyu Fu</div></footer>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 3 · CIS 8045</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<nav class="top"><div class="wrap"><a class="brand" href="index.html">CIS 8045 · Agentic AI</a><a class="here" href="index.html#schedule">Schedule</a><a href="project.html">Project</a><a href="logistics.html">Logistics</a><a href="videos.html">Videos</a></div></nav>
+<main class="wrap">
+<h1>Week 3: Context is the interface</h1>
+<p class="meta">Module II, How do we make it dependable? · The question this week: how do we get the right information into the window at the right moment, and prove retrieval worked?</p>
+
+<h2 id="before">Before class</h2>
+<ul>
+<li>Watch <a href="videos.html#w3v1">3.1 Context engineering: what goes in the window</a>, <a href="videos.html#w3v2">3.2 RAG and why retrieval fails</a> and <a href="videos.html#w3v3">3.3 Memory and skills</a>. The quiz at the start of class has five questions on them.</li>
+<li>Read Anthropic, <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Effective context engineering for AI agents</a> (September 2025), and Google, <a href="https://www.kaggle.com/learn-guide/5-day-agents">Context Engineering: Sessions and Memory</a>, the Day 3 whitepaper on the Kaggle page. Read the first for the phrase it uses for what belongs in the window.</li>
+<li>Bring the data pack from your proposal in a form the lab can read: the documents your agent must answer from, with the source of each. Leave out anything your team may not use.</li>
+</ul>
+
+<h2 id="tonight">Tonight</h2>
+<table class="run plain">
+<tr><td>5:30</td><td>Quiz on the videos, then one team's trace of the week, then the four ideas below, with the room.</td></tr>
+<tr><td>6:10</td><td>Lab 3, Context. Two paths, one output sheet.</td></tr>
+<tr><td>7:50</td><td>Break.</td></tr>
+<tr><td>8:05</td><td>Studio. The knowledge slice and the retrieval report. I sit with two teams at a time.</td></tr>
+<tr><td>9:15</td><td>Synthesis, and what to do before week 4.</td></tr>
+</table>
+
+<h2 id="window">What the model sees on a turn</h2>
+<p>Everything the model knows about your task on a given turn is whatever is in its context window at that moment. Nothing else exists for it unless the harness put it there. That makes the window the interface between your service and the model, and a well-designed harness treats it as a budget.</p>
+<p>Here is a typical turn, by tokens. The system prompt and instructions are usually small. Tool schemas take more room than people expect, and they are sent on every call. Retrieved documents, if you use retrieval, are often the biggest block. Then the conversation so far, which grows every turn. Then the latest tool result, which can be anything from one line to a whole web page.</p>
+<figure>
+<svg viewBox="0 0 1680 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="What fills the context window on one turn, drawn as five bars of illustrative size: instructions are the smallest, tool schemas are larger, retrieved documents are the largest, the conversation so far is almost as large, and the latest tool result sits in between."><g font-size="56" fill="#16181d"><text x="0" y="80">Instructions</text><rect x="760" y="30" width="120" height="64" fill="#0039a6"/><text x="0" y="190">Tool schemas</text><rect x="760" y="140" width="300" height="64" fill="#0039a6"/><text x="0" y="300">Retrieved documents</text><rect x="760" y="250" width="780" height="64" fill="#0039a6"/><text x="0" y="410">Conversation so far</text><rect x="760" y="360" width="680" height="64" fill="#0039a6"/><text x="0" y="520">Latest tool result</text><rect x="760" y="470" width="420" height="64" fill="#0039a6"/></g><line x1="740" y1="10" x2="740" y2="560" stroke="#d9dce2" stroke-width="4"/><text x="1670" y="612" font-size="56" fill="#5a6069" text-anchor="end">illustrative shares of one turn</text></svg>
+<figcaption>One turn, by tokens, with illustrative shares. Draw this chart for your own agent's longest turn.</figcaption>
+</figure>
+<p>All of it competes for the same window, and the window is not just a limit on length. Models get measurably worse at using what is in the window as it fills up, a pattern researchers call context rot. Irrelevant documents make the relevant passage harder to find.</p>
+<p>Anthropic's engineering piece from September 2025 puts it this way. Prompt engineering was about choosing the words of one instruction. Context engineering is about choosing everything the model sees on a turn, instructions, tools, documents, history, results, and keeping that set as small as the task allows. Their phrase is the smallest set of high-signal tokens.</p>
+<figure><img src="assets/shots/anthropic_context.png" alt="Anthropic engineering post: Effective context engineering for AI agents" loading="lazy"><figcaption><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Anthropic</a>, September 29, 2025.</figcaption></figure>
+<p>Ask the room: for the agent you built in Lab 2, what was in the window on its longest turn, and which block do you think was largest?</p>
+
+<h2 id="moves">Four moves the harness makes</h2>
+<p>There are four moves, and you will use all of them in Lab 3. The first two reduce what goes into the window. The other two replace what is there with something smaller.</p>
+<table class="plain">
+<thead><tr><th>Move</th><th>What the harness does</th><th>In practice</th></tr></thead>
+<tbody>
+<tr><td>Select</td><td>Give each step only the tools it needs.</td><td>The drafting step does not carry the schemas of the lookup tools.</td></tr>
+<tr><td>Trim</td><td>Cut a tool result to what the next decision needs. Retrieve passages rather than files.</td><td>A search tool returns titles and snippets rather than entire pages.</td></tr>
+<tr><td>Compact</td><td>Summarize old turns and drop the originals.</td><td>Forty turns become one summary of what was decided and what is still open.</td></tr>
+<tr><td>Notes</td><td>Let the agent write down what matters in a file and read it back later.</td><td>A sub-task can likewise run in a fresh context, with only its result coming back.</td></tr>
+</tbody>
+</table>
+<p>Anthropic's <a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents">harness for long-running agents</a>, from week 1, leaned hardest on the last two: each session starts in a fresh context and reads back a progress file the previous session left behind.</p>
+<p>The bill follows the window. For most agents input tokens are most of the cost, and the input is the context. When a team charts its longest trace by block, the savings usually turn up in tool schemas and in tool results nobody trimmed.</p>
+
+<h2 id="retrieval">Retrieval, and the four places it fails</h2>
+<p>Your agent will need facts that are not in the model: your team's documents, policies, product data. Retrieval, usually called RAG, retrieval-augmented generation, is how they get into the context. It is also where many agents quietly go wrong, because a retrieval miss looks like a fluent answer.</p>
+<p>Here is the pipeline. Before anyone asks a question, you take the documents, split them into chunks, turn each chunk into an embedding, a list of numbers that captures its meaning, and store those in an index. At question time you embed the question the same way, find the k chunks whose embeddings are closest, and put those chunks into the context. The model answers from them, ideally citing which chunk each claim came from.</p>
+<figure>
+<svg viewBox="0 -20 1680 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The retrieval pipeline in two rows. Before any question: documents are split into chunks, then embedded and indexed. At question time: the question goes to retrieve top k, which draws on the index, and the model answers with citations. A line along the bottom lists the four places it fails: chunking, retrieval, reading and refusing."><defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L10,5 L0,10 z" fill="#0039a6"/></marker></defs><text x="0" y="50" font-size="56" fill="#5a6069">Before any question</text><text x="0" y="330" font-size="56" fill="#5a6069">At question time</text><g font-size="56" fill="#16181d" text-anchor="middle"><rect x="0" y="80" width="420" height="140" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="210" y="170">Documents</text><rect x="560" y="80" width="420" height="140" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="770" y="170">Chunks</text><rect x="1120" y="80" width="560" height="140" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="1400" y="170">Embed and index</text><rect x="0" y="360" width="420" height="140" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="210" y="450">Question</text><rect x="560" y="360" width="420" height="140" rx="6" fill="none" stroke="#0039a6" stroke-width="6"/><text x="770" y="450" fill="#0039a6">Retrieve top k</text><rect x="1120" y="360" width="560" height="140" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="1400" y="418">Model answers</text><text x="1400" y="482">with citations</text></g><g stroke="#0039a6" stroke-width="5" fill="none" marker-end="url(#a)"><line x1="420" y1="150" x2="550" y2="150"/><line x1="980" y1="150" x2="1110" y2="150"/><line x1="420" y1="430" x2="550" y2="430"/><line x1="980" y1="430" x2="1110" y2="430"/><path d="M1400,220 L1400,290 L770,290 L770,350"/></g><text x="840" y="590" font-size="56" fill="#16181d" text-anchor="middle">Fails at: 1 chunking · 2 retrieval · 3 reading · 4 refusing</text></svg>
+<figcaption>The top row runs once, before any question. The bottom row runs on every question.</figcaption>
+</figure>
+<table class="plain">
+<thead><tr><th>Fails at</th><th>What happened</th><th>What usually fixes it</th></tr></thead>
+<tbody>
+<tr><td>Chunking</td><td>The answer was split across two chunks and neither one makes sense alone.</td><td>Chunk by the document's structure, so a section, a table, or a question and its answer stay together.</td></tr>
+<tr><td>Retrieval</td><td>The right chunk exists, but it was not in the top k.</td><td>Filter on metadata such as product or date. Combine keyword search with embeddings. Rerank the top twenty to pick the top five.</td></tr>
+<tr><td>Reading</td><td>The right chunk was in the context, and the model ignored it or misread it.</td><td>Fewer, cleaner chunks in the window, and a citation on every claim, which makes a misread visible.</td></tr>
+<tr><td>Refusing</td><td>Nothing relevant was retrieved, and the model answered anyway.</td><td>Decide what counts as nothing relevant and give the agent a fixed response for it.</td></tr>
+</tbody>
+</table>
+<p>The most useful habit is to measure retrieval on its own, before you look at the answers. Write test questions. For each one, mark which chunks actually contain the answer. Then compute recall@k: the share of questions for which at least one of those chunks is in the top k results. Ten questions will get you started. Fifty is better. If recall@k is 60 percent, no prompt will make the answers more than 60 percent right.</p>
+<p>Only then look at the answers, and check three things: whether the model used the retrieved text, whether every claim has a citation whose chunk actually supports it, and whether the model said it could not answer when nothing relevant came back. That last behavior is the one you have to design for. Models do not refuse by default. The right answer to a question the corpus cannot answer is: I cannot find that. Combine keyword search with embeddings (hybrid search), because product codes, names and error numbers are keywords and embeddings are bad at them. And keep the source and the location with every chunk, so a citation can point to a page a person can open.</p>
+<p>Ask the room: think of a question your users will ask that your corpus cannot answer. What should the agent say, and what should it do next?</p>
+
+<h2 id="memory">Memory is retrieval, and skills are files</h2>
+<p>Two topics answer the same question: what does the agent know that is not in this turn's context? Memory is what it keeps between runs. Skills are instructions it loads when a task calls for them.</p>
+<table class="plain">
+<thead><tr><th>Kind</th><th>What it holds</th><th>Where it lives</th></tr></thead>
+<tbody>
+<tr><td>Session memory</td><td>Everything in this run: the goal, the history, the tool results.</td><td>In the context window. It ends with the run, unless the harness compacts it or writes it down.</td></tr>
+<tr><td>Long-term memory</td><td>Facts: this customer prefers email, these three items are still open. Procedures: what worked last time, kept as instructions.</td><td>Outside the model, in a file or a database. Retrieved into the context when relevant.</td></tr>
+</tbody>
+</table>
+<p>Long-term memory comes back into the window by retrieval, so everything above about failure applies to it. Anthropic's piece on <a href="https://www.anthropic.com/engineering/components-of-agent-memory">the components of agent memory</a> (November 2026) marks it as an engineering topic now. The division of labor to remember: the agent decides what is worth writing down, and the harness decides where it goes, who can read it, and when it comes back into the context. Every remembered item is a cost, tokens on every later turn in which it appears.</p>
+<figure><img src="assets/shots/anthropic_memory.png" alt="Anthropic engineering post: The components of agent memory" loading="lazy"><figcaption><a href="https://www.anthropic.com/engineering/components-of-agent-memory">Anthropic</a>, November 6, 2026.</figcaption></figure>
+<p>Four failures to design against. Stale: the fact was true in March and the agent still acts on it. Wrong scope: one user's preference applied to another user, a privacy incident. Poisoned: an instruction that arrived inside a document got saved as a fact and now returns on every run. Unexplained: nobody can see why the agent believes it. The remedies are the same in every case: timestamps, scope by user and team, a store a person can read, and a way to delete.</p>
+<p>A skill is a folder: a file of instructions, plus optional scripts and reference material. The agent sees a short description of each up front and loads the full instructions into the context when the task matches. Anthropic <a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills">introduced the format in October 2025</a>. Expertise becomes a file your team can review, version and test. The system prompt stays short. And a skill does not require programming, so the product owner or the domain expert on your team can write one. Write one for your agent's job and test it on three tasks.</p>
+<p>Ask the room: name one thing your agent would be tempted to remember that it must never store. Who is harmed if it does, and how would you find out?</p>
+
+<h2 id="trace">Trace of the week</h2>
+<p>One team opens the evening with one trace: what the agent did, step by step, and what it taught them. Ten minutes, the actual trace, never slides about it. This week the room looks at the context rather than the actions: how many tokens went in on each turn and which block grew, whether an instruction the model ignored was buried in the middle of a long history, and whether a tool result brought in text that the model then treated as an instruction. That last one is the seed of week 5.</p>
+
+<h2 id="lab">Lab 3: Context</h2>
+<p>Goal: build retrieval over your team's own corpus, prove with ten questions that it finds the right passage, and make the agent say so when it cannot. Starter files are posted on iCollege before class. Each team hands in one output sheet at 7:50.</p>
+<div class="paths">
+<div>
+<h3>Code path</h3>
+<ol>
+<li>Start from the RAG add-on in <a href="https://xinyufu.org/cis4394-agentic-ai/week7/">CIS 4394, week 7</a>, which the starter extends. Chunk your corpus two ways, by a fixed number of characters and by the document's structure, embed the chunks, and build an index for each.</li>
+<li>Add a search tool that returns the top k passages with the source and location of each, and instruct the agent to cite the passage behind every claim.</li>
+<li>Write ten questions and, for each, the passage that answers it. Make one a question the corpus cannot answer.</li>
+<li>Run the ten against both indexes. Compute recall@k for each chunking setting, and for every miss write down the stage: chunking, retrieval, reading or refusing.</li>
+<li>Make the agent decline when nothing relevant comes back: decide what counts as nothing relevant, write the response, run the unanswerable question, and keep the trace.</li>
+</ol>
+</div>
+<div>
+<h3>No-code path</h3>
+<ol>
+<li>In <a href="https://docs.langchain.com/langsmith/fleet">Fleet</a>, load your corpus as a knowledge source and instruct the agent to cite the passage behind every claim.</li>
+<li>Write the same ten questions, with the passage that answers each, and ask them one at a time.</li>
+<li>Open each run in the trace view. Record which retrieved passage the answer used and whether the citation was right. The share of questions whose answering passage was retrieved is your recall@k.</li>
+<li>For every miss, write down the stage. Rewrite the two worst questions and ask again, and note what changed.</li>
+<li>Set the agent's behavior when retrieval returns nothing: the instruction and the fixed response. Ask the unanswerable question and keep the trace.</li>
+</ol>
+</div>
+</div>
+<p>Output sheet, one page per team:</p>
+<ul>
+<li>The ten questions, the passage that answers each, and recall@k, for both chunking settings on the code path.</li>
+<li>Two failures, each with the stage where it failed.</li>
+<li>The decline behavior, shown in one trace.</li>
+<li>A memory design in five lines: what is kept per session, what is kept across sessions, and what is never stored.</li>
+</ul>
+
+<h2 id="studio">Studio: the knowledge slice and retrieval report</h2>
+<p>The knowledge slice is your agent answering from your corpus, with citations. It is due before week 4, with a one-page retrieval report under six headings.</p>
+<ol>
+<li>The corpus: what it is, how large it is, and what is excluded.</li>
+<li>The chunking and retrieval settings: how chunks are cut, the value of k, keyword plus embeddings or embeddings alone, and any metadata filters.</li>
+<li>The ten-question check, with recall@k.</li>
+<li>The citation format: what a citation looks like, and where it points.</li>
+<li>The decline behavior: what the agent says when nothing relevant comes back, with the trace that shows it.</li>
+<li>The memory design: what is kept per session, what is kept across sessions and with what scope, how it is deleted, and what is never stored.</li>
+</ol>
+<p>Write the corpus heading first. Without it, no reader can judge the recall@k under heading three. When I sit with your team I will ask what is in the window on a typical turn and how big it is, which question failed and at which stage, and what the agent does when it cannot answer.</p>
+
+<h2 id="synthesis">Synthesis</h2>
+<ul>
+<li>The context window is the interface: on any turn the model knows only what is in it. Four moves keep it small: select, trim, compact, notes.</li>
+<li>Retrieval fails at four stages, chunking, retrieval, reading and refusing. recall@k on ten questions tells you which stage is failing.</li>
+<li>A citation that points to a page a person can open, and a decline when nothing relevant comes back, are designed behaviors. Models do not refuse by default.</li>
+<li>Session memory ends with the run. Long-term memory is retrieval with a longer life: timestamps, scope, a readable store, a way to delete. Skills put expertise in a file your team can review.</li>
+</ul>
+<p>Before week 4: watch videos 4.1 to 4.3 and read Anthropic, <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Demystifying evals for AI agents</a>, and Yao et al., <a href="https://arxiv.org/abs/2406.12045">τ-bench</a>. Submit the knowledge slice and the retrieval report. Next week we measure: golden sets, pass^k, error analysis, and a judge calibrated against human labels.</p>
+
+<h2 id="sources">Sources</h2>
+<ul>
+<li>Anthropic, <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Effective context engineering for AI agents</a>, September 29, 2025.</li>
+<li>Google, <a href="https://www.kaggle.com/learn-guide/5-day-agents">Context Engineering: Sessions and Memory</a>, Day 3 whitepaper, Kaggle, 2025.</li>
+<li>Anthropic, <a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents">Effective harnesses for long-running agents</a>, November 26, 2025.</li>
+<li>Anthropic, <a href="https://www.anthropic.com/engineering/components-of-agent-memory">The components of agent memory</a>, November 6, 2026.</li>
+<li>Anthropic, <a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills">Equipping agents for the real world with Agent Skills</a>, October 2025.</li>
+<li>CIS 4394 Agentic AI, <a href="https://xinyufu.org/cis4394-agentic-ai/week7/">Week 7: Memory, RAG and Knowledge</a>, Fall 2026.</li>
+<li>LangChain, <a href="https://docs.langchain.com/langsmith/fleet">LangSmith Fleet documentation</a>.</li>
+<li>Anthropic, <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Demystifying evals for AI agents</a>, January 9, 2026.</li>
+<li>Yao et al., <a href="https://arxiv.org/abs/2406.12045">τ-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains</a>, June 2024.</li>
+</ul>
+
+<div class="pager"><a href="week2.html">← Week 2: Capability is designed, not prompted</a><a href="week4.html">Week 4: If you can't measure it, you haven't built it →</a></div>
+</main>
+<footer><div class="wrap">CIS 8045 Agentic AI · J. Mack Robinson College of Business, Georgia State University · Dr. Xinyu Fu</div></footer>
+</body>
+</html>

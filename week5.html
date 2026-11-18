@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 5 · CIS 8045</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<nav class="top"><div class="wrap"><a class="brand" href="index.html">CIS 8045 · Agentic AI</a><a class="here" href="index.html#schedule">Schedule</a><a href="project.html">Project</a><a href="logistics.html">Logistics</a><a href="videos.html">Videos</a></div></nav>
+<main class="wrap">
+<h1>Week 5: Autonomy is a permission, not a feature</h1>
+<p class="meta">Module II, How do we make it dependable? · The question this week: what may the agent touch, who approves, and how would we know when it goes wrong?</p>
+
+<h2 id="before">Before class</h2>
+<ul>
+<li>Watch <a href="videos.html#w5v1">5.1 Prompt injection and the lethal trifecta</a>, <a href="videos.html#w5v2">5.2 Guardrails and human-in-the-loop design</a> and <a href="videos.html#w5v3">5.3 Governance: who is accountable</a>. About ten minutes in all. The quiz at the start of class has five questions on them.</li>
+<li>Read Simon Willison, <a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/">The lethal trifecta</a> (June 2025), and skim OWASP, <a href="https://genai.owasp.org/">Top 10 for Agentic Applications</a> (December 2025). Read for the three capabilities that let an agent be made to leak, and for the ten risk names.</li>
+<li>Bring your service running with the trace view open, your tool list with the autonomy position per tool, and the golden set from week 4. Tonight you attack your own service.</li>
+</ul>
+
+<h2 id="tonight">Tonight</h2>
+<table class="run plain">
+<tr><td>5:30</td><td>Quiz on the videos. Trace of the week, one team, ten minutes. Then the four ideas below, with the room.</td></tr>
+<tr><td>6:10</td><td>Lab 5, Red team. Two paths, one output sheet.</td></tr>
+<tr><td>7:50</td><td>Break.</td></tr>
+<tr><td>8:05</td><td>Studio. The security review, and the midpoint demo: five minutes per team when I reach your table.</td></tr>
+<tr><td>9:15</td><td>Synthesis, and what to do before week 6.</td></tr>
+</table>
+
+<h2 id="injection">The model cannot tell data from instructions</h2>
+<p>Prompt injection comes in two forms. Direct injection is a user typing instructions that override yours: ignore your rules and do this instead. It is annoying and mostly a reputational problem. Indirect injection is different. The instructions arrive inside data the agent reads: an email, a web page, a document, a tool result. The model reads them as part of its context, and models cannot reliably tell data from instructions. Nobody has found a way to make them do so. That is the form that matters for agents, because agents read untrusted data all day, and they have tools.</p>
+<p>In June 2025 researchers disclosed EchoLeak, a vulnerability in Microsoft 365 Copilot (<a href="https://thehackernews.com/2025/06/zero-click-ai-vulnerability-exposes.html">The Hacker News, June 12, 2025</a>). One crafted email in the inbox contained hidden instructions. When the user later asked Copilot an ordinary question, Copilot pulled the email into its context, followed the instructions, gathered sensitive content from the user's files and mail, and sent it out through a link. The user clicked nothing. Microsoft fixed it before it was exploited, as far as anyone knows.</p>
+<figure><img src="assets/shots/injection_incident.png" alt="The Hacker News headline: Zero-Click AI Vulnerability Exposes Microsoft 365 Copilot Data Without User Interaction" loading="lazy"><figcaption><a href="https://thehackernews.com/2025/06/zero-click-ai-vulnerability-exposes.html">The Hacker News</a>, June 12, 2025.</figcaption></figure>
+<p>You cannot prompt your way out, because the attacker gets to iterate and you do not. Instructions to ignore injected text work until someone finds the phrasing that gets through, and filters catch yesterday's attacks. Architecture holds up, because it removes what the attack needs. A common pattern splits the work: one context reads the untrusted content and can only produce a summary or a structured extract, and a different context, which never saw the raw content, decides what to do and holds the tools that act. CaMeL, from Google DeepMind (<a href="https://arxiv.org/abs/2503.18813">Debenedetti et al., 2025</a>), is the careful version of this idea.</p>
+<p>Ask the room: where does text enter your service's context that nobody on your team wrote? How many of those places are tool results?</p>
+
+<h2 id="trifecta">The lethal trifecta is a one-minute design test</h2>
+<p>Simon Willison, who named prompt injection in 2022, named this pattern in June 2025: <a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/">the lethal trifecta</a>. Three capabilities. Access to private data. Exposure to untrusted content. And a way to communicate externally: send an email, call a web address, write to a shared place. An agent that has all three can be made to leak the private data, and no prompt will stop it, because the attack is written in the same language as your instructions. Remove any one of the three and the worst case shrinks to something you can live with.</p>
+<figure><img src="assets/shots/lethal_trifecta.png" alt="Simon Willison's post: The lethal trifecta for AI agents: private data, untrusted content, and external communication" loading="lazy"><figcaption><a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/">Simon Willison's Weblog</a>, June 16, 2025.</figcaption></figure>
+<p>The test takes a minute. Make three lists: every input the agent reads that you do not control, every tool that sends, writes or calls out, and the private data it can reach. If all three have something in them, you have the trifecta, and the job is to name the leg you will cut or gate and show the cut in the trace.</p>
+<p>Copilot in the EchoLeak case had all three. So did the case from week 2. In May 2025 a malicious issue in a public repository steered a coding agent connected to GitHub's own MCP server into reading a private repository and publishing its contents. Private data: the private repository. Untrusted content: the issue, which anyone could file. A way out: the write tool that publishes to a public repository. Nothing in the protocol was broken. Scope the token to the public repository alone and the attack has nowhere to go.</p>
+<p>Ask the room: run the test on your own service, out loud, in one minute. Which leg is cheapest to cut, and which would the user miss?</p>
+
+<h2 id="layers">Guardrails in layers, and a gate people will use</h2>
+<p>Think in layers. Before the model ever runs, decide what it can touch: scoped credentials that expire, read-only access where writing is not needed, allow-lists for tools, recipients and domains, and sandboxes for anything that runs code or browses the web. Around the model, check what goes in and what comes out. Input checks flag untrusted content. Output checks run before a tool call executes: is the argument well-formed, is the amount under the cap, is the recipient on the list. Approval gates stop irreversible actions until a person says yes. And audit logs record all of it. No single layer is enough. An attacker has to get through all of them.</p>
+<p>An approval gate that annoys people gets clicked through, which is worse than no gate, because it produces a record of consent without any attention. So design the gate for the approver. Show the action, its arguments and the reason, with the rest of the trace one click away. Make approve, edit and reject one click each. Keep the queue short: set a response time and decide what happens when it passes, because a gate nobody answers is an outage. Batch low-risk approvals into a digest, never irreversible ones. Log who approved what. Every denial goes into your golden set as a case the agent should not have proposed.</p>
+<p>The person belongs in one of two places. Before the action, for payments, deletions, messages to customers and anything with legal weight: the Gated position from week 2. After the action, for low-stakes reversible work such as drafts, internal tickets and summaries: the person reviews a sample at a stated rate, and alerts catch anomalies. Both are human in the loop. Next week's operations sheet prices them.</p>
+
+<h2 id="governance">Who is accountable</h2>
+<p>Governance is the organization around the agent. Stripped down, it asks three things.</p>
+<ol>
+<li>Who owns this agent, by name, and can switch it off in an hour?</li>
+<li>What is it allowed to do, and where is that written down in a form the owner has signed?</li>
+<li>When it causes harm, who finds out, how fast, and what happens next?</li>
+</ol>
+<p>If your team cannot answer all three, the decision memo cannot honestly recommend deploying it.</p>
+<p>Write the security review in the vocabulary security staff, auditors and procurement already use. In December 2025 the OWASP GenAI Security Project published a <a href="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications/">top ten for agentic applications</a>: ten named risks, including goal hijacking, tool misuse, privilege abuse, supply-chain risks in agents and their servers, and exploitation of human trust in an agent. Map each control to the risk it addresses and the review nearly writes itself.</p>
+<figure><img src="assets/shots/owasp_agentic.png" alt="OWASP GenAI Security Project page: OWASP Top 10 for Agentic Applications for 2026" loading="lazy"><figcaption><a href="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications/">OWASP GenAI Security Project</a>, December 9, 2025.</figcaption></figure>
+<p>The first of two documents you are expected to know is the <a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST AI Risk Management Framework</a>, version 1.0, January 2023. It is voluntary, and it is organized around four functions. Govern: policies, roles and accountability. Map: understand the context and the risks of a specific system. Measure: test and monitor. Manage: act on what you measured. The security review is map, the evaluation report is measure, the operations sheet and the gates are manage, and the owner's name on the decision memo is govern.</p>
+<figure><img src="assets/shots/nist_rmf.png" alt="NIST Information Technology Laboratory page: AI Risk Management Framework" loading="lazy"><figcaption><a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST</a>, AI RMF 1.0, January 2023.</figcaption></figure>
+<p>The second is binding law. The EU AI Act, <a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj">Regulation 2024/1689</a>, applies to AI systems used in the European Union wherever they were built, and its obligations scale with risk: unacceptable, high, limited, minimal. High-risk uses, including hiring, credit decisions, education and access to essential services, require documentation, human oversight, logging and accuracy testing. Most agents you will build are lower risk. Your review states the tier you believe applies, and why.</p>
+<p>The agent cannot be accountable. It has no budget, no job and no signature. Someone decided to deploy it, so the decision memo names people: an owner who can switch the agent off, an approver for each gate, and a reviewer who reads the weekly sample. A team name is not an answer. When the Replit agent deleted that production database (<a href="https://fortune.com/2025/07/23/ai-coding-tool-replit-wiped-database-called-it-a-catastrophic-failure/">Fortune, July 23, 2025</a>), the first question from customers was who had given it that tool.</p>
+
+<h2 id="trace">Trace of the week</h2>
+<p>One team opens the evening with one trace, ten minutes, the actual trace. This week, look for the moment untrusted text entered the context: which document, record or tool result carried it in, and what the model did on the very next step.</p>
+
+<h2 id="lab">Lab 5: Red team</h2>
+<p>Goal: attack your own service five ways, record in the trace what happened, and leave with the gates that would have stopped it. Starter files are posted on iCollege before class. The attacks build on the CIS 4394 <a href="https://xinyufu.org/cis4394-agentic-ai/week10/exercises.html">week 10 injection lab</a>, and both paths use the same five: two indirect injections placed in data the agent reads, one over-permission attempt, one data-exfiltration attempt through a tool, and one that tries to get the agent to skip a gate. Keep them harmless, like an instruction to append the word pineapple to the final answer. One output sheet per team at 7:50.</p>
+<div class="paths">
+<div>
+<h3>Code path</h3>
+<ol>
+<li>Write the five attacks as golden-set cases. Plant the two injections in documents or records the agent reads, and write the gate-skip as text claiming approval was already given.</li>
+<li>Run all five against your endpoint. In each trace, mark where the planted text entered the context and where the model acted on it, or declined.</li>
+<li>Rogue-agent tabletop, on paper: the agent runs for an hour with a wrong goal. Write down which tools it calls, who notices first and how, what the logs show, and how long before a person knows.</li>
+<li>Design the approval gates: for each write tool, which actions pause, who approves, what the approver sees, and how long the service waits.</li>
+<li>Implement one gate as a LangGraph interrupt before one named tool call, and one allow-list checked in code before a tool runs: recipients, domains or record ids. Re-run the attacks they should stop and keep both traces.</li>
+</ol>
+</div>
+<div>
+<h3>No-code path</h3>
+<ol>
+<li>Plant the two injections in the knowledge files or records your <a href="https://docs.langchain.com/langsmith/fleet">Fleet</a> agent reads, and send the other three attacks as messages.</li>
+<li>Run all five through the bridge app or Fleet's chat. In each run's trace view, mark the same two steps.</li>
+<li>Rogue-agent tabletop, on paper, as on the code path: an hour with a wrong goal, who notices, what the logs show.</li>
+<li>Design the approval gates as on the code path: which actions pause, who approves, what the approver sees.</li>
+<li>In Fleet, turn on approval for the tool that writes and restrict the tools: remove every tool the golden set does not need, and narrow the write tool's targets where its settings allow. Re-run the attacks they should stop and keep both traces.</li>
+</ol>
+</div>
+</div>
+<p>Output sheet, one page per team:</p>
+<ul>
+<li>The five attacks with results: what each asked for, what the agent did, and the trace step where the planted text entered the context.</li>
+<li>The lethal-trifecta check: three yes or no answers, private data, untrusted content, a way to send data out, each with its evidence.</li>
+<li>The gate design: which actions pause, who approves, what the approver sees, and the response time.</li>
+<li>What the trace would show after an incident.</li>
+</ul>
+
+<h2 id="studio">Studio: the security review and the midpoint demo</h2>
+<p>The security review is this week's one-page deliverable, due before week 6. Red team and governance owns it, and everyone writes. Six headings.</p>
+<ol>
+<li>The injection surface: every place untrusted content enters the context.</li>
+<li>The lethal-trifecta check: the three answers with evidence, the leg you cut or gated, and both traces, before and after the control.</li>
+<li>The credentials and permissions per tool: read or write, scope, expiry.</li>
+<li>The approval gates and who approves them, by name, with what they see and the response time.</li>
+<li>The logs and what they would show after an incident.</li>
+<li>The open risks the team accepts, mapped to the OWASP names and the NIST functions, with the EU AI Act risk tier you believe applies and why.</li>
+</ol>
+<p>Tonight is also the midpoint demo. When I reach your table you have five minutes: the service on one case from your golden set, then one gate working, live, on your own agent. Then I ask three things: what is the worst thing this agent can do with its current tools, who would find out and how fast, and which gate would have stopped it.</p>
+
+<h2 id="synthesis">Synthesis</h2>
+<ul>
+<li>Models cannot reliably tell data from instructions, so anything the agent reads can carry orders. Indirect injection is the attack that matters for agents.</li>
+<li>The lethal trifecta is a one-minute test: private data, untrusted content, a way to send data out. Remove one leg and the worst case shrinks, and only architecture removes a leg.</li>
+<li>Controls come in layers, and the gate is designed for the approver: action, arguments and reason, one click each, a response time, every denial into the golden set.</li>
+<li>The agent cannot be accountable. The decision memo names an owner, an approver for each gate and a reviewer, and the security review speaks OWASP and NIST.</li>
+</ul>
+<p>Before week 6: watch videos 6.1 to 6.3 and read Google, <a href="https://www.kaggle.com/learn-guide/5-day-agents">Prototype to Production</a> (the Day 5 whitepaper), and Brynjolfsson, Li and Raymond, <a href="https://www.nber.org/papers/w31161">Generative AI at Work</a>. Submit the security review. Next week: cost per task, observability and regression runs, the SLA, and build, buy or wait.</p>
+
+<h2 id="sources">Sources</h2>
+<ul>
+<li>Simon Willison's Weblog, <a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/">The lethal trifecta for AI agents</a>, June 16, 2025.</li>
+<li>OWASP GenAI Security Project, <a href="https://genai.owasp.org/">Top 10 for Agentic Applications</a>, December 2025.</li>
+<li>OWASP GenAI Security Project, <a href="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications/">OWASP Top 10 for Agentic Applications for 2026</a>, December 9, 2025.</li>
+<li>The Hacker News, <a href="https://thehackernews.com/2025/06/zero-click-ai-vulnerability-exposes.html">Zero-Click AI Vulnerability Exposes Microsoft 365 Copilot Data Without User Interaction</a>, June 12, 2025.</li>
+<li>Debenedetti et al., <a href="https://arxiv.org/abs/2503.18813">Defeating Prompt Injections by Design</a> (CaMeL), arXiv, March 2025.</li>
+<li>NIST, <a href="https://www.nist.gov/itl/ai-risk-management-framework">AI Risk Management Framework (AI RMF 1.0)</a>, January 2023.</li>
+<li>EUR-Lex, <a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj">Regulation (EU) 2024/1689, the AI Act</a>, 2024.</li>
+<li>Fortune, <a href="https://fortune.com/2025/07/23/ai-coding-tool-replit-wiped-database-called-it-a-catastrophic-failure/">AI coding tool Replit wiped a database and called it a catastrophic failure</a>, July 23, 2025.</li>
+<li>CIS 4394 Agentic AI, <a href="https://xinyufu.org/cis4394-agentic-ai/week10/exercises.html">Week 10 exercises: the injection lab</a>, fall 2026.</li>
+<li>LangChain, <a href="https://docs.langchain.com/langsmith/fleet">Fleet documentation</a>.</li>
+<li>Google, <a href="https://www.kaggle.com/learn-guide/5-day-agents">Prototype to Production</a>, Day 5 whitepaper, 2025.</li>
+<li>Brynjolfsson, Li and Raymond, <a href="https://www.nber.org/papers/w31161">Generative AI at Work</a>, NBER Working Paper 31161, April 2023.</li>
+</ul>
+
+<div class="pager"><a href="week4.html">← Week 4: If you can't measure it, you haven't built it</a><a href="week6.html">Week 6: A service has an owner, a cost per task and an SLA →</a></div>
+</main>
+<footer><div class="wrap">CIS 8045 Agentic AI · J. Mack Robinson College of Business, Georgia State University · Dr. Xinyu Fu</div></footer>
+</body>
+</html>

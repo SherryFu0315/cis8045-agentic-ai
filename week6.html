@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 6 · CIS 8045</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<nav class="top"><div class="wrap"><a class="brand" href="index.html">CIS 8045 · Agentic AI</a><a class="here" href="index.html#schedule">Schedule</a><a href="project.html">Project</a><a href="logistics.html">Logistics</a><a href="videos.html">Videos</a></div></nav>
+<main class="wrap">
+<h1>Week 6: A service has an owner, a cost per task and an SLA</h1>
+<p class="meta">Module III, How do we run it, and when do we stop? · The question this week: what does it take to run an agent as a service, is it worth it, and what changes for the people around it?</p>
+
+<h2 id="before">Before class</h2>
+<ul>
+<li>Watch <a href="videos.html#w6v1">6.1 The cost of a task</a>, <a href="videos.html#w6v2">6.2 Observability and regression in production</a> and <a href="videos.html#w6v3">6.3 Build, buy or wait: platform risk and ROI</a>. About ten minutes in all. The quiz has five questions on them.</li>
+<li>Read Google, <a href="https://www.kaggle.com/learn-guide/5-day-agents">Prototype to Production</a> (the Day 5 whitepaper), and Brynjolfsson, Li and Raymond, <a href="https://www.nber.org/papers/w31161">Generative AI at Work</a>. Read the second one for who gained and who did not.</li>
+<li>Bring your team's LangSmith project and the failure categories from your error analysis.</li>
+</ul>
+
+<h2 id="tonight">Tonight</h2>
+<table class="run plain">
+<tr><td>5:30</td><td>Quiz on the videos. Trace of the week, one team, ten minutes. Then the ideas below, with the room.</td></tr>
+<tr><td>6:10</td><td>Lab 6, Operate. One dashboard, one regression run, then the case discussion.</td></tr>
+<tr><td>7:50</td><td>Break.</td></tr>
+<tr><td>8:05</td><td>Studio. The operations sheet and the decision memo draft.</td></tr>
+<tr><td>9:15</td><td>Synthesis, and what to do before week 7.</td></tr>
+</table>
+
+<h2 id="cost">What one task costs</h2>
+<p>Cost is the number an executive will ask for first, and the one most teams cannot produce. Providers charge per token, separately for input and output, priced per million on the <a href="https://platform.claude.com/docs/en/about-claude/pricing">pricing page</a>. Output costs several times more than input, and cached input costs a fraction of fresh input. The exact numbers change every few months. The structure does not.</p>
+<figure><img src="assets/shots/pricing.png" alt="Claude Platform Docs pricing page: a table of prices per million tokens for input, output and prompt caching, by model" loading="lazy"><figcaption><a href="https://platform.claude.com/docs/en/about-claude/pricing">Claude Platform Docs</a>, pricing page, November 2026.</figcaption></figure>
+<p>For an agent, two things follow. Input is most of the bill, because the whole context is sent on every turn, so the input for turn six includes everything from turns one to five, and a task that takes twelve turns costs far more than twice a task that takes six. Multiply by the runs, including retries and failures, and you have the cost of the service. And caching the stable part of the context, the instructions and the tool schemas, is the single cheapest optimization there is.</p>
+<figure>
+<svg viewBox="0 0 1680 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Six turns drawn as stacked bars: the input tokens of each turn grow from turn one to turn six because the whole context is re-sent, and the output tokens of each turn stay small."><text x="0" y="60" font-size="56" fill="#16181d">Each turn re-sends the whole context, so input grows.</text><rect x="0" y="96" width="40" height="40" fill="#0039a6"/><text x="60" y="130" font-size="56" fill="#5a6069">input tokens</text><rect x="460" y="96" width="40" height="40" fill="#9aa0a6"/><text x="520" y="130" font-size="56" fill="#5a6069">output tokens</text><line x1="0" y1="500" x2="1680" y2="500" stroke="#5a6069" stroke-width="4"/><rect x="60" y="450" width="160" height="50" fill="#0039a6"/><rect x="60" y="415" width="160" height="35" fill="#9aa0a6"/><text x="140" y="560" font-size="56" fill="#5a6069" text-anchor="middle">turn 1</text><rect x="330" y="415" width="160" height="85" fill="#0039a6"/><rect x="330" y="380" width="160" height="35" fill="#9aa0a6"/><text x="410" y="560" font-size="56" fill="#5a6069" text-anchor="middle">turn 2</text><rect x="600" y="375" width="160" height="125" fill="#0039a6"/><rect x="600" y="340" width="160" height="35" fill="#9aa0a6"/><text x="680" y="560" font-size="56" fill="#5a6069" text-anchor="middle">turn 3</text><rect x="870" y="330" width="160" height="170" fill="#0039a6"/><rect x="870" y="295" width="160" height="35" fill="#9aa0a6"/><text x="950" y="560" font-size="56" fill="#5a6069" text-anchor="middle">turn 4</text><rect x="1140" y="280" width="160" height="220" fill="#0039a6"/><rect x="1140" y="245" width="160" height="35" fill="#9aa0a6"/><text x="1220" y="560" font-size="56" fill="#5a6069" text-anchor="middle">turn 5</text><rect x="1410" y="220" width="160" height="280" fill="#0039a6"/><rect x="1410" y="185" width="160" height="35" fill="#9aa0a6"/><text x="1490" y="560" font-size="56" fill="#5a6069" text-anchor="middle">turn 6</text></svg>
+<figcaption>Cost per task is the sum over turns.</figcaption>
+</figure>
+<p>You measure it from traces. For each run: input, output and cached tokens per turn, which model served each call, and latency, split between the model and waiting on tools. For the service: cost per task as a mean and a 95th percentile, because the long tail is where budgets die. Cost per successful task, total cost divided by passes, which is the honest number. And the cost of a failure, what a person spends afterwards fixing what the agent got wrong, which is usually the largest and never appears on the invoice.</p>
+<p>Five ways to cut it. Cache the stable prefix. Route: a small model for routine turns, a large one only where judgment is needed, and measure that the pass rate holds. Trim tool results and context, as in week 3. Cap the steps, because a loop that does not stop is the most expensive failure an agent can have. And count the retries: when error analysis removes a failure category, cost per successful task falls too.</p>
+<p>Ask the room: question four asks "What does it cost, in money and in people's time, to find out?" Which of the three costs above would you have to guess for your service today?</p>
+
+<h2 id="observe">Seeing what the service is doing</h2>
+<p>Observability is being able to see what the service is doing. Regression is finding out that a change made it worse before your users do. For every run you need the full trace, the outcome, which is pass, fail, unknown or escalated to a person, and the version of everything involved, because the model, the prompt, the tools and the skills all change independently. For every day: volume, pass rate, cost per task and latency, gate approvals and denials, and the failure categories from your error analysis, counted.</p>
+<p>Agents regress for reasons that have nothing to do with your code. The provider updates the model behind the same name. Someone improves the prompt for one case and breaks three others. A tool changes its output format. The documents change, so retrieval changes. Or users start asking for something your golden set never covered.</p>
+<figure>
+<svg viewBox="0 0 1680 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The regression run: a change to the prompt or model, then run the golden set k times, then compare with the last known good, then ship if the result is the same or better, or investigate if it is worse."><defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L10,5 L0,10 z" fill="#0039a6"/></marker></defs><g font-size="56" fill="#16181d" text-anchor="middle"><rect x="0" y="120" width="460" height="180" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="230" y="192">A change:</text><text x="230" y="258" fill="#5a6069">prompt or model</text><rect x="520" y="120" width="500" height="180" rx="6" fill="none" stroke="#0039a6" stroke-width="6"/><text x="770" y="192" fill="#0039a6">Run the golden set</text><text x="770" y="258" fill="#0039a6">k times</text><rect x="1100" y="120" width="580" height="180" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="1390" y="192">Compare with last</text><text x="1390" y="258">known good</text><rect x="520" y="420" width="500" height="140" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="770" y="508">Worse: investigate</text><rect x="1100" y="420" width="580" height="140" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="1390" y="508">Same or better: ship</text></g><g stroke="#0039a6" stroke-width="5" fill="none" marker-end="url(#a)"><line x1="460" y1="210" x2="510" y2="210"/><line x1="1020" y1="210" x2="1090" y2="210"/><line x1="1390" y1="300" x2="1390" y2="410"/><path d="M1250,300 L1250,360 L770,360 L770,410"/></g></svg>
+<figcaption>The regression run.</figcaption>
+</figure>
+<p>The defense is the regression run. Before any change goes live, run the golden set k times and compare the pass rate and the cost with the last known good. Same or better: ship it and record the new baseline. Worse: investigate with error analysis. The whole run should be a single command or a single button, or nobody will do it on a Friday afternoon.</p>
+<p>The golden set only covers what you thought of. Sampling: the reviewer named in your memo reads a fixed share of real traces every week, and the surprising ones become golden cases. Alerts: pass rate below a threshold, cost above a threshold, a tool called too many times in one run, or a gate denied twice in a row. Alerts are how an Unattended agent earns its position on the dial.</p>
+<p>Ask the room: which of the five reasons agents regress has already happened to your team this term, and how did you find out?</p>
+
+<h2 id="sla">The service-level agreement in plain terms</h2>
+<p>For your service, the SLA is four plain answers the owner can be held to.</p>
+<table class="plain">
+<thead><tr><th>Term</th><th>In plain terms</th><th>What you write down</th></tr></thead>
+<tbody>
+<tr><td>Availability</td><td>How often it is there.</td><td>The share of the time it answers, and the hours it is promised for.</td></tr>
+<tr><td>Latency</td><td>How long a task takes.</td><td>Median and 95th percentile, and the step budget that caps the tail.</td></tr>
+<tr><td>Fallback</td><td>What happens when the pipeline is down.</td><td>Who does the task by hand, and how the user is told.</td></tr>
+<tr><td>Owner</td><td>Who answers for it.</td><td>One named person who is paged when an alert fires.</td></tr>
+</tbody>
+</table>
+<p>The fallback is the row teams skip. A model provider, a tracing service, your tools or your documents can each be down on a Tuesday morning, and the person who did the task before needs to still be in the role and still have the time. The owner is one person with a name. If the honest answer to who is paged is a team or a vendor, write that down as a risk in the memo.</p>
+
+<h2 id="buy">Build, buy or wait</h2>
+<p>The executive reading your memo has three options. Build: you control the tools, the data and the dial, and you own the evaluation and the fixes, paid for in engineers and time. Buy: faster to start, and the vendor's evaluation is not yours, so ask for the pass rate on your own cases. Wait: capability keeps improving, but waiting forfeits the value and, more importantly, the learning. A small pilot that measures carefully is the good way to wait.</p>
+<p>Two cautionary tales. First, platform risk. OpenAI launched Agent Builder, a visual agent builder, in October 2025. In June 2026 it announced that the visual builder would be retired, with a final date of November 30, 2026, and pointed users to the code-first SDK. Thirteen months from launch to retirement. If your memo recommends buying, say what happens to the service when the platform changes its mind.</p>
+<figure><img src="assets/shots/agentkit_sunset.png" alt="OpenAI Developers deprecations page: Agent Builder listed as deprecated with a shutdown date of November 30, 2026, and the Agents SDK named as the replacement" loading="lazy"><figcaption><a href="https://developers.openai.com/api/docs/deprecations">OpenAI Developers</a>, deprecations page, 2026.</figcaption></figure>
+<p>Second, agent washing. When Gartner predicted in June 2025 that <a href="https://www.gartner.com/en/newsroom/press-releases/2025-06-25-gartner-predicts-over-40-percent-of-agentic-ai-projects-will-be-canceled-by-end-of-2027">more than 40 percent of agentic AI projects would be canceled by the end of 2027</a>, for rising cost, unclear business value and weak risk controls, it also estimated that only a small fraction of the vendors selling agentic AI had a genuine agent rather than a rebranded chatbot or a scripted automation. A vendor who cannot show you a trace is selling you a dial position they have not earned.</p>
+<figure><img src="assets/shots/gartner_40pct.png" alt="IT Brief US headline: Over 40% of agentic AI projects set for cancellation by 2027, dated June 24, 2025" loading="lazy"><figcaption><a href="https://itbrief.news/story/over-40-of-agentic-ai-projects-set-for-cancellation-by-2027">IT Brief US</a>, reporting Gartner, June 24, 2025.</figcaption></figure>
+<p>Ask the room: a vendor offers your team's job as a product, priced per task, with a pass rate on their own demo set. What do you ask for first?</p>
+
+<h2 id="roi">Is it worth it, and for whom</h2>
+<p>The return on investment goes in the memo as unit economics, with measured numbers. Benefits: minutes saved per task, times tasks per month, times the loaded hourly cost of the person who does it today, plus faster cycle time if someone will pay for speed, plus errors avoided, priced at what an error costs today. Costs: cost per successful task from your traces, review and approval time priced in minutes, and the build and run costs, meaning people, licenses, the regression run and the dashboard. If the benefit depends on the agent being Unattended and your pass^k does not support Unattended, the memo says so and prices the Gated version instead.</p>
+<p>Then the people. Brynjolfsson, Li and Raymond followed more than five thousand customer-support agents after an AI assistant was introduced (<a href="https://www.nber.org/papers/w31161">NBER Working Paper 31161</a>). Issues resolved per hour rose about 14 percent on average and about 34 percent for the least experienced workers, and the most experienced gained little. The assistant carried the practices of the best workers to the newest ones.</p>
+<p>So the memo says what changes for three groups: the user, who becomes a reviewer, the experienced people, whose knowledge became the instructions and the golden set and who must keep them current, and the owner, the reviewer and the approver, which are new jobs with hours attached. If those hours are not in the cost column, the return is overstated.</p>
+<p>Ask the room: for your team's job, who is the novice and who is the expert, and which one should review the agent's output?</p>
+
+<h2 id="trace">Trace of the week</h2>
+<p>One team opens the evening with one trace, in the actual trace view, ten minutes. While they present, count the tokens per turn and find the turn where the context grew most, which is usually a tool result that came back larger than anyone expected. Ask the team what they would trim.</p>
+
+<h2 id="lab">Lab 6: Operate</h2>
+<p>Goal: the owner's numbers from your own traces, one change, and a regression run. Starter files are posted on iCollege before class. One output sheet per team at 7:50.</p>
+<div class="paths">
+<div>
+<h3>Code path</h3>
+<ol>
+<li>Open your team's LangSmith project. Build a small dashboard: volume, pass rate, cost per task, latency, gate approvals and denials, and the failure categories from your week 4 error analysis.</li>
+<li>With the starter script, price the tokens per turn in each trace at the list prices for the model that served the call. Report cost per task, mean and 95th percentile, cost per successful task, and the price basis.</li>
+<li>Record the last known good on the golden set: pass rate, pass^k and cost per task. Then change one thing in the harness: the prompt or the model.</li>
+<li>Run the golden set again k times as a regression run and compare with the last known good. Same or better: record the new baseline. Worse: investigate.</li>
+</ol>
+</div>
+<div>
+<h3>No-code path</h3>
+<ol>
+<li>Open the <a href="https://docs.langchain.com/langsmith/fleet">Fleet</a> agent's runs in LangSmith. Use the dashboard view for the same numbers, and tag the week 4 failure categories on the failed runs by hand.</li>
+<li>Open five traces, read the token counts per turn, price them from the pricing page, and compute cost per task, its 95th percentile and cost per successful task. Write down the price basis.</li>
+<li>Record the last known good from your week 4 experiment on the golden set dataset. Then change one thing: the agent's instructions, or its model.</li>
+<li>Run the dataset again k times from the evaluation view as a new experiment and compare it with the last known good. Same or better: record the new baseline. Worse: investigate.</li>
+</ol>
+</div>
+</div>
+<p>Then the case discussion, for everyone. Each team takes one of the anonymized company briefs handed out in class, answers <a href="index.html#questions">the four questions</a> about it in ten minutes, then argues deploy, extend the pilot or stop, with the two numbers that decided it.</p>
+<p>Output sheet, one page per team:</p>
+<ul>
+<li>The dashboard numbers.</li>
+<li>Cost per task and per successful task, with the price basis stated.</li>
+<li>The regression run result, before and after, and the call.</li>
+<li>The team's verdict on its brief, with the two numbers that decided it.</li>
+</ul>
+
+<h2 id="studio">Studio: the operations sheet and the decision memo draft</h2>
+<p>Two deliverables before next week's session, both on the <a href="project.html">project page</a>: a one-page operations sheet for the person who will be paged, and a two-page decision memo for the executive who decides. Start with the sheet, because the memo quotes it.</p>
+<p>The operations sheet, one page, with these headings:</p>
+<ol>
+<li>Owner: one named person, with the reviewer and the approver behind them.</li>
+<li>Cost per task and per successful task, with the 95th percentile, the price basis, and the budget cap per task.</li>
+<li>Latency: median and 95th percentile.</li>
+<li>Availability and fallback: the hours promised, and who does the task by hand when the pipeline is down.</li>
+<li>What breaks and who is paged: the two alerts and their thresholds, and the price of a human minute.</li>
+<li>The regression procedure: the command or button, the k, and where the last known good is recorded.</li>
+</ol>
+<p>The decision memo, two pages for an executive, with these headings:</p>
+<ol>
+<li>Recommendation: deploy, extend the pilot or stop, in the first line.</li>
+<li>The job and the user.</li>
+<li>The numbers: pass^k, cost per successful task, latency, the dial position.</li>
+<li>The risks and the gates, from the security review.</li>
+<li>What it would take to go further, and what would change your mind.</li>
+<li>The named owner, approver and reviewer.</li>
+</ol>
+<p>When I sit with your team I will ask three things: what one task costs today by hand and with the agent, what the pass^k number would have to be before the executive says yes, and who the named owner is.</p>
+
+<h2 id="synthesis">Synthesis</h2>
+<ul>
+<li>Cost per task is the sum over turns, input is most of the bill, and cost per successful task is the honest number.</li>
+<li>Observability is the trace, the outcome and the version of everything. The regression run compares the golden set with the last known good before a change ships.</li>
+<li>The SLA in plain terms is availability, latency, the fallback and a named owner.</li>
+<li>Build, buy or wait is decided with measured numbers, and the memo prices the platform changing its mind.</li>
+</ul>
+<p>Before week 7: watch videos 7.1 to 7.3 and read Anthropic, <a href="https://www.anthropic.com/engineering/multi-agent-research-system">How we built our multi-agent research system</a>, and Cemri et al., <a href="https://arxiv.org/abs/2503.13657">Why do multi-agent LLM systems fail?</a> Submit the operations sheet and the decision memo draft. Next week: multi-agent systems and when not to build them, long-running agents, and what the benchmarks say about the limits.</p>
+
+<h2 id="sources">Sources</h2>
+<ul>
+<li>Google, <a href="https://www.kaggle.com/learn-guide/5-day-agents">Prototype to Production</a> (Day 5 whitepaper), 2025.</li>
+<li>Brynjolfsson, Li and Raymond, <a href="https://www.nber.org/papers/w31161">Generative AI at Work</a>, NBER Working Paper 31161.</li>
+<li>Claude Platform Docs, <a href="https://platform.claude.com/docs/en/about-claude/pricing">Pricing</a>, November 2026.</li>
+<li>OpenAI Developers, <a href="https://developers.openai.com/api/docs/deprecations">Deprecations</a>, 2026.</li>
+<li>Gartner, <a href="https://www.gartner.com/en/newsroom/press-releases/2025-06-25-gartner-predicts-over-40-percent-of-agentic-ai-projects-will-be-canceled-by-end-of-2027">Gartner predicts over 40% of agentic AI projects will be canceled by end of 2027</a>, June 25, 2025.</li>
+<li>IT Brief US, <a href="https://itbrief.news/story/over-40-of-agentic-ai-projects-set-for-cancellation-by-2027">Over 40% of agentic AI projects set for cancellation by 2027</a>, June 24, 2025.</li>
+<li>LangChain, <a href="https://docs.langchain.com/langsmith/fleet">LangSmith Fleet documentation</a>.</li>
+<li>Anthropic, <a href="https://www.anthropic.com/engineering/multi-agent-research-system">How we built our multi-agent research system</a>, June 13, 2025.</li>
+<li>Cemri et al., <a href="https://arxiv.org/abs/2503.13657">Why do multi-agent LLM systems fail?</a>, arXiv, March 2025.</li>
+</ul>
+
+<div class="pager"><a href="week5.html">← Week 5: Autonomy is a permission, not a feature</a><a href="week7.html">Week 7: More agents, more autonomy, more ways to fail →</a></div>
+</main>
+<footer><div class="wrap">CIS 8045 Agentic AI · J. Mack Robinson College of Business, Georgia State University · Dr. Xinyu Fu</div></footer>
+</body>
+</html>

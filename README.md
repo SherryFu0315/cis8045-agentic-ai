@@ -13,6 +13,7 @@ The course site, as static HTML.
 - `index.html`: the seven weekly themes, what each week covers, and how a class session runs.
 - `project.html`: the team project. Each team turns an agent into a served endpoint with a golden set of at least twenty cases, pass^k results, an error analysis, a guardrail and governance memo, a cost per successful task, and a decision memo that a manager could sign.
 - `logistics.html`: grading, the two lab tracks (Python, or LangSmith's no-code builder Fleet), and course policies.
+- `week1.html` to `week8.html`: the page for each class session, which we work from directly in class instead of slides. Each one has the videos and reading to do before class, the run of the evening, the week's ideas with figures and questions for the room, the trace of the week, the lab in two tracks, the studio deliverable and the synthesis. Week 8 is the final presentations. Screenshots used as figures are in `assets/shots/`, each captioned with publisher and date.
 - `videos.html` and `videos/`: twenty-one short pre-class videos, three per week, two and a half to four and a half minutes each, with captions and the full script under each one. The slides are HTML rendered to video and the narration is a synthetic voice.
 
 ## The seven themes

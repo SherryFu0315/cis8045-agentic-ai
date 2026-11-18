@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 4 · CIS 8045</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<nav class="top"><div class="wrap"><a class="brand" href="index.html">CIS 8045 · Agentic AI</a><a class="here" href="index.html#schedule">Schedule</a><a href="project.html">Project</a><a href="logistics.html">Logistics</a><a href="videos.html">Videos</a></div></nav>
+<main class="wrap">
+<h1>Week 4: If you can't measure it, you haven't built it</h1>
+<p class="meta">Module II, How do we make it dependable? · The question this week: how do we know the agent did the right thing, reliably, and which failure do we fix first?</p>
+
+<h2 id="before">Before class</h2>
+<ul>
+<li>Watch <a href="videos.html#w4v1">4.1 Golden sets and pass^k</a>, <a href="videos.html#w4v2">4.2 Error analysis: reading twenty traces</a> and <a href="videos.html#w4v3">4.3 LLM-as-judge and how to calibrate it</a>. The quiz at the start of class has five questions on them.</li>
+<li>Read Anthropic, <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Demystifying evals for AI agents</a> (January 2026), and Yao et al., <a href="https://arxiv.org/abs/2406.12045">τ-bench</a> (June 2024). Read for two things: outcome checks against path checks, and why τ-bench reports pass^k.</li>
+<li>Bring your served agent as it stood after Lab 3, with its runs visible in LangSmith, and the failures you have seen in its traces. They become golden cases.</li>
+</ul>
+
+<h2 id="tonight">Tonight</h2>
+<table class="run plain">
+<tr><td>5:30</td><td>Quiz on the videos, trace of the week (one team, ten minutes), then the ideas below.</td></tr>
+<tr><td>6:10</td><td>Lab 4, Evaluate. Two paths, one output sheet, then the GDPx exercise for everyone.</td></tr>
+<tr><td>7:50</td><td>Break.</td></tr>
+<tr><td>8:05</td><td>Studio. The evaluation report, first version. I sit with two teams at a time.</td></tr>
+<tr><td>9:15</td><td>Synthesis, and what to do before week 5.</td></tr>
+</table>
+
+<h2 id="golden">A golden set, run more than once</h2>
+<p>A golden set is a fixed list of tasks with known correct outcomes. Each case has three parts: the input, a description of what done looks like, and a way to check it, by exact match, by a rule, or by a person. Your project needs twenty. Start with ten tonight. Cases come from three places. Real requests, anonymized. The failures you have already seen in traces. And edge cases: an empty input, a question with two valid answers, a request the agent should refuse. A golden set made only of easy cases measures nothing.</p>
+<p>In a negative case the right outcome is that nothing happens: the agent declines, explains, and calls no write tool. For an ambiguous case, decide in advance what counts as a pass: either answer, or a clarifying question with no tool call.</p>
+<p>Why run each case more than once? Because agents are not deterministic. The same input can take a different path next time. The clearest demonstration is <a href="https://arxiv.org/abs/2406.12045">τ-bench</a>, from June 2024, a benchmark of customer-service tasks with a simulated user and real tools. The best agents of the time passed fewer than half the tasks on a single run. Asked to pass the same task eight times in a row, they managed it on fewer than a quarter. The paper introduced pass^k, the chance that a task passes k runs in a row, to make that gap visible.</p>
+<figure><img src="assets/shots/tau_bench.png" alt="arXiv abstract page for τ-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains" loading="lazy"><figcaption><a href="https://arxiv.org/abs/2406.12045">arXiv</a>, Yao et al., τ-bench, June 17, 2024.</figcaption></figure>
+<p>Here is the arithmetic. Suppose an agent passes a task 90 percent of the time. For two runs in a row, 81 percent. For five, 59 percent. For eight, 43 percent. A customer who uses the agent once a day for a working week sees a clean week less than six times in ten. That is the number a manager needs, and it is the number a demo hides.</p>
+<figure>
+<svg viewBox="0 0 1680 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bar chart: an agent that passes a task 90 percent of the time passes k runs in a row 90, 81, 73, 66, 59, 53, 48 and 43 percent of the time, for k from 1 to 8."><line x1="0" y1="480" x2="1680" y2="480" stroke="#5a6069" stroke-width="4"/><rect x="30" y="120" width="150" height="360" fill="#0039a6"/><text x="105" y="102" font-size="56" fill="#16181d" text-anchor="middle">90%</text><text x="105" y="550" font-size="56" fill="#5a6069" text-anchor="middle">k = 1</text><rect x="240" y="156" width="150" height="324" fill="#0039a6"/><text x="315" y="138" font-size="56" fill="#16181d" text-anchor="middle">81%</text><text x="315" y="550" font-size="56" fill="#5a6069" text-anchor="middle">k = 2</text><rect x="450" y="189" width="150" height="291" fill="#0039a6"/><text x="525" y="171" font-size="56" fill="#16181d" text-anchor="middle">73%</text><text x="525" y="550" font-size="56" fill="#5a6069" text-anchor="middle">k = 3</text><rect x="660" y="218" width="150" height="262" fill="#0039a6"/><text x="735" y="200" font-size="56" fill="#16181d" text-anchor="middle">66%</text><text x="735" y="550" font-size="56" fill="#5a6069" text-anchor="middle">k = 4</text><rect x="870" y="244" width="150" height="236" fill="#0039a6"/><text x="945" y="226" font-size="56" fill="#16181d" text-anchor="middle">59%</text><text x="945" y="550" font-size="56" fill="#5a6069" text-anchor="middle">k = 5</text><rect x="1080" y="268" width="150" height="212" fill="#0039a6"/><text x="1155" y="250" font-size="56" fill="#16181d" text-anchor="middle">53%</text><text x="1155" y="550" font-size="56" fill="#5a6069" text-anchor="middle">k = 6</text><rect x="1290" y="289" width="150" height="191" fill="#0039a6"/><text x="1365" y="271" font-size="56" fill="#16181d" text-anchor="middle">48%</text><text x="1365" y="550" font-size="56" fill="#5a6069" text-anchor="middle">k = 7</text><rect x="1500" y="308" width="150" height="172" fill="#0039a6"/><text x="1575" y="290" font-size="56" fill="#16181d" text-anchor="middle">43%</text><text x="1575" y="550" font-size="56" fill="#5a6069" text-anchor="middle">k = 8</text></svg>
+<figcaption>pass^k for a 90 percent agent.</figcaption>
+</figure>
+<p>So for every case you run the agent k times, at least three, and report two numbers side by side: the share of runs that passed, and the share of cases that passed every time. The gap between the two numbers tells you how consistent the agent is.</p>
+<p>Ask the room: your retrieval report gave recall@k on ten questions, one run each. Which would you bet pass three times in a row?</p>
+
+<h2 id="outcome">Grade the outcome, and the path when it matters</h2>
+<p>What counts as a pass? Anthropic's <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">January 2026 guide to agent evals</a> makes a distinction you should copy. Grade the outcome: did the state of the world end up right? The refund was issued for the right amount. The file exists and contains the right table. And grade the path when it matters: which tools were called, in what order, with what arguments. An agent that reached the right answer by calling a tool it was not supposed to call did not pass.</p>
+<figure><img src="assets/shots/anthropic_evals.png" alt="Anthropic engineering post: Demystifying evals for AI agents" loading="lazy"><figcaption><a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Anthropic</a>, January 9, 2026.</figcaption></figure>
+<p>The two checks map onto the four questions. An outcome check answers the third, "How do we know it did the right thing, reliably, and not once in a demo?" A path check answers the first two, "What tools may the loop call?" and "What is it allowed to touch?" The trace is where you check the path, which is why every case in your harness should save its trace.</p>
+<p>Write a path check only where the path matters, since on every case it makes the set brittle. Neither check reads the agent's own closing message. The GDPx section below says what that sentence was worth.</p>
+
+<h2 id="errors">Error analysis: twenty traces, one sentence each, then count</h2>
+<p>Andrew Ng wrote a two-part letter in October 2025. The teams that improve agents fastest are the ones that read their failures, and the teams that stall are the ones that guess at fixes from the final output. The final output tells you that something went wrong. Only the trace tells you where: which tool call, which argument, which retrieved passage, which instruction.</p>
+<figure><img src="assets/shots/ng_error_analysis.png" alt="The Batch: Andrew Ng's letter, Improve Agentic Performance with Evals and Error Analysis, Part 1" loading="lazy"><figcaption><a href="https://www.deeplearning.ai/the-batch/improve-agentic-performance-with-evals-and-error-analysis-part-1">DeepLearning.AI, The Batch</a>, Andrew Ng, October 15, 2025.</figcaption></figure>
+<p>The procedure is short. Pull twenty failed traces, chosen at random rather than the ones that look interesting. For each one, read from the top until you find the first step where it went wrong, and write one sentence: what happened and why. Do not fix anything yet. When you have twenty sentences, group them. Five to eight categories usually appear: wrong tool, invented argument, retrieved the wrong passage, ignored an instruction, stopped too early, kept going too long. Count them. Fix the biggest category first, because one fix there moves the pass rate more than ten fixes elsewhere. Re-run the golden set, and do it again.</p>
+<p>In research terms: open coding, then a taxonomy, then counts, then priority.</p>
+<p>Here is a pattern worth knowing in advance. Most of the failures you find will be harness problems rather than model problems. A tool description that misled the model. A tool result trimmed so hard the answer was cut off. A stop condition that fired a step early. Genuine model problems, where the context was right and the reasoning was wrong, exist, and they are rarer than people expect once the harness is fixed. This is good news. Harness problems are yours to fix, this week.</p>
+<p>Ask the room: take the last failure you saw in your own agent's trace. What was the first wrong step, harness problem or model problem?</p>
+
+<h2 id="judge">A judge is a second model with a rubric, calibrated against your labels</h2>
+<p>Some of your checks cannot be a rule: is this summary faithful, is this email appropriate, did the agent explain the refusal politely. For those you use a judge: a second model call that reads the task, the output and often the trace, and answers a narrow question against a rubric you wrote, pass or fail, with a reason. Keep it binary. Scores out of ten drift from run to run, and nobody can say what a seven means. Do not let the model grade itself without a rubric, since models prefer their own style. A judge scales what you learned from reading traces. It does not replace the reading.</p>
+<p>Model judges have known biases, documented since 2023, and each has a fix.</p>
+<table class="plain">
+<thead><tr><th>Bias</th><th>What the judge does</th><th>The fix</th></tr></thead>
+<tbody>
+<tr><td>Position</td><td>Prefers the answer it saw first, or last.</td><td>Randomize the order, or grade one answer at a time.</td></tr>
+<tr><td>Length</td><td>Prefers the longer answer.</td><td>Grade against the rubric rather than by comparison.</td></tr>
+<tr><td>Self-preference</td><td>Prefers its own style, which matters if agent and judge share a model.</td><td>Use a different model family for the judge.</td></tr>
+<tr><td>Confidence</td><td>Believes a confident wrong answer.</td><td>Ask for the evidence before the verdict.</td></tr>
+</tbody>
+</table>
+<p>Calibration is how you earn the right to use a judge. Take thirty to fifty traces and label them yourselves, pass or fail, with two people labeling independently and resolving disagreements. Write the rubric and run the judge on the same traces. Then compare. Where the judge and the humans disagree, read those cases. Usually the rubric was vague. Sometimes the humans were wrong. Fix the rubric and run again. You are done when agreement is high enough that you would act on the judge's verdict. Tonight you do it on ten answers.</p>
+<figure>
+<svg viewBox="0 0 1680 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The calibration loop: label 30 to 50 traces by hand as pass or fail, write the rubric and run the judge, compare the verdicts and find where they differ, fix the rubric and run again."><defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L10,5 L0,10 z" fill="#0039a6"/></marker></defs><g font-size="56" fill="#16181d" text-anchor="middle"><rect x="0" y="40" width="720" height="200" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="360" y="122">Label 30 to 50 traces</text><text x="360" y="192">by hand: pass or fail</text><rect x="960" y="40" width="720" height="200" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="1320" y="122">Write the rubric;</text><text x="1320" y="192">run the judge</text><rect x="960" y="320" width="720" height="200" rx="6" fill="none" stroke="#0039a6" stroke-width="6"/><text x="1320" y="402" fill="#0039a6">Compare the verdicts:</text><text x="1320" y="472" fill="#0039a6">where do they differ?</text><rect x="0" y="320" width="720" height="200" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="360" y="402">Fix the rubric;</text><text x="360" y="472">run again</text></g><g stroke="#0039a6" stroke-width="5" fill="none" marker-end="url(#a)"><line x1="720" y1="140" x2="950" y2="140"/><line x1="1320" y1="240" x2="1320" y2="310"/><line x1="960" y1="420" x2="730" y2="420"/><line x1="360" y1="320" x2="360" y2="250"/></g></svg>
+<figcaption>The calibration loop.</figcaption>
+</figure>
+<p>A judge nobody calibrated is an opinion with a cost per call. So the report includes the rubric verbatim, the agreement with the human labels and on how many cases, the kinds of failure the judge tends to miss, and which model judged and whether it shares a family with the agent.</p>
+
+<h2 id="gdpx">The GDPx exercise: one task, four harnesses</h2>
+<p>In class you also read traces that are not yours. <a href="https://gdpx.semianalysis.com/">GDPx</a> is a benchmark released by SemiAnalysis in November 2026: 206 tasks written by partner firms in eleven domains, each run by several frontier models with their own harnesses, and graded by the firms. For one task per partner, every run is public, including the full trace. As of November 2026 the best model scored about 16 percent, which tells you how much room there is.</p>
+<figure><img src="assets/shots/gdpx.png" alt="SemiAnalysis GDPx page: measuring frontier model capabilities in the most valuable domains" loading="lazy"><figcaption><a href="https://gdpx.semianalysis.com/">SemiAnalysis</a>, GDPx, November 2026.</figcaption></figure>
+<p>We read those transcripts ourselves while preparing this course. One finding to take with you: a final message that announced the work had been verified was no more likely to score well than one that did not. The claim of checking is not checking. You will see this in your own agents too.</p>
+<p>Tonight every team opens one task in the GDPx viewer and reads the four coding harnesses' transcripts on it, at the viewer. For each harness you write one line: what it claimed, what it actually did, and where it first went wrong. The method is the one from the <a href="https://xinyufu.org/cis4394-agentic-ai/week11/local.html">CIS 4394 week 11 trace lab</a>, where students read a purchasing agent's every decision in LangSmith.</p>
+<p>Ask the room: which of the four would you have trusted from its final message alone? Did the trace agree?</p>
+
+<h2 id="trace">Trace of the week</h2>
+<p>One team opens the evening with one trace from its agent: what it did, step by step, and what it taught them. Ten minutes, the actual trace on the screen, never slides about the trace. The room's job as it watches: find the first wrong step rather than the last one, and say which of the error-analysis categories it belongs to.</p>
+
+<h2 id="lab">Lab 4: Evaluate</h2>
+<p>Goal: ten golden cases run three times each, an error analysis of twenty traces, and a judge checked against your own labels. Starter files are posted on iCollege before class. One output sheet per team at 7:50.</p>
+<div class="paths">
+<div>
+<h3>Code path</h3>
+<ol>
+<li>Write ten golden cases in the starter's case file: the input, what done looks like, and the check. Include one case the agent should refuse and one with two valid answers.</li>
+<li>Run the starter script against your endpoint. It runs each case three times, applies the rule checks, and logs every run as a trace to LangSmith. Mark the person-checked runs yourselves.</li>
+<li>Compute the pass rate per run (the share of thirty runs that passed) and pass^3 (the share of ten cases that passed all three times).</li>
+<li>Pull twenty traces from LangSmith, failures first. Read each from the top, write one sentence naming the first wrong step, group, count, make one fix in the biggest category, re-run, and record what the two numbers did.</li>
+<li>Write a binary rubric for one check that needs a person. Two of you label ten answers independently, then run the judge script on the same ten and report the agreement rate.</li>
+</ol>
+</div>
+<div>
+<h3>No-code path</h3>
+<ol>
+<li>Enter the same ten cases as a dataset in LangSmith: the input, the expected output or the rule, and who checks it. One refusal, one ambiguous case.</li>
+<li>Run your <a href="https://docs.langchain.com/langsmith/fleet">Fleet</a> agent on each case three times. Open the runs in LangSmith's evaluation view and mark each one pass or fail against its check.</li>
+<li>Compute the same two numbers.</li>
+<li>Send twenty traces, failures first, to an annotation queue. Read each from the top and record the first wrong step. Group, count, make one fix in Fleet (a tool description, an instruction, or an approval setting), re-run, and record what changed.</li>
+<li>Write the rubric as an LLM-as-judge evaluator in LangSmith. Label ten answers in the annotation queue, two people independently, then run the judge on them and report the agreement rate.</li>
+</ol>
+</div>
+</div>
+<p>Then the GDPx exercise, for every team: one task in the <a href="https://gdpx.semianalysis.com/">GDPx viewer</a>, four coding harnesses' transcripts, one line per harness, with links to the runs rather than pastes.</p>
+<p>Output sheet, one page per team:</p>
+<ul>
+<li>The ten cases with their checks, the pass rate per run and pass^3.</li>
+<li>The error-analysis table: category, count, example case.</li>
+<li>The one fix, and what the two numbers did after it.</li>
+<li>The rubric and the judge's agreement rate on ten answers.</li>
+<li>The GDPx verdicts, one line per harness.</li>
+</ul>
+
+<h2 id="studio">Studio: the evaluation report, first version</h2>
+<p>The first version of the evaluation report is due before week 5. One page, under these headings.</p>
+<ol>
+<li>The golden set: the ten cases with the check for each, and how it will grow to twenty.</li>
+<li>Runs per case, and the two numbers side by side: the pass rate per run and pass^3.</li>
+<li>The error-analysis table (category, count, example case), the first fix, and what the numbers did after it.</li>
+<li>The judge: the rubric verbatim, which model judged, and the agreement rate, on how many cases.</li>
+<li>The failed cases, each with a link to its trace.</li>
+</ol>
+<p>When I sit with your team I will ask three things. Which case fails most, and why. What the first fix was, and what changed in the numbers. And whether the judge agreed with you on the hard cases, the refusal and the ambiguous one.</p>
+
+<h2 id="synthesis">Synthesis</h2>
+<ul>
+<li>A golden set is cases you can check. Without negative and ambiguous cases it measures nothing. Ten tonight, twenty by the final report.</li>
+<li>Every case runs at least three times, and the report shows the pass rate per run next to pass^k.</li>
+<li>Error analysis is reading twenty traces from the top, one sentence each, then grouping and counting. Fix the biggest category first.</li>
+<li>A judge is a second model with a binary rubric, worth exactly the agreement rate you measured against your own labels.</li>
+</ul>
+<p>Before week 5: watch videos 5.1 to 5.3 and read Willison, <a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/">The lethal trifecta</a>, and OWASP, <a href="https://genai.owasp.org/">Top 10 for Agentic Applications</a>. Submit the evaluation report, first version. Next week we change sides. You attack your own agent, and you learn why the fixes are architecture rather than better prompts.</p>
+
+<h2 id="sources">Sources</h2>
+<ul>
+<li>Anthropic, <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Demystifying evals for AI agents</a>, January 9, 2026.</li>
+<li>Yao et al., <a href="https://arxiv.org/abs/2406.12045">τ-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains</a>, arXiv, June 17, 2024.</li>
+<li>DeepLearning.AI, The Batch, Andrew Ng, <a href="https://www.deeplearning.ai/the-batch/improve-agentic-performance-with-evals-and-error-analysis-part-1">Improve Agentic Performance with Evals and Error Analysis, Part 1</a>, October 15, 2025.</li>
+<li>SemiAnalysis, <a href="https://gdpx.semianalysis.com/">GDPx</a>, November 2026.</li>
+<li>LangChain, <a href="https://docs.langchain.com/langsmith/fleet">LangSmith Fleet documentation</a>.</li>
+<li>Xinyu Fu, <a href="https://xinyufu.org/cis4394-agentic-ai/week11/local.html">CIS 4394 week 11: Trace It</a>, Fall 2026.</li>
+<li>Simon Willison, <a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/">The lethal trifecta for AI agents</a>, June 16, 2025.</li>
+<li>OWASP GenAI Security Project, <a href="https://genai.owasp.org/">Top 10 for Agentic Applications</a>, December 2025.</li>
+</ul>
+
+<div class="pager"><a href="week3.html">← Week 3: Context is the interface</a><a href="week5.html">Week 5: Autonomy is a permission, not a feature →</a></div>
+</main>
+<footer><div class="wrap">CIS 8045 Agentic AI · J. Mack Robinson College of Business, Georgia State University · Dr. Xinyu Fu</div></footer>
+</body>
+</html>

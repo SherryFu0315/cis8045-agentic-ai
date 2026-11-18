@@ -46,7 +46,7 @@ Input is most of the bill, because the whole context is sent on every turn.
 
 12
 00:00:49.916 --> 00:00:58.105
-And caching the stable part of the context, the instructions and the tool schemas, is the single cheapest optimisation there is.
+And caching the stable part of the context, the instructions and the tool schemas, is the single cheapest optimization there is.
 
 13
 00:00:58.855 --> 00:01:01.568
@@ -110,7 +110,7 @@ Cache the stable prefix.
 
 28
 00:02:19.713 --> 00:02:30.193
-Route: use a small, cheap model for routine turns, classification and formatting, and a large model only where judgement is needed, and measure that the pass rate holds.
+Route: use a small, cheap model for routine turns, classification and formatting, and a large model only where judgment is needed, and measure that the pass rate holds.
 
 29
 00:02:30.243 --> 00:02:34.330

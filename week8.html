@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 8 · CIS 8045</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<nav class="top"><div class="wrap"><a class="brand" href="index.html">CIS 8045 · Agentic AI</a><a class="here" href="index.html#schedule">Schedule</a><a href="project.html">Project</a><a href="logistics.html">Logistics</a><a href="videos.html">Videos</a></div></nav>
+<main class="wrap">
+<h1>Week 8: Would you sign off on this?</h1>
+<p class="meta">Final presentations, in the exam slot. The panel plays the buyer. Each team answers the four questions about its own service.</p>
+
+<h2 id="before">Before class</h2>
+<ul>
+<li>Submit the final build and the final report before the session, as listed on the <a href="project.html">project page</a>. The panel reads the decision memo before you present, so it should stand on its own.</li>
+<li>Prepare a ten-minute slot: about six minutes of demo and four of questions. Show the service running on a case from your golden set and on one case the panel gives you on the spot. Have the trace view open.</li>
+<li>Bring the numbers on one page: pass rate per run, pass^k, cost per successful task, latency, the autonomy position per action, and the named owner, approver and reviewer.</li>
+</ul>
+
+<h2 id="tonight">Tonight</h2>
+<table class="run plain">
+<tr><td>5:30</td><td>Set up. Every team checks that its endpoint or Fleet agent responds and that the trace view opens.</td></tr>
+<tr><td>5:40</td><td>Presentations, ten minutes each, in the order drawn in week 7. Peer scoring after each one.</td></tr>
+<tr><td>6:50</td><td>Break.</td></tr>
+<tr><td>7:05</td><td>Presentations continue.</td></tr>
+<tr><td>7:45</td><td>The panel's verdicts, team by team: deploy, extend the pilot, or stop, and why.</td></tr>
+<tr><td>8:00</td><td>Course synthesis. End by 8:00 or when the last verdict is in.</td></tr>
+</table>
+
+<h2 id="panel">What the panel asks</h2>
+<p>The panel is two or three people playing the executive who has to say yes or no. They have read your memo. They will ask the four questions in some order, and they will ask for the trace behind any number you give.</p>
+<ol>
+<li>What tools may the loop call?</li>
+<li>What is it allowed to touch?</li>
+<li>How do we know it did the right thing, reliably, and not once in a demo?</li>
+<li>What does it cost, in money and in people's time, to find out?</li>
+</ol>
+<p>Expect follow-ups of the kind we practiced all term. Which case fails most often, and what did you do about it? Show me the gate pausing an action. What happens when retrieval returns nothing? Who finds out when it goes wrong, and how fast? What would it take to move one action from Gated to Report?</p>
+
+<h2 id="scoring">Scoring</h2>
+<p>The presentation is 5 of the 35 project points. The panel scores it on four lines, one per question, and on one more: did the demo match the memo. Every team also scores every other team on the same lines, and the peer scores count toward the trace-of-the-week and peer-review component. A demo that works on the golden set but not on the panel's case is not a failure if the team can say, from the trace, why it failed and what it would cost to fix.</p>
+<table class="plain">
+<thead><tr><th>Line</th><th>What a full score looks like</th></tr></thead>
+<tbody>
+<tr><td>Tools</td><td>Every tool named, read or write, with its limits in code and shown in the trace.</td></tr>
+<tr><td>Reach</td><td>Permissions, gates and the lethal-trifecta check answered with evidence, and the open risks stated.</td></tr>
+<tr><td>Reliability</td><td>A golden set of at least twenty cases, pass^k reported honestly, the error analysis and the calibrated judge.</td></tr>
+<tr><td>Cost</td><td>Cost per task and per successful task from traces, latency, and who pays in time when it fails.</td></tr>
+<tr><td>Match</td><td>The demo, the numbers and the memo tell the same story.</td></tr>
+</tbody>
+</table>
+
+<h2 id="reflection">The individual reflection</h2>
+<p>Due after the session, one page per person, not shared with the team. Three parts. What you built and what you learned from the traces you read, with one specific trace. What you would do differently if the service went live next month. And the AI-use disclosure: which tools you used, for what, and one thing a tool got wrong that you caught. The reflection is the one piece of work in the course that you write without AI assistance.</p>
+
+<h2 id="synthesis">Course synthesis</h2>
+<ul>
+<li>The loop is the product, and the harness around it is where the design lives: tools, context, stop conditions, gates and the trace.</li>
+<li>Capability is designed. A tool is a permission, and limits belong in code.</li>
+<li>Context is the interface. What the model sees on a turn decides what it can do, and retrieval has to be measured, not assumed.</li>
+<li>If you cannot measure it, you have not built it. A golden set, pass^k and twenty traces read from the top beat any demo.</li>
+<li>Autonomy is a permission. Every agent that reads untrusted content and holds private data needs a gate before it can send anything out.</li>
+<li>A service has an owner, a cost per task and an SLA, and a decision memo that someone signs.</li>
+<li>More agents and longer horizons add value only when the task is wide, parallel and valuable enough, and they add failure modes every time.</li>
+</ul>
+<p>Thank you for the term. The services you built, the traces you read, and the memos you wrote are the portfolio. Keep them.</p>
+
+<div class="pager"><a href="week7.html">← Week 7: More agents, more autonomy, more ways to fail</a><a href="index.html#schedule">Schedule</a></div>
+</main>
+<footer><div class="wrap">CIS 8045 Agentic AI · J. Mack Robinson College of Business, Georgia State University · Dr. Xinyu Fu</div></footer>
+</body>
+</html>

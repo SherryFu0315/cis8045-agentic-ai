@@ -22,11 +22,11 @@ An orchestrator with workers: one lead agent breaks the job up, sends pieces to 
 
 6
 00:00:29.572 --> 00:00:40.124
-And a handoff chain: the task moves from one specialised agent to the next, triage to expert to closer, each with its own instructions and tools.
+And a handoff chain: the task moves from one specialized agent to the next, triage to expert to closer, each with its own instructions and tools.
 
 7
 00:00:40.174 --> 00:00:47.056
-Both exist because one context window cannot hold everything, and because specialised instructions beat one giant prompt.
+Both exist because one context window cannot hold everything, and because specialized instructions beat one giant prompt.
 
 8
 00:00:47.106 --> 00:00:50.318
@@ -134,7 +134,7 @@ Routing and fixed sub-tasks usually do not need an agent at all.
 
 34
 00:03:01.173 --> 00:03:05.188
-Is the work parallel, like search, or one artefact, like a report?
+Is the work parallel, like search, or one artifact, like a report?
 
 35
 00:03:05.238 --> 00:03:09.254

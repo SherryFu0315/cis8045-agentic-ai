@@ -10,7 +10,7 @@ Everything so far was about the agent.
 
 3
 00:00:04.332 --> 00:00:15.475
-This one is about the organisation around it: who owns the agent, who is accountable when it causes harm, and the two documents that every AI professional is expected to know.
+This one is about the organization around it: who owns the agent, who is accountable when it causes harm, and the two documents that every AI professional is expected to know.
 
 4
 00:00:16.225 --> 00:00:18.624
@@ -38,7 +38,7 @@ The first document is the NIST AI Risk Management Framework, version 1.0, publis
 
 10
 00:00:48.407 --> 00:00:52.704
-It is voluntary, and it is organised around four functions.
+It is voluntary, and it is organized around four functions.
 
 11
 00:00:52.754 --> 00:00:54.878
@@ -94,7 +94,7 @@ High-risk uses, including hiring, credit decisions, education and access to esse
 
 24
 00:01:48.668 --> 00:01:58.631
-Most agents you will build are lower risk, but notice that the high-risk requirements are the same artefacts this course asks for.
+Most agents you will build are lower risk, but notice that the high-risk requirements are the same artifacts this course asks for.
 
 25
 00:01:58.681 --> 00:02:00.452
