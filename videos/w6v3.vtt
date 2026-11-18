@@ -1,0 +1,129 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.548
+Last video for week six, and the one that frames your decision memo.
+
+2
+00:00:04.598 --> 00:00:09.500
+The executive reading it has three options: build the agent, buy one, or wait.
+
+3
+00:00:09.550 --> 00:00:16.222
+This video gives you a way to lay out that choice, and two cautionary tales about depending on platforms.
+
+4
+00:00:16.972 --> 00:00:19.028
+Lay the three options out honestly.
+
+5
+00:00:19.078 --> 00:00:27.804
+Build means you control the tools, the data and the dial, and you own the evaluation and the fixes, paid for in engineers and time.
+
+6
+00:00:27.854 --> 00:00:40.442
+Buy is faster to start, and the vendor's evaluation is not yours; your data goes where the vendor runs it, and the question to ask any vendor is the pass rate on your cases, not theirs.
+
+7
+00:00:40.492 --> 00:00:45.357
+Wait is a real option, because capability keeps improving, but waiting is not free.
+
+8
+00:00:45.407 --> 00:00:48.516
+It forfeits the value and, more importantly, the learning.
+
+9
+00:00:48.566 --> 00:00:52.729
+A small pilot that measures carefully is the good way to wait.
+
+10
+00:00:53.479 --> 00:00:54.672
+Two cautionary tales.
+
+11
+00:00:54.722 --> 00:00:55.916
+First, platform risk.
+
+12
+00:00:55.966 --> 00:01:01.719
+OpenAI launched a visual agent builder in October 2025 as part of its AgentKit.
+
+13
+00:01:01.769 --> 00:01:13.326
+In June 2026 it announced that the visual builder would be retired, with a final date of November 30, 2026, and pointed users to the code-first SDK instead.
+
+14
+00:01:13.376 --> 00:01:15.813
+Thirteen months from launch to retirement.
+
+15
+00:01:15.863 --> 00:01:29.492
+If your decision memo recommends buying, say what happens to the service when the platform changes its mind, because the odds that it will during the life of the service are not small.
+
+16
+00:01:30.242 --> 00:01:31.269
+Second, agent washing.
+
+17
+00:01:31.319 --> 00:01:49.582
+When Gartner predicted in June 2025 that more than 40 percent of agentic AI projects would be cancelled by the end of 2027, it also estimated that only a small fraction of the vendors selling agentic AI had a genuine agent, as opposed to a rebranded chatbot or a scripted automation.
+
+18
+00:01:49.632 --> 00:01:52.454
+You know how to tell the difference now.
+
+19
+00:01:52.504 --> 00:01:56.045
+Ask to see the loop, the tools and a trace.
+
+20
+00:01:56.095 --> 00:01:58.918
+Ask for pass rates on a golden set.
+
+21
+00:01:58.968 --> 00:02:05.381
+A vendor who cannot show you a trace is selling you a dial position they have not earned.
+
+22
+00:02:06.131 --> 00:02:09.041
+Then the return on investment, with measured numbers.
+
+23
+00:02:09.091 --> 00:02:24.211
+Benefits: minutes saved per task, times tasks per month, times the loaded hourly cost of the person who does it today; faster cycle time, if someone will actually pay for speed; and errors avoided, priced at what an error costs today.
+
+24
+00:02:24.261 --> 00:02:36.790
+Costs: cost per successful task from your traces, human review and approval time priced in minutes, and the build and run costs, which include the people, the licences, the regression run and the dashboard.
+
+25
+00:02:36.840 --> 00:02:47.520
+If the benefit depends on the agent being unattended and your pass^k does not support unattended, the memo says so and prices the gated version instead.
+
+26
+00:02:48.270 --> 00:02:50.817
+So the decision memo is two pages.
+
+27
+00:02:50.867 --> 00:03:00.093
+Page one: the job, the agent, and the numbers, pass^k, cost per successful task, latency, and the dial position you are recommending.
+
+28
+00:03:00.143 --> 00:03:04.917
+Page two: the risks and controls, the owner and approvers, and the recommendation.
+
+29
+00:03:04.967 --> 00:03:07.143
+Deploy, extend the pilot, or stop.
+
+30
+00:03:07.193 --> 00:03:10.853
+Say which, and say what evidence would change your mind.
+
+31
+00:03:10.903 --> 00:03:13.079
+An executive can act on that.
+
+32
+00:03:13.129 --> 00:03:20.871
+Next week, the last set of videos: multi-agent systems, long-running agents, and what the benchmarks say about where the limits are.

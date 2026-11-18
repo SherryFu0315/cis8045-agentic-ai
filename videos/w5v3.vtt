@@ -1,0 +1,157 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:01.755
+Last video for week five.
+
+2
+00:00:01.805 --> 00:00:04.282
+Everything so far was about the agent.
+
+3
+00:00:04.332 --> 00:00:15.475
+This one is about the organisation around it: who owns the agent, who is accountable when it causes harm, and the two documents that every AI professional is expected to know.
+
+4
+00:00:16.225 --> 00:00:18.624
+Strip governance down and it is three questions.
+
+5
+00:00:18.674 --> 00:00:22.911
+Who owns this agent, by name, and can switch it off in an hour?
+
+6
+00:00:22.961 --> 00:00:28.729
+What is it allowed to do, and where is that written down in a form the owner has signed?
+
+7
+00:00:28.779 --> 00:00:33.015
+And when it causes harm, who finds out, how fast, and what happens next?
+
+8
+00:00:33.065 --> 00:00:38.527
+If your team cannot answer all three for your project, the decision memo cannot honestly recommend deploying it.
+
+9
+00:00:39.277 --> 00:00:48.357
+The first document is the NIST AI Risk Management Framework, version 1.0, published in January 2023 by the US standards agency.
+
+10
+00:00:48.407 --> 00:00:52.704
+It is voluntary, and it is organised around four functions.
+
+11
+00:00:52.754 --> 00:00:54.878
+Govern: policies, roles and accountability.
+
+12
+00:00:54.928 --> 00:00:59.660
+Map: understand the context and the risks of a specific system.
+
+13
+00:00:59.710 --> 00:01:01.399
+Measure: test and monitor.
+
+14
+00:01:01.449 --> 00:01:04.007
+Manage: act on what you measured.
+
+15
+00:01:04.057 --> 00:01:07.051
+Your project maps onto it almost exactly.
+
+16
+00:01:07.101 --> 00:01:09.224
+The security review is map.
+
+17
+00:01:09.274 --> 00:01:11.398
+The evaluation report is measure.
+
+18
+00:01:11.448 --> 00:01:14.876
+The operations sheet and the gates are manage.
+
+19
+00:01:14.926 --> 00:01:18.789
+The owner's name on the decision memo is govern.
+
+20
+00:01:19.539 --> 00:01:22.220
+The second document is binding law.
+
+21
+00:01:22.270 --> 00:01:35.874
+The EU AI Act, Regulation 2024/1689, applies to AI systems used in the European Union regardless of where they were built, and its obligations scale with risk.
+
+22
+00:01:35.924 --> 00:01:38.605
+A handful of uses are banned.
+
+23
+00:01:38.655 --> 00:01:48.618
+High-risk uses, including hiring, credit decisions, education and access to essential services, carry requirements for documentation, human oversight, logging and accuracy testing.
+
+24
+00:01:48.668 --> 00:01:58.631
+Most agents you will build are lower risk, but notice that the high-risk requirements are the same artefacts this course asks for.
+
+25
+00:01:58.681 --> 00:02:00.452
+Documentation, oversight, logs, testing.
+
+26
+00:02:00.502 --> 00:02:03.637
+A well-run agent service already has them.
+
+27
+00:02:04.388 --> 00:02:07.575
+One more point, and people forget it all the time.
+
+28
+00:02:07.625 --> 00:02:09.193
+The agent cannot be accountable.
+
+29
+00:02:09.243 --> 00:02:12.106
+It has no budget, no job and no signature.
+
+30
+00:02:12.157 --> 00:02:19.552
+Someone decided to deploy it, with certain tools, at a certain position on the dial, and that decision should be on the record.
+
+31
+00:02:19.602 --> 00:02:28.292
+So your decision memo names people: an owner who can switch the agent off, an approver for each gate, and a reviewer who reads the weekly sample.
+
+32
+00:02:28.342 --> 00:02:30.558
+Write a person's name in each role.
+
+33
+00:02:30.608 --> 00:02:32.824
+A team name is not an answer.
+
+34
+00:02:32.874 --> 00:02:38.003
+When the Replit agent deleted that database, customers did not ask what the model was thinking.
+
+35
+00:02:38.053 --> 00:02:40.593
+They asked who had given it that tool.
+
+36
+00:02:41.343 --> 00:02:53.494
+So for this week's deliverable: map your controls to the OWASP names and the four NIST functions, state the risk tier you believe applies and why, and name the owner, the approvers and the reviewer.
+
+37
+00:02:53.544 --> 00:02:56.282
+In class this week is the midpoint demo.
+
+38
+00:02:56.332 --> 00:02:59.420
+Show one gate working, live, on your own agent.
+
+39
+00:02:59.470 --> 00:03:06.391
+Next week we move from safety to running the thing: cost, observability, and the decision to build, buy or wait.

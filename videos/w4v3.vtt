@@ -1,0 +1,125 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:01.747
+Last video for week four.
+
+2
+00:00:01.797 --> 00:00:13.248
+Twenty cases times three runs is sixty traces, and some of your checks cannot be a rule: is this summary faithful, is this email appropriate, did the agent explain the refusal politely.
+
+3
+00:00:13.298 --> 00:00:16.842
+For those you will use a model as a judge.
+
+4
+00:00:16.892 --> 00:00:19.358
+This video is about doing that honestly.
+
+5
+00:00:20.108 --> 00:00:22.298
+A judge is a second model call.
+
+6
+00:00:22.348 --> 00:00:31.261
+It reads the task, the agent's output, and often the trace, and it answers a narrow question against a rubric you wrote: pass or fail, with a reason.
+
+7
+00:00:31.311 --> 00:00:32.222
+Keep it binary.
+
+8
+00:00:32.272 --> 00:00:37.663
+Scores out of ten drift from run to run, and nobody can say what a seven means.
+
+9
+00:00:37.713 --> 00:00:42.465
+Do not let the model grade itself without a rubric; models prefer their own style.
+
+10
+00:00:42.515 --> 00:00:45.666
+And a judge is not a replacement for reading traces.
+
+11
+00:00:45.716 --> 00:00:49.508
+It is a way to scale what you learned from reading them.
+
+12
+00:00:50.257 --> 00:00:53.257
+Model judges have known biases, documented since 2023.
+
+13
+00:00:53.307 --> 00:00:58.975
+Position bias: in a comparison, the judge prefers whichever answer it saw first, or last.
+
+14
+00:00:59.025 --> 00:01:01.643
+Length bias: it prefers the longer answer.
+
+15
+00:01:01.693 --> 00:01:08.886
+Self-preference: it prefers text in its own style, which matters if the agent and the judge share a model.
+
+16
+00:01:08.936 --> 00:01:11.554
+And it believes a confident wrong answer.
+
+17
+00:01:11.604 --> 00:01:26.420
+Each of these can be measured, and each has a fix: randomise the order, grade one answer at a time against a rubric rather than comparing, use a different model family, and ask for the evidence before the verdict.
+
+18
+00:01:27.170 --> 00:01:31.091
+Calibration is how you earn the right to use a judge.
+
+19
+00:01:31.141 --> 00:01:38.311
+Take thirty to fifty traces and label them yourselves, pass or fail, with two people labelling independently and resolving disagreements.
+
+20
+00:01:38.361 --> 00:01:42.281
+Write the rubric and run the judge on the same traces.
+
+21
+00:01:42.331 --> 00:01:43.003
+Then compare.
+
+22
+00:01:43.053 --> 00:01:46.613
+Where the judge and the humans disagree, read those cases.
+
+23
+00:01:46.663 --> 00:01:48.418
+Usually the rubric was vague.
+
+24
+00:01:48.468 --> 00:01:50.223
+Sometimes the humans were wrong.
+
+25
+00:01:50.273 --> 00:01:52.389
+Fix the rubric and run again.
+
+26
+00:01:52.439 --> 00:02:01.774
+You are done when agreement is high enough that you would act on the judge's verdict, and you report that agreement number in the evaluation report.
+
+27
+00:02:01.824 --> 00:02:06.106
+A judge nobody calibrated is an opinion with a cost per call.
+
+28
+00:02:06.856 --> 00:02:23.052
+So in the evaluation report, include the rubric verbatim, the agreement between the judge and the human labels and on how many cases it was measured, the kinds of failure the judge tends to miss, and which model judged and whether it shares a family with the agent.
+
+29
+00:02:23.102 --> 00:02:28.128
+Readers of your report will trust the judge exactly as much as that section earns.
+
+30
+00:02:28.178 --> 00:02:29.821
+Next week we change sides.
+
+31
+00:02:29.871 --> 00:02:35.574
+You will attack your own agent, and learn why the fixes are architecture rather than better prompts.

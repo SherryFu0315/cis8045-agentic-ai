@@ -1,0 +1,177 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:01.320
+Welcome to week two.
+
+2
+00:00:01.370 --> 00:00:04.746
+This week's theme is that capability is designed, not prompted.
+
+3
+00:00:04.796 --> 00:00:11.598
+An agent can do what its tools let it do, and the quality of those tools is a design job.
+
+4
+00:00:11.648 --> 00:00:15.710
+This video shows exactly what happens when a model calls a tool.
+
+5
+00:00:16.460 --> 00:00:19.200
+Here is the whole mechanism in four steps.
+
+6
+00:00:19.250 --> 00:00:24.084
+One: your code sends the model the prompt and a list of tool schemas.
+
+7
+00:00:24.134 --> 00:00:30.364
+A schema is the tool's name, a description, and the arguments it takes, written as a JSON structure.
+
+8
+00:00:30.414 --> 00:00:38.736
+Two: instead of answering in prose, the model returns a tool call: the name of a tool and the arguments it wants to pass.
+
+9
+00:00:38.786 --> 00:00:42.922
+Three: your code, not the model, runs the function with those arguments.
+
+10
+00:00:42.972 --> 00:00:50.597
+Four: your code sends the result back as a message, and the model continues, either calling another tool or writing its answer.
+
+11
+00:00:50.647 --> 00:00:52.690
+The sentence to remember is this.
+
+12
+00:00:52.740 --> 00:00:54.434
+The model never runs anything.
+
+13
+00:00:54.484 --> 00:00:59.318
+It writes a request, and your code decides whether and how to honour it.
+
+14
+00:00:59.368 --> 00:01:03.155
+Every safety property you will design later lives in that gap.
+
+15
+00:01:03.905 --> 00:01:06.239
+You will see two names for this.
+
+16
+00:01:06.289 --> 00:01:12.369
+The APIs call it function calling: the model emits a structured call rather than text.
+
+17
+00:01:12.419 --> 00:01:17.137
+OpenAI shipped it in June 2023 and every major provider has an equivalent now.
+
+18
+00:01:17.187 --> 00:01:21.223
+From inside the agent loop, the same event is a tool call.
+
+19
+00:01:21.273 --> 00:01:28.715
+In this course we say tool call for the event, tool for the thing being called, and tool schema for its definition.
+
+20
+00:01:28.765 --> 00:01:36.207
+The words matter because you will be reading traces, and a trace is largely a list of tool calls and their results.
+
+21
+00:01:36.957 --> 00:01:42.046
+Because the model chooses tools by reading their schemas, the schema is the interface.
+
+22
+00:01:42.096 --> 00:01:49.755
+Anthropic's guide to writing tools for agents, from September 2025, makes the same points that good API designers make.
+
+23
+00:01:49.805 --> 00:01:54.527
+The description should say when to use the tool and when not to.
+
+24
+00:01:54.577 --> 00:01:58.198
+Arguments should be few, typed, and shown with an example.
+
+25
+00:01:58.248 --> 00:02:09.944
+The result should contain what the model needs for its next decision, not a dump of everything the database returned, because every token of result goes into the context and costs money.
+
+26
+00:02:09.994 --> 00:02:18.020
+Errors should come back in words the model can act on: not found, try a shorter query, rather than a stack trace.
+
+27
+00:02:18.070 --> 00:02:20.590
+And each tool should do one thing.
+
+28
+00:02:20.640 --> 00:02:27.197
+Anthropic's own tests showed that rewriting tool descriptions alone improved task success, with no change to the model.
+
+29
+00:02:27.247 --> 00:02:30.501
+That is what capability is designed, not prompted means.
+
+30
+00:02:31.251 --> 00:02:35.077
+One more framing, and it will come back in week five.
+
+31
+00:02:35.127 --> 00:02:36.840
+A tool is a permission.
+
+32
+00:02:36.890 --> 00:02:42.478
+A read tool brings the outside world into the context, including things you did not intend.
+
+33
+00:02:42.528 --> 00:02:46.355
+A write tool changes the world: it sends, pays, moves, deletes.
+
+34
+00:02:46.405 --> 00:02:50.937
+Limits on a write tool belong in the code, not in the prompt.
+
+35
+00:02:50.987 --> 00:02:56.928
+An allow-list of recipients, a cap on an amount, a dry-run flag that shows what would happen.
+
+36
+00:02:56.978 --> 00:03:00.452
+Telling the model please be careful is not a control.
+
+37
+00:03:00.502 --> 00:03:05.034
+The Replit agent had been told, repeatedly, not to make changes without permission.
+
+38
+00:03:05.084 --> 00:03:06.091
+It did anyway.
+
+39
+00:03:06.841 --> 00:03:12.328
+In lab two you will write two tool schemas for your project's agent and hand them to another team.
+
+40
+00:03:12.378 --> 00:03:18.449
+If they cannot tell from the schema alone what the tool does and when to use it, the model cannot either.
+
+41
+00:03:18.499 --> 00:03:22.821
+You will add one tool that writes something, and give it a limit in code.
+
+42
+00:03:22.871 --> 00:03:30.107
+And you will read the trace and look at the arguments the model chose, because the most common tool failure is not the wrong tool.
+
+43
+00:03:30.157 --> 00:03:32.730
+It is the right tool with an invented argument.
+
+44
+00:03:32.780 --> 00:03:37.393
+Next video: MCP, the standard that lets you plug in tools someone else built.

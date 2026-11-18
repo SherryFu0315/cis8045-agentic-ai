@@ -1,0 +1,137 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:01.329
+Welcome to week six.
+
+2
+00:00:01.379 --> 00:00:07.883
+The theme: a service has an owner, a cost per task and an SLA, a service-level agreement.
+
+3
+00:00:07.933 --> 00:00:15.816
+This video is about cost, because it is the number an executive will ask for first, and the one most teams cannot produce.
+
+4
+00:00:16.566 --> 00:00:22.401
+Model providers charge per token, separately for input and output, usually priced per million tokens.
+
+5
+00:00:22.451 --> 00:00:25.932
+Output tokens cost several times more than input tokens.
+
+6
+00:00:25.982 --> 00:00:31.818
+Input that the provider has seen recently and cached costs a fraction of fresh input.
+
+7
+00:00:31.868 --> 00:00:37.310
+And some features, such as very long contexts or built-in tools, carry extra charges.
+
+8
+00:00:37.360 --> 00:00:40.057
+The exact numbers change every few months.
+
+9
+00:00:40.107 --> 00:00:41.626
+The structure does not.
+
+10
+00:00:41.676 --> 00:00:43.980
+For an agent, two things follow.
+
+11
+00:00:44.030 --> 00:00:49.866
+Input is most of the bill, because the whole context is sent on every turn.
+
+12
+00:00:49.916 --> 00:00:58.105
+And caching the stable part of the context, the instructions and the tool schemas, is the single cheapest optimisation there is.
+
+13
+00:00:58.855 --> 00:01:01.568
+Here is how a task's cost builds up.
+
+14
+00:01:01.618 --> 00:01:06.404
+Each turn sends the whole context so far: instructions, tools, history, the latest result.
+
+15
+00:01:06.454 --> 00:01:10.894
+So the input for turn six includes everything from turns one to five.
+
+16
+00:01:10.944 --> 00:01:14.003
+The output of each turn is small by comparison.
+
+17
+00:01:14.053 --> 00:01:18.148
+Add up the turns and you have the cost of one task.
+
+18
+00:01:18.198 --> 00:01:25.746
+Multiply by the number of runs, including the retries and the runs that failed, and you have the cost of the service.
+
+19
+00:01:25.796 --> 00:01:34.036
+A task that takes twelve turns costs far more than twice a task that takes six, because the later turns carry the heavier context.
+
+20
+00:01:34.786 --> 00:01:40.182
+You measure all of this from traces, which is why tracing was in the first lab.
+
+21
+00:01:40.232 --> 00:01:49.031
+For each run: input, output and cached tokens per turn, which model served each call, wall-clock time, and how much of it was waiting on tools.
+
+22
+00:01:49.081 --> 00:01:56.519
+For the service: cost per task, as a mean and as a 95th percentile, because the long tail is where budgets die.
+
+23
+00:01:56.569 --> 00:02:03.326
+Cost per successful task, which is total cost divided by the number of passes, and which is the honest number.
+
+24
+00:02:03.376 --> 00:02:10.473
+And the cost of a failure, which is what a person spends afterwards finding and fixing what the agent got wrong.
+
+25
+00:02:10.523 --> 00:02:15.578
+That last one is usually the largest, and it never appears on the provider's invoice.
+
+26
+00:02:16.328 --> 00:02:18.159
+Five ways to cut it.
+
+27
+00:02:18.209 --> 00:02:19.663
+Cache the stable prefix.
+
+28
+00:02:19.713 --> 00:02:30.193
+Route: use a small, cheap model for routine turns, classification and formatting, and a large model only where judgement is needed, and measure that the pass rate holds.
+
+29
+00:02:30.243 --> 00:02:34.330
+Trim tool results and context, which you did in week three.
+
+30
+00:02:34.380 --> 00:02:42.228
+Cap the number of steps, because a loop that does not stop is the most expensive failure an agent can have.
+
+31
+00:02:42.278 --> 00:02:48.621
+And count the retries: when error analysis removes a failure category, cost per successful task falls too.
+
+32
+00:02:48.671 --> 00:02:51.253
+Evaluation and economics are the same work.
+
+33
+00:02:52.003 --> 00:03:11.963
+On your operations sheet, report cost per task and per successful task with the 95th percentile, latency as median and 95th percentile, the budget cap per task and what the harness does when it is hit, and the price of a human minute, so that the review and approval time from last week shows up as a number.
+
+34
+00:03:12.013 --> 00:03:17.137
+Next video: watching the service in production, and knowing when a change made it worse.

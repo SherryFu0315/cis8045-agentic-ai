@@ -1,0 +1,185 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:01.285
+Welcome to week three.
+
+2
+00:00:01.335 --> 00:00:03.956
+The theme is that context is the interface.
+
+3
+00:00:04.006 --> 00:00:10.967
+Everything the model knows about your task on a given turn is whatever is in its context window at that moment.
+
+4
+00:00:11.017 --> 00:00:18.312
+This video is about what goes in there, what it costs, and why a well-designed harness treats the window as a budget.
+
+5
+00:00:19.062 --> 00:00:21.426
+Here is a typical turn, by tokens.
+
+6
+00:00:21.476 --> 00:00:24.185
+The system prompt and instructions are usually small.
+
+7
+00:00:24.235 --> 00:00:29.357
+Tool schemas take more room than people expect, and they are sent on every call.
+
+8
+00:00:29.407 --> 00:00:33.150
+Retrieved documents, if you use retrieval, are often the biggest block.
+
+9
+00:00:33.200 --> 00:00:36.253
+Then the conversation so far, which grows every turn.
+
+10
+00:00:36.303 --> 00:00:42.116
+Then the latest tool result, which can be anything from one line to a whole web page.
+
+11
+00:00:42.166 --> 00:00:44.874
+All of it competes for the same window.
+
+12
+00:00:44.924 --> 00:00:48.322
+And the window is not just a limit on length.
+
+13
+00:00:48.372 --> 00:00:55.564
+Models get measurably worse at using what is in the window as it fills up, a pattern researchers call context rot.
+
+14
+00:00:55.614 --> 00:00:56.943
+More is not better.
+
+15
+00:00:56.993 --> 00:00:57.978
+Relevant is better.
+
+16
+00:00:58.728 --> 00:01:02.596
+Anthropic's engineering piece from September 2025 puts it this way.
+
+17
+00:01:02.646 --> 00:01:06.514
+Prompt engineering was about choosing the words of one instruction.
+
+18
+00:01:06.564 --> 00:01:17.484
+Context engineering is about choosing everything the model sees on a turn: instructions, tools, documents, history, results, and about keeping that set as small as the task allows.
+
+19
+00:01:17.534 --> 00:01:21.011
+Their phrase is the smallest set of high-signal tokens.
+
+20
+00:01:21.061 --> 00:01:23.753
+In practice that means decisions like these.
+
+21
+00:01:23.803 --> 00:01:28.063
+Which tools does this step need, rather than all of them.
+
+22
+00:01:28.113 --> 00:01:31.981
+Which ten lines of the document, rather than the document.
+
+23
+00:01:32.031 --> 00:01:36.683
+A summary of the last forty turns, rather than the forty turns.
+
+24
+00:01:37.433 --> 00:01:42.205
+There are four moves, and you will use all of them in lab three.
+
+25
+00:01:42.255 --> 00:01:44.616
+The first two reduce what goes in.
+
+26
+00:01:44.666 --> 00:01:48.404
+Select tools per step rather than giving every step every tool.
+
+27
+00:01:48.454 --> 00:01:55.292
+Trim tool results to what the next decision needs; a search tool should return titles and snippets, not entire pages.
+
+28
+00:01:55.342 --> 00:01:56.670
+Retrieve passages, not files.
+
+29
+00:01:56.720 --> 00:02:00.803
+The other two replace what is in the window with something smaller.
+
+30
+00:02:00.853 --> 00:02:03.558
+Compaction summarises old turns and drops the originals.
+
+31
+00:02:03.608 --> 00:02:09.069
+Notes in a file let the agent write down what matters and read it back later.
+
+32
+00:02:09.119 --> 00:02:15.613
+And a sub-task can run in a fresh context, with only its result coming back to the main loop.
+
+33
+00:02:15.663 --> 00:02:19.057
+Anthropic's long-running harness from week one used all of these.
+
+34
+00:02:19.807 --> 00:02:24.383
+When you read a trace this week, look at the context, not just the actions.
+
+35
+00:02:24.433 --> 00:02:28.084
+How many tokens went in on each turn, and which block grew?
+
+36
+00:02:28.134 --> 00:02:34.870
+Was the instruction the model ignored sitting near the top of the window, or buried in the middle of a long history?
+
+37
+00:02:34.920 --> 00:02:39.496
+Did a tool result bring in text that the model then treated as an instruction?
+
+38
+00:02:39.546 --> 00:02:42.272
+That last one is the seed of week five.
+
+39
+00:02:42.322 --> 00:02:44.123
+And what did the turn cost?
+
+40
+00:02:44.173 --> 00:02:49.057
+For most agents, input tokens are most of the bill, and the input is the context.
+
+41
+00:02:49.807 --> 00:02:52.571
+In lab three, the first task is measurement.
+
+42
+00:02:52.621 --> 00:02:57.143
+Take your agent's longest trace and chart the tokens per turn, by block.
+
+43
+00:02:57.193 --> 00:03:02.067
+Then cut the context by a third without losing a result that passed before.
+
+44
+00:03:02.117 --> 00:03:04.529
+Write down what you removed and why.
+
+45
+00:03:04.579 --> 00:03:09.805
+Most teams find the savings in tool schemas and in tool results they never trimmed.
+
+46
+00:03:09.855 --> 00:03:15.432
+The next video is about the biggest block in most windows: retrieval, and why it fails.

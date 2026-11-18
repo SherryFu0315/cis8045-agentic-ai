@@ -1,0 +1,197 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:02.586
+This is the second video for week one.
+
+2
+00:00:02.636 --> 00:00:05.222
+The first video settled what an agent is.
+
+3
+00:00:05.272 --> 00:00:06.870
+This one is about money.
+
+4
+00:00:06.920 --> 00:00:12.143
+Where are agents producing value right now, where are pilots stalling, and what separates the two?
+
+5
+00:00:12.193 --> 00:00:17.416
+You will need this for the opportunity audit your team hands in after the first class.
+
+6
+00:00:18.166 --> 00:00:20.089
+Start with the uncomfortable number.
+
+7
+00:00:20.140 --> 00:00:35.481
+In August 2025 a report from MIT's NANDA initiative, based on interviews, a survey and a review of public deployments, concluded that about 95 percent of enterprise generative AI pilots had produced no measurable effect on profit and loss.
+
+8
+00:00:35.531 --> 00:00:39.428
+Fortune's headline was blunt: 95 percent of pilots are failing.
+
+9
+00:00:39.478 --> 00:00:42.191
+Two details matter more than the headline.
+
+10
+00:00:42.241 --> 00:00:51.663
+The pilots that worked were usually bought rather than built in house, and they were pointed at one back-office process with a clear owner.
+
+11
+00:00:51.713 --> 00:01:00.346
+The ones that stalled were general-purpose tools that never learned from feedback and never fit into how the work was actually done.
+
+12
+00:01:01.096 --> 00:01:04.572
+Gartner reached a similar conclusion from the other direction.
+
+13
+00:01:04.622 --> 00:01:18.679
+In June 2025 it predicted that more than 40 percent of agentic AI projects would be cancelled by the end of 2027, and it gave three reasons: rising cost, unclear business value, and weak risk controls.
+
+14
+00:01:18.729 --> 00:01:24.948
+Hold on to those three, because they map onto the four questions from the first video.
+
+15
+00:01:24.998 --> 00:01:26.516
+Cost is question four.
+
+16
+00:01:26.566 --> 00:01:29.259
+Business value is question three, measured honestly.
+
+17
+00:01:29.309 --> 00:01:32.002
+Risk controls are questions one and two.
+
+18
+00:01:32.052 --> 00:01:34.745
+Notice what is not on the list.
+
+19
+00:01:34.795 --> 00:01:37.487
+Nobody said the models were too weak.
+
+20
+00:01:38.237 --> 00:01:43.578
+Now the good news, and it comes from a careful study rather than a vendor.
+
+21
+00:01:43.628 --> 00:01:51.124
+Brynjolfsson, Li and Raymond followed more than five thousand customer-support agents at a software company after an AI assistant was introduced.
+
+22
+00:01:51.174 --> 00:01:55.795
+Productivity, measured as issues resolved per hour, rose about 14 percent on average.
+
+23
+00:01:55.845 --> 00:01:59.388
+For the least experienced workers it rose about 34 percent.
+
+24
+00:01:59.438 --> 00:02:01.545
+The most experienced workers gained little.
+
+25
+00:02:01.595 --> 00:02:03.701
+Two things to take from this.
+
+26
+00:02:03.751 --> 00:02:13.043
+First, the clearest wins so far are in assisted work, where a person stays in the loop and the AI drafts, suggests and looks things up.
+
+27
+00:02:13.093 --> 00:02:23.105
+Second, the value went mostly to novices, which tells you where to point an agent: at work where the knowledge of the best people can be written down.
+
+28
+00:02:23.855 --> 00:02:26.143
+The capability side is moving fast.
+
+29
+00:02:26.193 --> 00:02:38.614
+In September 2025 OpenAI released GDPval, a benchmark built from 1,320 real work products across 44 occupations, each written and graded by professionals with about 14 years of experience.
+
+30
+00:02:38.664 --> 00:02:44.849
+Expert graders compared the model's output with the professional's own work without knowing which was which.
+
+31
+00:02:44.899 --> 00:02:53.033
+The best model at the time was rated as good as or better than the professional in 47.6 percent of comparisons.
+
+32
+00:02:53.083 --> 00:02:54.982
+Read the fine print, though.
+
+33
+00:02:55.032 --> 00:03:01.997
+Every GDPval task arrives with a clear brief and all the files the model needs.
+
+34
+00:03:02.047 --> 00:03:07.453
+In a company, finding the brief and the files is most of the job.
+
+35
+00:03:07.503 --> 00:03:12.519
+So GDPval tells you the writing and analysis hold up.
+
+36
+00:03:12.569 --> 00:03:17.975
+It does not tell you the agent will find its way around your organisation.
+
+37
+00:03:18.725 --> 00:03:21.624
+Put the evidence together and a pattern appears.
+
+38
+00:03:21.674 --> 00:03:33.419
+Agents fit where one user does one workflow with a bounded set of tasks, where the result can be checked, and where mistakes can be undone or a person reviews them first.
+
+39
+00:03:33.469 --> 00:03:37.474
+Customer support, document drafting, data pulls, internal help desks, first-pass reviews.
+
+40
+00:03:37.524 --> 00:03:51.112
+They fit badly where the goal is open-ended and nobody can say what done looks like, where actions are irreversible and unsupervised, and where the knowledge needed lives only in people's heads and was never written down.
+
+41
+00:03:51.862 --> 00:03:53.713
+That pattern is your first deliverable.
+
+42
+00:03:53.763 --> 00:03:57.516
+The opportunity audit asks five things about the job your team picks.
+
+43
+00:03:57.566 --> 00:04:01.319
+Who does it today, how often, and how long does it take.
+
+44
+00:04:01.369 --> 00:04:05.121
+Who the user is and what the bounded list of tasks is.
+
+45
+00:04:05.171 --> 00:04:08.290
+What done looks like, in a form you can check.
+
+46
+00:04:08.340 --> 00:04:11.459
+What goes wrong today, and how costly a mistake is.
+
+47
+00:04:11.509 --> 00:04:15.578
+And how much autonomy you would allow at first: suggest, draft, or act.
+
+48
+00:04:15.628 --> 00:04:19.064
+If you cannot answer the third question, pick a different job.
+
+49
+00:04:19.114 --> 00:04:25.401
+The next video opens up the harness, the code around the model, which is where most of this course lives.

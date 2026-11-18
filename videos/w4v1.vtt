@@ -1,0 +1,173 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:01.239
+Welcome to week four.
+
+2
+00:00:01.289 --> 00:00:04.786
+The theme: if you can't measure it, you haven't built it.
+
+3
+00:00:04.836 --> 00:00:16.392
+By the end of this week your team will have an evaluation report, and this video gives you its two foundations: a golden set, and a metric called pass^k, written pass, caret, k.
+
+4
+00:00:17.142 --> 00:00:21.748
+A golden set is a fixed list of tasks with known correct outcomes.
+
+5
+00:00:21.798 --> 00:00:32.491
+Each case has three parts: the input, a description of what done looks like, and a way to check it, by exact match, by a rule, or by a person.
+
+6
+00:00:32.541 --> 00:00:33.923
+Your project needs twenty.
+
+7
+00:00:33.973 --> 00:00:35.714
+Start with ten this week.
+
+8
+00:00:35.764 --> 00:00:37.504
+Where do cases come from?
+
+9
+00:00:37.554 --> 00:00:38.578
+Real requests, anonymised.
+
+10
+00:00:38.628 --> 00:00:41.443
+The failures you have already seen in traces.
+
+11
+00:00:41.493 --> 00:00:47.889
+And edge cases: an empty input, a question with two valid answers, a request the agent should refuse.
+
+12
+00:00:47.939 --> 00:00:51.470
+A golden set made only of easy cases measures nothing.
+
+13
+00:00:52.220 --> 00:00:54.711
+Why not just run each case once?
+
+14
+00:00:54.761 --> 00:00:56.526
+Because agents are not deterministic.
+
+15
+00:00:56.576 --> 00:01:00.157
+The same input can take a different path next time.
+
+16
+00:01:00.207 --> 00:01:07.417
+The clearest demonstration is τ-bench, from June 2024, a benchmark of customer-service tasks with a simulated user and real tools.
+
+17
+00:01:07.467 --> 00:01:13.225
+The best agents of the time passed fewer than half the tasks on a single run.
+
+18
+00:01:13.275 --> 00:01:20.123
+Asked to pass the same task eight times in a row, they managed it on fewer than a quarter.
+
+19
+00:01:20.173 --> 00:01:24.479
+The paper introduced pass^k to make that gap visible.
+
+20
+00:01:25.229 --> 00:01:26.445
+Here is the arithmetic.
+
+21
+00:01:26.495 --> 00:01:29.926
+Suppose an agent passes a task 90 percent of the time.
+
+22
+00:01:29.975 --> 00:01:34.356
+Pass to the k is the chance it passes k runs in a row.
+
+23
+00:01:34.406 --> 00:01:35.938
+For two runs, 81 percent.
+
+24
+00:01:35.988 --> 00:01:37.204
+For five, 59 percent.
+
+25
+00:01:37.254 --> 00:01:38.469
+For eight, 43 percent.
+
+26
+00:01:38.519 --> 00:01:45.748
+A customer who uses the agent once a day for a working week sees a clean week less than six times in ten.
+
+27
+00:01:45.798 --> 00:01:50.494
+That is the number a manager needs, and it is the number a demo hides.
+
+28
+00:01:50.544 --> 00:02:02.203
+So for every case in your golden set you run the agent k times, at least three, and you report two numbers: the share of runs that passed, and the share of cases that passed every time.
+
+29
+00:02:02.953 --> 00:02:04.581
+What counts as a pass?
+
+30
+00:02:04.631 --> 00:02:08.944
+Anthropic's January 2026 guide to agent evals makes a distinction you should copy.
+
+31
+00:02:08.994 --> 00:02:12.972
+Grade the outcome: did the state of the world end up right?
+
+32
+00:02:13.022 --> 00:02:18.342
+The refund was issued for the right amount; the file exists and contains the right table.
+
+33
+00:02:18.392 --> 00:02:24.048
+And grade the path when it matters: which tools were called, in what order, with what arguments.
+
+34
+00:02:24.098 --> 00:02:30.760
+An agent that reached the right answer by calling a tool it was not supposed to call did not pass.
+
+35
+00:02:30.810 --> 00:02:37.473
+The trace is where you check the path, which is why every case in your harness should save its trace.
+
+36
+00:02:38.223 --> 00:02:40.934
+So here is the skeleton of your evaluation report.
+
+37
+00:02:40.984 --> 00:02:44.309
+The golden set itself, twenty cases with the check for each.
+
+38
+00:02:44.359 --> 00:02:47.070
+The number of runs per case, at least three.
+
+39
+00:02:47.120 --> 00:02:51.672
+The pass rate per run and pass^k per case, side by side.
+
+40
+00:02:51.722 --> 00:02:55.660
+The gap between the two numbers tells you how consistent the agent is.
+
+41
+00:02:55.710 --> 00:03:00.262
+And the list of failed cases with a link to the trace of each failure.
+
+42
+00:03:00.312 --> 00:03:03.637
+The next video is about what to do with those failures.
+
+43
+00:03:03.687 --> 00:03:09.160
+It is called error analysis, and it is the most useful hour your team will spend this term.

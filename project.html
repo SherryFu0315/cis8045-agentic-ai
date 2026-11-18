@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Project · CIS 8045</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<nav class="top"><div class="wrap"><a class="brand" href="index.html">CIS 8045 · Agentic AI</a><a href="index.html#schedule">Schedule</a><a class="here" href="project.html">Project</a><a href="logistics.html">Logistics</a><a href="videos.html">Videos</a></div></nav>
+<main class="wrap">
+<h1>Project</h1>
+<p class="meta">One agent service per team, built over seven weeks and defended on the last day.</p>
+
+<h2>What you are building</h2>
+<p>Teams of four take one bounded job that a person does today and build an agent service that does it: one user, one workflow, a limited set of tasks, and a human in charge of anything irreversible. The demo is the smallest part of the work. The grade rests on the package a company would need before letting the agent near real work.</p>
+<p>Where a sponsor brief is available, the team works from it. Otherwise the team brings a problem from a current or former workplace, with data it is allowed to use: public, synthetic, or de-identified with the owner's permission. No team connects to a production system.</p>
+
+<h2>Deliverables</h2>
+<ol>
+<li>A served agent. On the code path, an endpoint built with LangGraph. On the no-code path, an agent built in Fleet, LangSmith's no-code builder, that another application calls. Either way it uses at least two tools and runs on free tiers.</li>
+<li>An evaluation report. A golden set of at least twenty cases, pass^k results, an error analysis of the failures, and a judge calibrated against human labels.</li>
+<li>A security review. The injection surface, a lethal-trifecta check, the approval gates, and what the logs would show after an incident.</li>
+<li>An operations sheet. Cost per task, latency, what breaks, and who is responsible when it does.</li>
+<li>A decision memo. Two pages for an executive: deploy, extend the pilot, or stop, with the numbers behind the recommendation.</li>
+<li>The final presentation. Ten minutes of demo and questions in front of a panel that plays the buyer.</li>
+<li>An individual reflection with an AI-use disclosure.</li>
+</ol>
+
+<h2>Roles</h2>
+<p>Each team assigns four roles and keeps them for the term: builder, evaluator, red team and governance, and product owner. The builder writes the code or configures Fleet. The evaluator owns the golden set and the error analysis. Red team and governance owns the security review and the approval design. The product owner owns the brief, the memo and the final presentation. Everyone reads traces and everyone writes.</p>
+
+<h2>Two build paths</h2>
+<p>The code path uses Python, LangGraph and LangSmith. Coding agents such as Claude Code or Codex are allowed, and the builder should expect a short oral check in which I pick a trace and ask what the code did and why. The no-code path uses LangSmith Fleet plus the small bridge application from CIS 4394, which lets another program call a Fleet agent. Both paths produce the same seven deliverables and are graded on the same rubric.</p>
+
+<h2>Milestones</h2>
+<table class="plain">
+<thead><tr><th>After week</th><th>Deliverable</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Team roster and opportunity audit: the job, the user, the tasks, and how much autonomy the agent should have.</td></tr>
+<tr><td>2</td><td>Proposal: architecture one-pager, tool list, autonomy level, and the data pack.</td></tr>
+<tr><td>3</td><td>Knowledge slice working, with a retrieval report.</td></tr>
+<tr><td>4</td><td>Evaluation report, first version.</td></tr>
+<tr><td>5</td><td>Security review. Midpoint demo in class.</td></tr>
+<tr><td>6</td><td>Operations sheet and a draft of the decision memo.</td></tr>
+<tr><td>7</td><td>Final build and final report.</td></tr>
+<tr><td>8</td><td>Final presentations. Individual reflection.</td></tr>
+</tbody>
+</table>
+
+<h2>How it is graded</h2>
+<p>The project is 35 percent of the course grade: served agent 10, evaluation report 10, security review 5, decision memo 5, presentation 5. The weekly one-page deliverables are graded separately and add up to 25 percent. Every component is read against the four questions on the <a href="index.html#questions">course page</a> and against six requirements every project must meet: free tiers only, at least two tools, a golden set of at least twenty cases with pass^k results, a security review, an honest list of limitations, and a memo an executive could act on.</p>
+</main>
+<footer><div class="wrap">CIS 8045 Agentic AI · J. Mack Robinson College of Business, Georgia State University · Dr. Xinyu Fu</div></footer>
+</body>
+</html>

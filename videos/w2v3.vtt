@@ -1,0 +1,157 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:01.513
+Last video for week two.
+
+2
+00:00:01.563 --> 00:00:04.954
+We have the loop, the harness, tools and MCP.
+
+3
+00:00:05.004 --> 00:00:08.395
+The question now is how much the model gets to decide.
+
+4
+00:00:08.445 --> 00:00:16.840
+We treat that as a dial, not a switch, and the position of the dial is a design choice your team will write down in the proposal.
+
+5
+00:00:17.590 --> 00:00:18.902
+Here is the dial.
+
+6
+00:00:18.952 --> 00:00:26.049
+At the left, the model suggests and a person acts: think of a draft reply the person must copy and send.
+
+7
+00:00:26.099 --> 00:00:31.495
+One step right, the model drafts and the person approves every output before it goes anywhere.
+
+8
+00:00:31.545 --> 00:00:41.025
+In the middle, the model acts on its own for routine steps, and a gate stops it before anything risky or irreversible, where a person must say yes.
+
+9
+00:00:41.075 --> 00:00:46.811
+Further right, the model acts and reports, and a person reviews afterwards, by sampling or by exception.
+
+10
+00:00:46.861 --> 00:00:51.917
+At the far right, the agent runs unattended and nobody looks unless an alert fires.
+
+11
+00:00:51.967 --> 00:00:56.341
+The same model and the same tools can sit anywhere on this dial.
+
+12
+00:00:56.391 --> 00:01:00.766
+What moves it is harness design: who acts, and when a person looks.
+
+13
+00:01:01.516 --> 00:01:03.570
+Recall the distinction from week one.
+
+14
+00:01:03.620 --> 00:01:08.128
+A workflow fixes the steps in code and the model fills each step.
+
+15
+00:01:08.178 --> 00:01:15.141
+Its cost and behaviour are predictable and it is easy to test, because the same input follows the same path.
+
+16
+00:01:15.191 --> 00:01:17.946
+An agent lets the model choose the steps.
+
+17
+00:01:17.996 --> 00:01:26.011
+It handles cases nobody wrote down, and it is harder to test, because the same input can take different paths on different runs.
+
+18
+00:01:26.061 --> 00:01:30.569
+Workflows naturally sit toward the left of the dial, agents toward the right.
+
+19
+00:01:30.619 --> 00:01:37.231
+Most good systems are a workflow with an agent inside it, at the one step where judgement is needed.
+
+20
+00:01:37.981 --> 00:01:42.943
+An approval gate is a specific piece of harness code, so let us be concrete.
+
+21
+00:01:42.993 --> 00:01:48.957
+Before a named tool call, say send email or issue refund, the loop pauses and saves its state.
+
+22
+00:01:49.007 --> 00:01:54.971
+A person sees the proposed action with its arguments and the reasons, and approves, edits or rejects it.
+
+23
+00:01:55.021 --> 00:01:58.312
+The loop resumes from the saved state carrying the decision.
+
+24
+00:01:58.362 --> 00:02:02.990
+And the pause itself goes into the trace, with who approved what and when.
+
+25
+00:02:03.040 --> 00:02:05.997
+In LangGraph this is an interrupt on a node.
+
+26
+00:02:06.047 --> 00:02:09.339
+In Fleet it is an approval setting on a tool.
+
+27
+00:02:09.389 --> 00:02:17.024
+In both cases the important part is that the gate lives in the harness, where the model cannot talk its way past it.
+
+28
+00:02:17.774 --> 00:02:18.979
+How do you choose?
+
+29
+00:02:19.029 --> 00:02:29.966
+Move left when a mistake is costly or irreversible, when you have no evidence yet of how often the agent fails, and when the user is not the person who gets hurt by a mistake.
+
+30
+00:02:30.016 --> 00:02:40.325
+Move right when errors are cheap and visible, when you have measured the failure rate and can live with it, and when reviewing the agent's work is genuinely faster than doing the task.
+
+31
+00:02:40.375 --> 00:02:44.092
+Notice that two of the three conditions on the right require measurement.
+
+32
+00:02:44.142 --> 00:02:45.976
+That is why week four exists.
+
+33
+00:02:46.026 --> 00:02:49.115
+You cannot earn a position on the dial without numbers.
+
+34
+00:02:49.865 --> 00:02:57.431
+In the proposal your team submits after this week, state the dial position for each tool rather than for the agent as a whole.
+
+35
+00:02:57.481 --> 00:03:01.239
+Reading the calendar can be unattended while sending the invitation is gated.
+
+36
+00:03:01.289 --> 00:03:08.537
+Name the gate: which action pauses, who approves, and how quickly they must answer, because a gate nobody answers is a stuck service.
+
+37
+00:03:08.587 --> 00:03:12.663
+And say what evidence would let you move one step to the right.
+
+38
+00:03:12.713 --> 00:03:16.153
+That sentence is the bridge to the rest of the course.
+
+39
+00:03:16.203 --> 00:03:21.548
+Next week: context, which is what the model sees when it decides, and how to control it.

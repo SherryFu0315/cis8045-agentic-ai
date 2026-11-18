@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CIS 8045: Agentic AI</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<nav class="top"><div class="wrap"><a class="brand" href="index.html">CIS 8045 · Agentic AI</a><a class="here" href="index.html#schedule">Schedule</a><a href="project.html">Project</a><a href="logistics.html">Logistics</a><a href="videos.html">Videos</a></div></nav>
+<main class="wrap">
+<h1>CIS 8045: Agentic AI</h1>
+<p class="meta">Georgia State University · J. Mack Robinson College of Business · Spring 2027, Mini-Mester 1 · Dr. Xinyu Fu</p>
+
+<h2 id="about">About the course</h2>
+<p>Most organizations can get an AI agent to work once. Far fewer can get one to work on the thousandth request, inside a budget, with a named person accountable when it goes wrong. This course is about what it takes to get from the first to the second.</p>
+<p>You will build an agent in the first week. The remaining weeks turn it into something a company could run. You will give it tools and limits, ground it in the right documents, measure whether it does the job, attack it before anyone else does, and work out what it costs per task and who owns it. Each team finishes with a working service, an evaluation report, a security review and a two-page decision memo written for an executive who has to say yes or no.</p>
+<p>The course is for M.S. students who have taken at least one earlier PATH course. Some of you write Python and some of you do not. There is a code path and a no-code path, and they lead to the same deliverables. Every member of a team reads traces and writes.</p>
+
+<h2 id="questions">Four questions</h2>
+<p>Every deliverable is graded against the same four questions. They appear in the first video, and they come back on the last day, when a panel decides whether your service should go live.</p>
+<ol>
+<li>What tools may the loop call?</li>
+<li>What is it allowed to touch?</li>
+<li>How do we know it did the right thing, reliably, and not once in a demo?</li>
+<li>What does it cost, in money and in people's time, to find out?</li>
+</ol>
+
+<h2 id="week">How a week works</h2>
+<dl class="how">
+<dt>Before class</dt><dd>Two or three short videos (two to eight minutes each), one reading, and a five-question quiz on the videos. The <a href="videos.html">videos page</a> has the scripts and captions.</dd>
+<dt>In class</dt><dd>We meet one evening a week, 5:30 to 9:45. The evening opens with a debrief on the videos and the reading, then one team presents its trace of the week. The lab follows, with a code path and a no-code path. After the break, teams work on that week's deliverable in the studio while I sit with two teams at a time.</dd>
+<dt>After class</dt><dd>Each team submits a one-page deliverable before the next session. The <a href="project.html">project page</a> lists them.</dd>
+</dl>
+
+<h2 id="schedule">Schedule</h2>
+<p>Eight sessions, one theme each. Slides and extra readings are linked as they are released. Dates and the room will be added once the section is posted. The order will not change.</p>
+<table class="sched">
+<thead><tr><th>Week</th><th>Theme</th><th>What we cover</th><th>Before class</th><th>In class</th><th>Due before next session</th></tr></thead>
+<tbody>
+<tr><td class="wk" data-l="Week">1</td><td class="theme" data-l="Theme" data-w="1">The loop is the product</td><td data-l="What we cover">What an agent is. The loop and the harness around it. Degrees of autonomy. Where agents create value today and where pilots stall.</td><td data-l="Before class">Videos 1.1 to 1.3. Reading: Anthropic, <a href="https://www.anthropic.com/engineering/building-effective-agents">Building effective agents</a>; OpenAI, <a href="https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf">A practical guide to building agents</a>.</td><td data-l="In class">Lab 1, First loop. Run a sixty-line agent loop with two tools, or the same agent in Fleet (LangSmith's no-code agent builder), and annotate one trace. Opportunity audit.</td><td data-l="Due before next session">Team roster and opportunity audit.</td></tr>
+<tr><td class="wk" data-l="Week">2</td><td class="theme" data-l="Theme" data-w="2">Capability is designed, not prompted</td><td data-l="What we cover">Tool schemas and function calling. MCP. Agent skills. The harness as a design object: state, stop conditions, approval gates. Exposing an agent so other software can call it.</td><td data-l="Before class">Videos 2.1 to 2.3. Reading: Anthropic, <a href="https://www.anthropic.com/engineering/writing-tools-for-agents">Writing effective tools for agents</a>.</td><td data-l="In class">Lab 2, Tools and harness. Grow the loop into a harness and expose it as an endpoint, or configure tools and approvals in Fleet and call it from a small app. Add one MCP server.</td><td data-l="Due before next session">Proposal: architecture one-pager, tool list, autonomy level, data pack.</td></tr>
+<tr><td class="wk" data-l="Week">3</td><td class="theme" data-l="Theme" data-w="3">Context is the interface</td><td data-l="What we cover">Context engineering. Retrieval: chunking, embeddings, recall@k, citations, and when the agent should say it cannot answer. Session memory and long-term memory. Instructions and skills.</td><td data-l="Before class">Videos 3.1 to 3.3. Reading: Anthropic, <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Effective context engineering for AI agents</a>; Google, <a href="https://www.kaggle.com/learn-guide/5-day-agents">Context Engineering: Sessions and Memory</a> (Day 3 whitepaper).</td><td data-l="In class">Lab 3, Context. Retrieval over your team's corpus with citations, recall@k on ten questions, a memory design.</td><td data-l="Due before next session">Knowledge slice and retrieval report.</td></tr>
+<tr><td class="wk" data-l="Week">4</td><td class="theme" data-l="Theme" data-w="4">If you can't measure it, you haven't built it</td><td data-l="What we cover">Golden sets. pass^k, the chance that a task passes k runs in a row. Error analysis. LLM-as-judge and how to calibrate it against human labels. Reading traces. Comparing harnesses on the same task.</td><td data-l="Before class">Videos 4.1 to 4.3. Reading: Anthropic, <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Demystifying evals for AI agents</a>; Yao et al., <a href="https://arxiv.org/abs/2406.12045">τ-bench</a>.</td><td data-l="In class">Lab 4, Evaluate. Ten golden cases, pass^k, error analysis on twenty traces, judge calibration. The GDPx exercise: public transcripts of four coding harnesses on one task.</td><td data-l="Due before next session">Evaluation report, first version.</td></tr>
+<tr><td class="wk" data-l="Week">5</td><td class="theme" data-l="Theme" data-w="5">Autonomy is a permission, not a feature</td><td data-l="What we cover">Prompt injection. The lethal trifecta. The OWASP top ten for agentic applications. Sandboxes and credentials. Approval gates and audit logs. Who is accountable under NIST AI RMF and the EU AI Act.</td><td data-l="Before class">Videos 5.1 to 5.3. Reading: Willison, <a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/">The lethal trifecta</a>; OWASP, <a href="https://genai.owasp.org/">Top 10 for Agentic Applications</a>.</td><td data-l="In class">Lab 5, Red team. Attack your own service, run a rogue-agent tabletop, design the approval gates.</td><td data-l="Due before next session">Security review. Midpoint demo in class.</td></tr>
+<tr><td class="wk" data-l="Week">6</td><td class="theme" data-l="Theme" data-w="6">A service has an owner, a cost per task and an SLA</td><td data-l="What we cover">Observability and regression. Cost per task, latency, routing and caching. Service-level agreements. Build, buy or wait, and platform risk. Return on investment. Human-agent teams and how work changes around an agent.</td><td data-l="Before class">Videos 6.1 to 6.3. Reading: Google, <a href="https://www.kaggle.com/learn-guide/5-day-agents">Prototype to Production</a> (Day 5 whitepaper); Brynjolfsson, Li and Raymond, <a href="https://www.nber.org/papers/w31161">Generative AI at Work</a>.</td><td data-l="In class">Lab 6, Operate. A dashboard, cost per task from traces, a regression run after a change. Case discussion on company briefs.</td><td data-l="Due before next session">Operations sheet and decision memo draft.</td></tr>
+<tr><td class="wk" data-l="Week">7</td><td class="theme" data-l="Theme" data-w="7">More agents, more autonomy, more ways to fail</td><td data-l="What we cover">Multi-agent patterns and when not to use them. Long-running harnesses. Coding agents and computer-use agents. Failure taxonomies. What benchmarks say about the limits.</td><td data-l="Before class">Videos 7.1 to 7.3. Reading: Anthropic, <a href="https://www.anthropic.com/engineering/multi-agent-research-system">How we built our multi-agent research system</a>; Cemri et al., <a href="https://arxiv.org/abs/2503.13657">Why do multi-agent LLM systems fail?</a></td><td data-l="In class">Lab 7, Clinic. Peer review of another team's service against the rubric, then final fixes.</td><td data-l="Due before next session">Final build and report.</td></tr>
+<tr><td class="wk" data-l="Week">8</td><td class="theme" data-l="Theme" data-w="8">Would you sign off on this?</td><td data-l="What we cover">Final presentations. Each team answers the four questions about its own service.</td><td data-l="Before class">Prepare the demo.</td><td data-l="In class">Ten minutes per team, demo and questions. The panel plays the buyer. Peer scores.</td><td data-l="Due before next session">Individual reflection and AI-use disclosure.</td></tr>
+</tbody>
+</table>
+
+<h2 id="staff">Instructor</h2>
+<p><a href="https://xinyufu.org">Dr. Xinyu Fu</a>, Department of Computer Information Systems. Office hours after class and by appointment. Course questions go through iCollege.</p>
+</main>
+<footer><div class="wrap">CIS 8045 Agentic AI · J. Mack Robinson College of Business, Georgia State University · Dr. Xinyu Fu</div></footer>
+</body>
+</html>

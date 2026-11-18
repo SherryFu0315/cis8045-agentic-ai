@@ -1,0 +1,125 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:09.274
+This video is about the agents at the frontier right now: agents that run for hours, agents that write software, and agents that operate a computer through the screen.
+
+2
+00:00:09.324 --> 00:00:12.490
+You have used at least one of them this term.
+
+3
+00:00:12.540 --> 00:00:16.670
+The point here is what they change for everything this course has taught.
+
+4
+00:00:17.420 --> 00:00:18.835
+Start with long-running agents.
+
+5
+00:00:18.885 --> 00:00:30.560
+A task that takes a model hours or days cannot fit one context window, so the work is split into sessions, and each session starts with no memory of the last one.
+
+6
+00:00:30.610 --> 00:00:37.155
+Anthropic's November 2025 write-up of harnesses for this kind of agent is a good model of the engineering.
+
+7
+00:00:37.205 --> 00:00:53.277
+Continuity lives in the harness: a progress file the agent reads first and updates last, a task list with items marked done, clean checkpoints at the end of each session, and tests that define what done means, so the agent cannot simply declare victory.
+
+8
+00:00:53.327 --> 00:01:00.238
+Notice that all of it is week one's harness and week four's evaluation, applied at a longer time scale.
+
+9
+00:01:00.988 --> 00:01:06.215
+Coding agents are agents whose tools are a file system, a shell and a test runner.
+
+10
+00:01:06.265 --> 00:01:13.800
+You are allowed to use them in this course, and the oral trace check exists so that you can explain what they did.
+
+11
+00:01:13.850 --> 00:01:17.097
+They work unusually well, and it is worth asking why.
+
+12
+00:01:17.147 --> 00:01:20.725
+Code has tests, so the agent can check its own work.
+
+13
+00:01:20.775 --> 00:01:24.353
+Errors are cheap inside a sandbox, and version control undoes mistakes.
+
+14
+00:01:24.403 --> 00:01:26.991
+Most business domains have none of those advantages.
+
+15
+00:01:27.041 --> 00:01:32.597
+There is no test suite for a customer email, and there is no undo for a payment.
+
+16
+00:01:32.647 --> 00:01:40.842
+When someone shows you a coding-agent result and promises the same for your domain, ask what plays the role of the test and the undo.
+
+17
+00:01:41.591 --> 00:01:45.751
+Computer-use agents look at the screen, move the mouse and type.
+
+18
+00:01:45.801 --> 00:01:54.169
+They matter because much of the work in organisations happens in systems with no API: legacy applications and vendor portals.
+
+19
+00:01:54.219 --> 00:02:04.500
+They are slow and expensive, since every step costs a screenshot's worth of tokens, and every screen is untrusted content, so the lethal trifecta applies in full.
+
+20
+00:02:04.550 --> 00:02:09.092
+Pass rates on long tasks are still well below human, and improving.
+
+21
+00:02:09.142 --> 00:02:14.831
+For a capstone, a computer-use step belongs behind a gate, if it belongs at all.
+
+22
+00:02:15.581 --> 00:02:16.937
+What stays the same?
+
+23
+00:02:16.987 --> 00:02:18.343
+Everything on this list.
+
+24
+00:02:18.393 --> 00:02:20.803
+The loop, the harness and the trace.
+
+25
+00:02:20.853 --> 00:02:24.669
+Golden sets and pass^k, now over longer tasks.
+
+26
+00:02:24.719 --> 00:02:27.130
+The trifecta, now with more untrusted input.
+
+27
+00:02:27.180 --> 00:02:29.941
+Cost per task, now larger and more variable.
+
+28
+00:02:29.991 --> 00:02:32.050
+And a person who owns it.
+
+29
+00:02:32.100 --> 00:02:34.862
+The frontier moves the scale of each question.
+
+30
+00:02:34.912 --> 00:02:36.971
+It has not changed the questions.
+
+31
+00:02:37.021 --> 00:02:43.297
+The last video asks how far the capability has actually come, using the benchmarks rather than the demos.

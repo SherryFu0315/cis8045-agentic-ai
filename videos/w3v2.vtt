@@ -1,0 +1,173 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.769
+This video is about retrieval, usually called RAG, retrieval-augmented generation.
+
+2
+00:00:03.819 --> 00:00:10.262
+Your agent will need facts that are not in the model: your team's documents, policies, product data.
+
+3
+00:00:10.312 --> 00:00:13.317
+Retrieval is how they get into the context.
+
+4
+00:00:13.367 --> 00:00:20.574
+It is also where many agents quietly go wrong, so the second half of the video is about failure.
+
+5
+00:00:21.324 --> 00:00:22.645
+Here is the pipeline.
+
+6
+00:00:22.695 --> 00:00:33.960
+Before anyone asks a question, you take the documents, split them into chunks, turn each chunk into an embedding, a list of numbers that captures its meaning, and store those in an index.
+
+7
+00:00:34.010 --> 00:00:42.531
+At question time, you embed the question the same way, find the k chunks whose embeddings are closest, and put those chunks into the context.
+
+8
+00:00:42.581 --> 00:00:46.989
+The model answers from them, ideally citing which chunk each claim came from.
+
+9
+00:00:47.039 --> 00:00:48.360
+Four places to fail.
+
+10
+00:00:48.410 --> 00:00:53.160
+Chunking: the answer was split across two chunks and neither one makes sense alone.
+
+11
+00:00:53.210 --> 00:00:57.618
+Retrieval: the right chunk exists, but it was not in the top k.
+
+12
+00:00:57.668 --> 00:01:03.103
+Reading: the right chunk was in the context, and the model ignored it or misread it.
+
+13
+00:01:03.153 --> 00:01:06.532
+Refusing: nothing relevant was retrieved, and the model answered anyway.
+
+14
+00:01:07.282 --> 00:01:12.613
+The most useful habit is to measure retrieval on its own, before you look at the answers.
+
+15
+00:01:12.663 --> 00:01:13.563
+Write test questions.
+
+16
+00:01:13.613 --> 00:01:16.728
+For each one, mark which chunks actually contain the answer.
+
+17
+00:01:16.778 --> 00:01:24.008
+Then compute recall at k: the share of questions for which at least one of those chunks is in the top k results.
+
+18
+00:01:24.058 --> 00:01:25.907
+Ten questions will get you started.
+
+19
+00:01:25.957 --> 00:01:26.857
+Fifty is better.
+
+20
+00:01:26.907 --> 00:01:32.554
+If recall at k is 60 percent, no prompt will make the answers more than 60 percent right.
+
+21
+00:01:32.604 --> 00:01:34.453
+Only then look at the answers.
+
+22
+00:01:34.503 --> 00:01:36.669
+Did the model use the retrieved text?
+
+23
+00:01:36.719 --> 00:01:41.100
+Does every claim have a citation, and does the cited chunk actually support it?
+
+24
+00:01:41.150 --> 00:01:45.531
+And when nothing relevant came back, did the model say it could not answer?
+
+25
+00:01:45.581 --> 00:01:49.013
+That last behaviour is the one you have to design for.
+
+26
+00:01:49.063 --> 00:01:50.912
+Models do not refuse by default.
+
+27
+00:01:51.662 --> 00:01:53.395
+Some fixes work almost everywhere.
+
+28
+00:01:53.445 --> 00:02:02.668
+Chunk by the document's structure rather than by a fixed number of characters, so a section, a table, or a question and its answer stay together.
+
+29
+00:02:02.718 --> 00:02:08.374
+Add metadata and filter on it, so a question about one product searches that product's documents.
+
+30
+00:02:08.424 --> 00:02:15.507
+Combine keyword search with embedding search; product codes, names and error numbers are keywords, and embeddings are bad at them.
+
+31
+00:02:15.557 --> 00:02:21.926
+Rerank a larger candidate set, say the top twenty, with a second model that picks the top five.
+
+32
+00:02:21.976 --> 00:02:30.129
+And keep the source and the location with every chunk, so that a citation can point to a page a person can open.
+
+33
+00:02:30.879 --> 00:02:31.887
+One more distinction.
+
+34
+00:02:31.937 --> 00:02:35.415
+In a chatbot, retrieval happens once, before the model speaks.
+
+35
+00:02:35.465 --> 00:02:37.884
+In an agent, search is a tool.
+
+36
+00:02:37.934 --> 00:02:45.997
+The model decides when to call it, it can rewrite the query and search again, and it can stop when it has enough.
+
+37
+00:02:46.047 --> 00:02:53.405
+That is more powerful and it is harder to evaluate, because the same question can produce different searches on different runs.
+
+38
+00:02:53.455 --> 00:03:00.812
+It also means every search result lands in the context and costs tokens, which is why last video's trimming matters here.
+
+39
+00:03:01.562 --> 00:03:10.261
+In the second part of lab three you build retrieval over your team's corpus with citations, write ten test questions, and report recall at k.
+
+40
+00:03:10.311 --> 00:03:13.760
+Include one question whose answer is not in the corpus.
+
+41
+00:03:13.810 --> 00:03:17.610
+The right answer to that question is: I cannot find that.
+
+42
+00:03:17.660 --> 00:03:22.859
+If your agent answers it anyway, you have found your first failure to write up.
+
+43
+00:03:22.909 --> 00:03:30.558
+Next video: memory, which is what the agent keeps between runs, and skills, which are instructions it loads when it needs them.

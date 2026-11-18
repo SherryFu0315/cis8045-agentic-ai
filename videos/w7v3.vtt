@@ -1,0 +1,157 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:02.086
+The last video of the course.
+
+2
+00:00:02.136 --> 00:00:03.867
+We end with one question.
+
+3
+00:00:03.917 --> 00:00:07.784
+How capable are agents, really, and how fast is that changing?
+
+4
+00:00:07.834 --> 00:00:15.262
+We will answer it with benchmarks, read carefully, because benchmark literacy is a skill the people around you will not have.
+
+5
+00:00:16.012 --> 00:00:17.407
+Start with the trend.
+
+6
+00:00:17.457 --> 00:00:34.036
+In March 2025 the research group METR published a way to measure agent capability that is more useful than a score: the length of a task, measured in how long it takes a skilled human, that an agent can complete with 50 percent reliability.
+
+7
+00:00:34.086 --> 00:00:41.989
+They found that length doubling roughly every seven months since 2019, with signs of a faster pace in the most recent models.
+
+8
+00:00:42.039 --> 00:00:44.158
+Read the fine print, as always.
+
+9
+00:00:44.208 --> 00:00:49.581
+These are software tasks, at 50 percent reliability, and the trend line is a forecast.
+
+10
+00:00:49.631 --> 00:00:51.027
+Forecasts can be wrong.
+
+11
+00:00:51.077 --> 00:00:58.979
+But as a way of thinking about capability, task length at a stated reliability is exactly the frame this course has used.
+
+12
+00:00:59.730 --> 00:01:01.983
+Benchmarks make three kinds of claim.
+
+13
+00:01:02.033 --> 00:01:07.357
+Tasks with tests, in software, maths and puzzles, where a program checks the answer.
+
+14
+00:01:07.407 --> 00:01:11.964
+Scores climb fastest here, and these are the numbers in launch announcements.
+
+15
+00:01:12.014 --> 00:01:22.329
+Expert-graded work, such as GDPval, where professionals grade real work products blind; the best models are near parity, on tasks that arrive fully specified.
+
+16
+00:01:22.379 --> 00:01:28.471
+And interactive tasks, such as τ-bench, with a simulated user, real tools and rules to follow.
+
+17
+00:01:28.521 --> 00:01:33.077
+Scores are lowest here, and these tasks look most like your project.
+
+18
+00:01:33.127 --> 00:01:36.916
+When someone quotes a benchmark, ask which kind it is.
+
+19
+00:01:37.666 --> 00:01:40.678
+You met GDPx in week four.
+
+20
+00:01:40.728 --> 00:01:49.863
+Partner firms wrote 206 tasks from their own work and graded the results, and the models ran with their own harnesses, as they would for a customer.
+
+21
+00:01:49.913 --> 00:01:53.265
+The best score in November 2026 was about 16 percent.
+
+22
+00:01:53.315 --> 00:01:58.368
+Compare that with near parity on GDPval, and the difference is instructive.
+
+23
+00:01:58.418 --> 00:02:03.131
+GDPval hands the model a complete brief and all the files.
+
+24
+00:02:03.181 --> 00:02:09.934
+GDPx tasks look more like a job: messy inputs, judgement calls, things the brief did not say.
+
+25
+00:02:09.984 --> 00:02:19.120
+The gap between those two numbers is the gap this course has been about, and it is where the harness, the evaluation and the people come in.
+
+26
+00:02:19.870 --> 00:02:22.818
+So here is the checklist for reading any benchmark claim.
+
+27
+00:02:22.868 --> 00:02:25.217
+Who wrote the tasks and who graded them?
+
+28
+00:02:25.267 --> 00:02:28.515
+Is the score from one run, or pass^k?
+
+29
+00:02:28.565 --> 00:02:33.013
+Did the task arrive fully specified, or did the agent have to find things out?
+
+30
+00:02:33.063 --> 00:02:37.211
+Which harness was used, and could the model have seen the test during training?
+
+31
+00:02:37.261 --> 00:02:45.307
+And the question that matters most to a decision memo: what would this task look like inside your organisation, with your data, your systems and your users?
+
+32
+00:02:46.057 --> 00:02:47.758
+Next session is the last one.
+
+33
+00:02:47.808 --> 00:02:55.053
+Ten minutes per team, in front of a panel that plays the buyer, and the panel will ask the four questions from the first video.
+
+34
+00:02:55.103 --> 00:02:56.803
+What tools may the loop call?
+
+35
+00:02:56.853 --> 00:02:58.554
+What is it allowed to touch?
+
+36
+00:02:58.604 --> 00:03:03.222
+How do we know it did the right thing, reliably, and not once in a demo?
+
+37
+00:03:03.272 --> 00:03:07.307
+And what does it cost, in money and in people's time, to find out?
+
+38
+00:03:07.357 --> 00:03:14.602
+If your team can answer those four about your own service, with numbers and traces, you have done what this course set out to teach.
+
+39
+00:03:14.652 --> 00:03:18.103
+Thank you for taking it, and see you at the final presentations.

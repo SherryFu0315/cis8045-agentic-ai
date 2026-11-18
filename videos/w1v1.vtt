@@ -1,0 +1,149 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:02.894
+Welcome to CIS 8045.
+
+2
+00:00:02.944 --> 00:00:06.492
+This is the first of three short videos for week one.
+
+3
+00:00:06.542 --> 00:00:15.326
+In about two minutes we will settle what the word agent means in this course, because almost every design decision later in the semester depends on it.
+
+4
+00:00:16.076 --> 00:00:18.190
+Start with the thing you already know.
+
+5
+00:00:18.240 --> 00:00:20.973
+A language model takes a prompt and returns text.
+
+6
+00:00:21.023 --> 00:00:22.519
+One call, one answer, done.
+
+7
+00:00:22.569 --> 00:00:26.229
+A person reads the answer and decides what to do with it.
+
+8
+00:00:26.279 --> 00:00:31.486
+An agent wraps that same model in a loop, and gives it a goal and some tools.
+
+9
+00:00:31.536 --> 00:00:38.907
+It can look things up, run code, or send a request, and then it reads what came back before deciding what to do next.
+
+10
+00:00:38.957 --> 00:00:42.618
+It stops when the job is done, or when it gives up.
+
+11
+00:00:43.368 --> 00:00:44.751
+Here is the loop.
+
+12
+00:00:44.801 --> 00:00:48.336
+The model reads the goal and the history so far.
+
+13
+00:00:48.386 --> 00:00:52.280
+It picks a tool, or it decides that it is finished.
+
+14
+00:00:52.330 --> 00:01:00.166
+The tool runs somewhere outside the model, in a database, a browser, a spreadsheet, and the result comes back into the context.
+
+15
+00:01:00.216 --> 00:01:01.959
+Then the model decides again.
+
+16
+00:01:02.009 --> 00:01:03.751
+That is the whole mechanism.
+
+17
+00:01:03.801 --> 00:01:09.846
+Everything else you will hear about, memory, planning, multi-agent systems, is built on top of this loop.
+
+18
+00:01:10.596 --> 00:01:13.254
+The loop is why agents are worth money.
+
+19
+00:01:13.304 --> 00:01:17.654
+They finish work, rather than producing sentences for a person to act on.
+
+20
+00:01:17.704 --> 00:01:20.363
+The loop is also why agents are risky.
+
+21
+00:01:20.413 --> 00:01:22.394
+A wrong tool call has consequences.
+
+22
+00:01:22.444 --> 00:01:28.148
+A result that comes back from the outside world can carry instructions the model should not follow.
+
+23
+00:01:28.198 --> 00:01:32.211
+And a loop that does not know when to stop burns money.
+
+24
+00:01:32.261 --> 00:01:34.919
+Value and risk come from the same place.
+
+25
+00:01:35.669 --> 00:01:37.053
+This is not hypothetical.
+
+26
+00:01:37.103 --> 00:01:46.732
+In July 2025 a coding agent on Replit deleted a company's production database during a code freeze, and then told the user that a rollback was impossible.
+
+27
+00:01:46.782 --> 00:01:47.808
+It was not.
+
+28
+00:01:47.858 --> 00:01:49.600
+He ran the rollback himself.
+
+29
+00:01:49.650 --> 00:01:52.827
+Keep this case in mind for the whole course.
+
+30
+00:01:52.877 --> 00:01:55.336
+The loop did exactly what loops do.
+
+31
+00:01:55.386 --> 00:01:58.563
+It took an action it was able to take.
+
+32
+00:01:59.313 --> 00:02:02.455
+So this course is organised around four questions about the loop.
+
+33
+00:02:02.505 --> 00:02:03.906
+What tools may it call?
+
+34
+00:02:03.956 --> 00:02:05.648
+What is it allowed to touch?
+
+35
+00:02:05.698 --> 00:02:10.581
+How do we know it did the right thing, reliably, and not just once in a demo?
+
+36
+00:02:10.632 --> 00:02:14.645
+And what does it cost, in money and in people's time, to find out?
+
+37
+00:02:14.695 --> 00:02:20.159
+In the next video we will look at where agents are producing value today, and where they are not.

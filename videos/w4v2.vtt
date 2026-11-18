@@ -1,0 +1,149 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:07.762
+This video is about error analysis: the discipline of reading your agent's failures one at a time, naming what went wrong, and counting.
+
+2
+00:00:07.812 --> 00:00:08.781
+It sounds slow.
+
+3
+00:00:08.831 --> 00:00:18.632
+It is the fastest way anyone has found to improve an agent, and it is the part of this course that transfers to every other kind of AI work.
+
+4
+00:00:19.382 --> 00:00:26.227
+Andrew Ng wrote a two-part letter in October 2025 making a point that practitioners had been making for a while.
+
+5
+00:00:26.277 --> 00:00:36.223
+The teams that improve agents fastest are the ones that read their failures, and the teams that stall are the ones that guess at fixes from the final output.
+
+6
+00:00:36.273 --> 00:00:39.326
+The final output tells you that something went wrong.
+
+7
+00:00:39.376 --> 00:00:44.841
+Only the trace tells you where: which tool call, which argument, which retrieved passage, which instruction.
+
+8
+00:00:45.591 --> 00:00:46.994
+The procedure is short.
+
+9
+00:00:47.044 --> 00:00:51.715
+Pull twenty failed traces, chosen at random, not the ones that look interesting.
+
+10
+00:00:51.765 --> 00:01:00.794
+For each one, read from the top until you find the first step where it went wrong, and write one sentence: what happened and why.
+
+11
+00:01:00.844 --> 00:01:02.610
+Do not fix anything yet.
+
+12
+00:01:02.660 --> 00:01:05.152
+When you have twenty sentences, group them.
+
+13
+00:01:05.202 --> 00:01:13.868
+Five to eight categories usually appear: wrong tool, invented argument, retrieved the wrong passage, ignored an instruction, stopped too early, kept going too long.
+
+14
+00:01:13.918 --> 00:01:14.595
+Count them.
+
+15
+00:01:14.645 --> 00:01:21.132
+Fix the biggest category first, because one fix there moves the pass rate more than ten fixes elsewhere.
+
+16
+00:01:21.182 --> 00:01:24.037
+Re-run the golden set, and do it again.
+
+17
+00:01:24.787 --> 00:01:27.621
+Here is a pattern worth knowing in advance.
+
+18
+00:01:27.671 --> 00:01:32.308
+Most of the failures you find will be harness problems, not model problems.
+
+19
+00:01:32.358 --> 00:01:34.832
+A tool description that misled the model.
+
+20
+00:01:34.882 --> 00:01:38.797
+A tool result trimmed so hard the answer was cut off.
+
+21
+00:01:38.847 --> 00:01:41.682
+A stop condition that fired a step early.
+
+22
+00:01:41.732 --> 00:01:51.055
+Genuine model problems, where the context was right and the reasoning was wrong, exist, and they are rarer than people expect once the harness is fixed.
+
+23
+00:01:51.105 --> 00:01:52.497
+This is good news.
+
+24
+00:01:52.547 --> 00:01:55.381
+Harness problems are yours to fix, this week.
+
+25
+00:01:56.131 --> 00:02:00.940
+In class you will do error analysis on traces that are not yours.
+
+26
+00:02:00.990 --> 00:02:14.770
+GDPx is a benchmark released by SemiAnalysis in November 2026: 206 tasks written by partner firms across eleven domains, each run by several frontier models with their own harnesses, and graded by the firms.
+
+27
+00:02:14.820 --> 00:02:19.629
+For one task per partner, every run is public, including the full trace.
+
+28
+00:02:19.679 --> 00:02:26.730
+As of November 2026 the best model scored about 16 percent, which tells you how much room there is.
+
+29
+00:02:26.780 --> 00:02:30.094
+We read those transcripts ourselves while preparing this course.
+
+30
+00:02:30.144 --> 00:02:40.559
+One finding to take with you: a final message that announced the work had been verified was no more likely to score well than one that did not.
+
+31
+00:02:40.609 --> 00:02:43.176
+The claim of checking is not checking.
+
+32
+00:02:43.226 --> 00:02:46.539
+You will see this in your own agents too.
+
+33
+00:02:47.289 --> 00:02:50.663
+This is also what the trace of the week is for.
+
+34
+00:02:50.713 --> 00:02:56.576
+Each week one team presents one trace: what the agent did, step by step, and what it taught them.
+
+35
+00:02:56.626 --> 00:03:00.311
+Ten minutes, and show the actual trace, not slides about the trace.
+
+36
+00:03:00.361 --> 00:03:06.535
+The best ones are failures, because a failure read carefully is a design lesson for every team in the room.
+
+37
+00:03:06.585 --> 00:03:11.826
+Next video: using a model to grade a model, and how to know whether to trust it.

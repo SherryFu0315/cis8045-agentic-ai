@@ -1,0 +1,157 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.717
+Welcome to week seven, the last week of new material.
+
+2
+00:00:03.767 --> 00:00:07.485
+The theme: more agents, more autonomy, more ways to fail.
+
+3
+00:00:07.535 --> 00:00:15.774
+This video is about multi-agent systems, which are fashionable, sometimes right, and more often a way to make a simple problem hard.
+
+4
+00:00:16.524 --> 00:00:19.328
+Multi-agent systems come in two main shapes.
+
+5
+00:00:19.378 --> 00:00:29.522
+An orchestrator with workers: one lead agent breaks the job up, sends pieces to worker agents, each with its own context, and assembles the results.
+
+6
+00:00:29.572 --> 00:00:40.124
+And a handoff chain: the task moves from one specialised agent to the next, triage to expert to closer, each with its own instructions and tools.
+
+7
+00:00:40.174 --> 00:00:47.056
+Both exist because one context window cannot hold everything, and because specialised instructions beat one giant prompt.
+
+8
+00:00:47.106 --> 00:00:50.318
+Both also multiply the ways things go wrong.
+
+9
+00:00:51.068 --> 00:00:52.926
+Here is the case for.
+
+10
+00:00:52.976 --> 00:01:02.467
+In June 2025 Anthropic described its research system: a lead agent that plans and spawns sub-agents to search in parallel, each with a fresh context.
+
+11
+00:01:02.517 --> 00:01:09.718
+On their internal research evaluation it beat a single agent using the same top model by about 90 percent.
+
+12
+00:01:09.768 --> 00:01:11.245
+It is not cheap.
+
+13
+00:01:11.295 --> 00:01:18.496
+Agents already use several times the tokens of a chat, and this system used roughly fifteen times as many.
+
+14
+00:01:18.546 --> 00:01:25.365
+Their own conclusion was that the pattern pays off when the task is wide, parallel and valuable enough.
+
+15
+00:01:25.415 --> 00:01:26.892
+That describes open-ended research.
+
+16
+00:01:26.942 --> 00:01:30.708
+It does not describe a form that needs filling in.
+
+17
+00:01:31.458 --> 00:01:35.014
+Here is the case against, published one day earlier.
+
+18
+00:01:35.064 --> 00:01:45.830
+Cognition, the company behind the Devin coding agent, argued against building multi-agent systems for work that produces one coherent thing, such as a codebase or a document.
+
+19
+00:01:45.880 --> 00:01:54.242
+Sub-agents that each see part of the context make decisions that conflict, and the conflicts are plausible enough to slip through.
+
+20
+00:01:54.292 --> 00:02:05.860
+Their two principles: share the full context, including the history of decisions, and remember that every action carries an implicit decision that the next agent needs to know about.
+
+21
+00:02:05.910 --> 00:02:08.263
+The two posts are not contradictory.
+
+22
+00:02:08.313 --> 00:02:09.064
+Search parallelises.
+
+23
+00:02:09.114 --> 00:02:10.266
+Construction does not.
+
+24
+00:02:11.016 --> 00:02:18.737
+Researchers at Berkeley catalogued how multi-agent systems fail, in a paper first posted in March 2025.
+
+25
+00:02:18.787 --> 00:02:27.964
+They read 150 traces from seven popular frameworks, with expert annotators, and found fourteen failure modes in three groups.
+
+26
+00:02:28.014 --> 00:02:33.306
+Specification and design: unclear roles, missing stop conditions, violated task specifications.
+
+27
+00:02:33.356 --> 00:02:39.134
+Inter-agent misalignment: agents ignoring each other, withholding information, talking past each other.
+
+28
+00:02:39.184 --> 00:02:43.990
+And task verification: agents declaring work done without checking it.
+
+29
+00:02:44.040 --> 00:02:46.418
+Most failures were design failures.
+
+30
+00:02:46.468 --> 00:02:51.275
+The same lesson as week four, now with more agents.
+
+31
+00:02:52.025 --> 00:02:55.363
+So before your team adds a second agent, five questions.
+
+32
+00:02:55.413 --> 00:02:57.057
+Would a workflow step do?
+
+33
+00:02:57.107 --> 00:03:01.123
+Routing and fixed sub-tasks usually do not need an agent at all.
+
+34
+00:03:01.173 --> 00:03:05.188
+Is the work parallel, like search, or one artefact, like a report?
+
+35
+00:03:05.238 --> 00:03:09.254
+What does each agent see, and who holds the record of decisions?
+
+36
+00:03:09.304 --> 00:03:15.014
+How will you evaluate the whole system and each part, with the golden set you already have?
+
+37
+00:03:15.064 --> 00:03:20.096
+And what does it cost per task compared with the single agent you have now?
+
+38
+00:03:20.146 --> 00:03:24.500
+For most capstone projects the honest answer is one agent with good tools.
+
+39
+00:03:24.550 --> 00:03:28.566
+Next video: agents that run for hours, write code and use computers.

@@ -1,0 +1,177 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:01.416
+Third video for week one.
+
+2
+00:00:01.466 --> 00:00:03.470
+The first video gave you the loop.
+
+3
+00:00:03.520 --> 00:00:10.509
+This one names the parts around the loop, because that is what you will build, test and defend for the rest of the course.
+
+4
+00:00:10.560 --> 00:00:11.976
+We call it the harness.
+
+5
+00:00:12.726 --> 00:00:13.950
+Here is the picture.
+
+6
+00:00:14.000 --> 00:00:15.860
+The model sits in the middle.
+
+7
+00:00:15.910 --> 00:00:30.185
+Everything around it is the harness: the tools it can call, the context it sees on each turn, the conditions that end the loop, the gates where a person must say yes, and the trace, which is the record of every call and every result.
+
+8
+00:00:30.235 --> 00:00:34.006
+In the first lab you will write or configure each of these.
+
+9
+00:00:34.056 --> 00:00:36.234
+The word harness is borrowed from testing.
+
+10
+00:00:36.284 --> 00:00:40.691
+A test harness holds the thing under test and controls what it can touch.
+
+11
+00:00:40.741 --> 00:00:43.556
+An agent harness does the same for a model.
+
+12
+00:00:44.306 --> 00:00:46.328
+Why does this matter so much?
+
+13
+00:00:46.378 --> 00:00:50.473
+Because two agents can use the same model and behave completely differently.
+
+14
+00:00:50.523 --> 00:00:57.726
+A demo gives the model any tool at any time, runs until it feels done, keeps no record, and asks nobody.
+
+15
+00:00:57.776 --> 00:01:08.778
+A service gives the model a short list of tools with limits, a budget of steps and a definition of done, a trace of every call, and a gate before anything irreversible.
+
+16
+00:01:08.828 --> 00:01:12.577
+The Replit incident from the first video was a harness failure.
+
+17
+00:01:12.627 --> 00:01:20.175
+The model had a tool that could delete a production database, during a code freeze, with no gate in front of it.
+
+18
+00:01:20.225 --> 00:01:27.083
+The fixes the company announced afterwards were harness work: separate development and production databases, a planning-only mode, and one-click restore.
+
+19
+00:01:27.833 --> 00:01:30.582
+One more distinction you will use every week.
+
+20
+00:01:30.632 --> 00:01:34.780
+Anthropic's essay Building effective agents, from December 2024, separates workflows from agents.
+
+21
+00:01:34.830 --> 00:01:43.176
+In a workflow the steps are fixed in code and the model fills in each step: classify this, then draft that, then check it.
+
+22
+00:01:43.226 --> 00:01:47.024
+In an agent the model decides the steps as it goes.
+
+23
+00:01:47.074 --> 00:01:49.473
+Workflows are predictable and cheap to test.
+
+24
+00:01:49.523 --> 00:01:54.371
+Agents handle cases nobody wrote down, at the price of being harder to predict.
+
+25
+00:01:54.421 --> 00:02:03.117
+The essay's advice is to start with the simplest design that does the job, and many production systems are workflows with a small agent inside.
+
+26
+00:02:03.167 --> 00:02:05.916
+Treat that as the default for your project.
+
+27
+00:02:06.666 --> 00:02:08.612
+So the harness decides five things.
+
+28
+00:02:08.662 --> 00:02:10.941
+Which tools exist and with what permissions.
+
+29
+00:02:10.991 --> 00:02:15.266
+What the model sees each turn, and what it is kept away from.
+
+30
+00:02:15.316 --> 00:02:22.919
+When to stop, whether because the job is done, a step budget ran out, a cost budget ran out, or an error occurred.
+
+31
+00:02:22.969 --> 00:02:26.246
+What needs a human, and how the human is asked.
+
+32
+00:02:26.296 --> 00:02:30.238
+And what is recorded, so that someone can read afterwards what happened.
+
+33
+00:02:30.288 --> 00:02:35.561
+Each of those is a design decision, and each will appear in one of your deliverables.
+
+34
+00:02:35.611 --> 00:02:38.556
+The security review is mostly about the first two.
+
+35
+00:02:38.606 --> 00:02:41.217
+The evaluation report is about reading the record.
+
+36
+00:02:41.267 --> 00:02:43.213
+The operations sheet is about budgets.
+
+37
+00:02:43.963 --> 00:02:46.790
+This is not a beginner's topic that goes away.
+
+38
+00:02:46.840 --> 00:02:52.223
+In November 2025 Anthropic published a piece on harnesses for agents that run for hours or days.
+
+39
+00:02:52.273 --> 00:02:57.337
+Those agents work in sessions, and each session starts with no memory of the last one.
+
+40
+00:02:57.387 --> 00:02:59.574
+The answer was not a bigger model.
+
+41
+00:02:59.624 --> 00:03:07.883
+It was harness work: a progress file the agent updates, a task list it works through, and a clean checkpoint at the end of every session.
+
+42
+00:03:07.933 --> 00:03:13.956
+In week two you will build your own harness and expose it so that other software can call it.
+
+43
+00:03:14.006 --> 00:03:22.265
+Before then, run the first lab: a sixty-line loop with two tools, or the same loop in Fleet, and read one trace from start to finish.
+
+44
+00:03:22.315 --> 00:03:26.420
+Notice what the harness let the model do, and what it did not.

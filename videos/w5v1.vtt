@@ -1,0 +1,169 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:01.287
+Welcome to week five.
+
+2
+00:00:01.337 --> 00:00:04.965
+The theme is that autonomy is a permission, not a feature.
+
+3
+00:00:05.015 --> 00:00:07.306
+This week you attack your own agent.
+
+4
+00:00:07.356 --> 00:00:17.672
+The first video is about the attack that matters most for agents, prompt injection, and a simple way to tell whether your design is exposed to the worst version of it.
+
+5
+00:00:18.422 --> 00:00:20.686
+Prompt injection comes in two forms.
+
+6
+00:00:20.736 --> 00:00:27.240
+Direct injection is a user typing instructions that override yours: ignore your rules and do this instead.
+
+7
+00:00:27.290 --> 00:00:31.096
+It is annoying and it is mostly a reputational problem.
+
+8
+00:00:31.146 --> 00:00:32.639
+Indirect injection is different.
+
+9
+00:00:32.689 --> 00:00:39.579
+The instructions arrive inside data the agent reads: an email, a web page, a document, a tool result.
+
+10
+00:00:39.629 --> 00:00:46.134
+The model reads them as part of its context, and models cannot reliably tell data from instructions.
+
+11
+00:00:46.184 --> 00:00:49.990
+Nobody has found a way to make them do so.
+
+12
+00:00:50.040 --> 00:00:57.316
+That is the form that matters for agents, because agents read untrusted data all day, and they have tools.
+
+13
+00:00:58.066 --> 00:01:03.131
+Here is what it looks like in a product you may use.
+
+14
+00:01:03.181 --> 00:01:08.247
+In June 2025 researchers disclosed EchoLeak, a vulnerability in Microsoft 365 Copilot.
+
+15
+00:01:08.297 --> 00:01:12.510
+One crafted email, sitting in the inbox, contained hidden instructions.
+
+16
+00:01:12.560 --> 00:01:27.431
+When the user later asked Copilot an ordinary question, Copilot pulled the email into its context, followed the instructions, gathered sensitive content from the user's files and mail, and sent it out through a link.
+
+17
+00:01:27.481 --> 00:01:29.136
+The user clicked nothing.
+
+18
+00:01:29.186 --> 00:01:34.252
+Microsoft fixed it before it was exploited, as far as anyone knows.
+
+19
+00:01:34.302 --> 00:01:36.810
+The design lesson survives the fix.
+
+20
+00:01:37.560 --> 00:01:44.550
+Simon Willison, who named prompt injection in 2022, gave the pattern a name in June 2025: the lethal trifecta.
+
+21
+00:01:44.600 --> 00:01:45.291
+Three capabilities.
+
+22
+00:01:45.341 --> 00:01:46.773
+Access to private data.
+
+23
+00:01:46.823 --> 00:01:48.256
+Exposure to untrusted content.
+
+24
+00:01:48.306 --> 00:01:54.926
+And a way to communicate externally: send an email, call a web address, write to a shared place.
+
+25
+00:01:54.976 --> 00:02:06.784
+An agent that has all three can be made to leak the private data, and no prompt will stop it, because the attack is written in the same language as your instructions.
+
+26
+00:02:06.834 --> 00:02:13.083
+Remove any one of the three and the worst case shrinks to something you can live with.
+
+27
+00:02:13.133 --> 00:02:16.048
+Copilot in the EchoLeak case had all three.
+
+28
+00:02:16.798 --> 00:02:20.114
+Why can you not just prompt your way out?
+
+29
+00:02:20.164 --> 00:02:23.854
+Because the attacker gets to iterate and you do not.
+
+30
+00:02:23.904 --> 00:02:29.090
+Instructions to ignore injected text work until someone finds the phrasing that gets through.
+
+31
+00:02:29.140 --> 00:02:30.586
+Filters catch yesterday's attacks.
+
+32
+00:02:30.636 --> 00:02:35.074
+What works is architecture: do not give one agent all three legs.
+
+33
+00:02:35.124 --> 00:02:38.067
+A common pattern is to split the work.
+
+34
+00:02:38.117 --> 00:02:44.051
+One context reads the untrusted content and can only produce a summary or a structured extract.
+
+35
+00:02:44.101 --> 00:02:51.157
+A different context, which never saw the raw content, decides what to do and holds the tools that act.
+
+36
+00:02:51.207 --> 00:02:57.141
+The CaMeL design from Google DeepMind, published in 2025, is the careful version of this idea.
+
+37
+00:02:57.891 --> 00:03:01.318
+In the first part of lab five, map your own agent.
+
+38
+00:03:01.368 --> 00:03:08.272
+List every input it reads that you do not control: documents, emails, web pages, tool results from systems other people write to.
+
+39
+00:03:08.322 --> 00:03:11.117
+List every tool that sends, writes or calls out.
+
+40
+00:03:11.167 --> 00:03:13.330
+List the private data it can reach.
+
+41
+00:03:13.380 --> 00:03:23.129
+If all three lists have something in them, you have the trifecta, and the deliverable is to name the leg you will cut or gate, and show it in the trace.
+
+42
+00:03:23.179 --> 00:03:26.289
+Next video: the gates and guardrails that do the cutting.

@@ -1,0 +1,165 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:01.666
+Last video for week three.
+
+2
+00:00:01.716 --> 00:00:08.530
+Two topics that both answer the same question: what does the agent know that is not in this turn's context?
+
+3
+00:00:08.580 --> 00:00:10.932
+Memory is what it keeps between runs.
+
+4
+00:00:10.982 --> 00:00:14.708
+Skills are instructions it loads when a task calls for them.
+
+5
+00:00:14.758 --> 00:00:18.483
+Both are harness design, and both are easy to get wrong.
+
+6
+00:00:19.233 --> 00:00:20.895
+Start with the two kinds.
+
+7
+00:00:20.945 --> 00:00:26.032
+Session memory is everything in the current run: the goal, the history, the tool results.
+
+8
+00:00:26.082 --> 00:00:33.566
+It lives in the context window and it ends when the run ends, unless the harness compacts it or writes it down.
+
+9
+00:00:33.616 --> 00:00:36.649
+Long-term memory is what the agent keeps between runs.
+
+10
+00:00:36.699 --> 00:00:43.840
+Some of it is facts: this customer prefers email, this decision was made on Tuesday, these three items are still open.
+
+11
+00:00:43.890 --> 00:00:48.977
+Some of it is procedure: the way a task was done last time that worked.
+
+12
+00:00:49.027 --> 00:00:56.511
+Long-term memory is stored outside the model, in a file or a database, and retrieved into the context when it is relevant.
+
+13
+00:00:56.561 --> 00:01:00.963
+Which means it is retrieval, with everything the last video said about failure.
+
+14
+00:01:01.713 --> 00:01:11.653
+Anthropic published a piece on the components of agent memory in November 2026, one sign that this has become an engineering topic rather than a research one.
+
+15
+00:01:11.703 --> 00:01:14.612
+The division of labour to remember is this.
+
+16
+00:01:14.662 --> 00:01:17.572
+The agent decides what is worth writing down.
+
+17
+00:01:17.622 --> 00:01:24.232
+The harness decides where it goes, who can read it, and when it comes back into the context.
+
+18
+00:01:24.282 --> 00:01:30.151
+And every remembered item is a cost: tokens on every later turn in which it appears.
+
+19
+00:01:30.201 --> 00:01:34.591
+A memory that remembers everything is a context problem waiting to happen.
+
+20
+00:01:35.341 --> 00:01:37.066
+Four failures to design against.
+
+21
+00:01:37.116 --> 00:01:42.392
+Stale memory: the fact was true in March and the agent still acts on it.
+
+22
+00:01:42.442 --> 00:01:48.429
+Wrong scope: one user's preference applied to another user, which in a company is a privacy incident.
+
+23
+00:01:48.479 --> 00:01:56.240
+Poisoned memory: an instruction that arrived inside a document got saved as a fact, and now it comes back on every run.
+
+24
+00:01:56.290 --> 00:02:00.856
+And unexplained memory: nobody can see why the agent believes what it believes.
+
+25
+00:02:00.906 --> 00:02:09.733
+The remedies are the same in every case: timestamps, scope by user and team, a store a person can read, and a way to delete.
+
+26
+00:02:10.483 --> 00:02:11.157
+Now skills.
+
+27
+00:02:11.207 --> 00:02:16.587
+A skill is a folder: a file of instructions, plus optional scripts and reference material.
+
+28
+00:02:16.637 --> 00:02:25.275
+The agent sees only a short description of each skill up front, and loads the full instructions into the context when the task matches.
+
+29
+00:02:25.325 --> 00:02:30.705
+Anthropic introduced the format in October 2025 and it has spread across agent products since.
+
+30
+00:02:30.755 --> 00:02:33.239
+Why does it matter for a service?
+
+31
+00:02:33.289 --> 00:02:35.049
+Because expertise becomes a file.
+
+32
+00:02:35.099 --> 00:02:38.307
+It can be reviewed, versioned and tested like code.
+
+33
+00:02:38.357 --> 00:02:44.099
+The system prompt stays short, which the first video this week told you to care about.
+
+34
+00:02:44.149 --> 00:02:51.701
+And a skill does not require programming, so the product owner or the domain expert on your team can write one.
+
+35
+00:02:52.451 --> 00:02:54.059
+Two things for this week.
+
+36
+00:02:54.109 --> 00:03:00.357
+Write a memory design for your agent: what is stored, where, with what scope, and how it is deleted.
+
+37
+00:03:00.407 --> 00:03:01.683
+One page is enough.
+
+38
+00:03:01.733 --> 00:03:08.644
+And write one skill for your agent's job, then run it on three tasks and compare with the runs without it.
+
+39
+00:03:08.694 --> 00:03:13.947
+In the proposal, add one sentence that most teams forget: what the agent must never remember.
+
+40
+00:03:13.997 --> 00:03:15.273
+Next week we measure.
+
+41
+00:03:15.323 --> 00:03:18.588
+Golden sets, pass^k, and reading traces properly.

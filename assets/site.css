@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+/* CIS 8045 site. Four text sizes: 14 (notes), 16 (tables, nav), 18 (body), headings. 14px is the floor. */
+:root{--ink:#16181d;--muted:#5d6069;--line:#e3e1da;--blue:#0039a6;--fs-xs:14px;--fs-s:16px;--fs-m:18px;--max:980px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#fff;color:var(--ink);font-family:'Source Sans 3',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:var(--fs-m);line-height:1.55}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+nav.top{border-bottom:1px solid var(--line)}
+nav.top .wrap{display:flex;align-items:center;flex-wrap:wrap;gap:8px 26px;min-height:54px;padding-top:10px;padding-bottom:10px}
+nav.top a{color:var(--ink);text-decoration:none;font-size:var(--fs-s)}
+nav.top a.brand{font-weight:700;font-size:var(--fs-m);margin-right:auto}
+nav.top a.here{color:var(--blue);font-weight:600}
+main{padding-bottom:24px}
+h1{font-size:clamp(30px,4vw,40px);font-weight:700;line-height:1.15;margin:40px 0 8px}
+.meta{color:var(--muted);margin:0 0 32px}
+h2{font-size:26px;font-weight:700;line-height:1.2;margin:44px 0 12px}
+h3{font-size:20px;font-weight:600;margin:28px 0 8px}
+p,li,dd{max-width:74ch}
+p{margin:0 0 14px}
+ol,ul{margin:0 0 14px;padding-left:1.3em}
+li{margin:0 0 6px}
+a{color:var(--blue);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px}
+a:hover{text-decoration-thickness:2px}
+dl.how dt{font-weight:700;margin-top:14px}
+dl.how dd{margin:4px 0 0}
+table{border-collapse:collapse;width:100%;font-size:var(--fs-s);margin:12px 0 20px}
+th{text-align:left;font-weight:700;border-bottom:2px solid var(--ink);padding:8px 10px 8px 0;vertical-align:bottom}
+td{border-bottom:1px solid var(--line);padding:12px 10px 12px 0;vertical-align:top}
+table.plain td:first-child,table.plain th:first-child{width:9em}
+.sched td.wk{width:4.5em;color:var(--muted)}
+.sched td.theme{font-weight:700;width:12em}
+.sched td p{margin:0 0 6px;max-width:none}
+video{display:block;width:100%;max-width:960px;aspect-ratio:16/9;background:#000;margin:8px 0 10px}
+details{margin:0 0 22px;max-width:74ch}
+summary{cursor:pointer;color:var(--blue);font-size:var(--fs-s)}
+details p{font-size:var(--fs-s);margin:10px 0}
+.soon{color:var(--muted);font-size:var(--fs-s);margin:0 0 18px}
+footer{border-top:1px solid var(--line);margin-top:56px;padding:20px 0 44px;color:var(--muted);font-size:var(--fs-xs)}
+@media (max-width:760px){
+  nav.top a.brand{flex-basis:100%}
+  nav.top .wrap{gap:6px 20px}
+  .sched thead{display:none}
+  .sched tr{display:block;border-bottom:1px solid var(--line);padding:14px 0}
+  .sched td,.sched td.wk,.sched td.theme{display:block;border:0;padding:3px 0;width:auto}
+  .sched td::before{content:attr(data-l);display:block;color:var(--muted);font-size:var(--fs-xs);font-weight:600}
+  .sched td.wk{display:none}
+  .sched td.theme::before{content:"Week " attr(data-w)}
+}

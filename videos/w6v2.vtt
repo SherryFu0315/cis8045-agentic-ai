@@ -1,0 +1,125 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:02.961
+This video is about running an agent after launch.
+
+2
+00:00:03.011 --> 00:00:13.000
+Two words: observability, which is being able to see what the service is doing, and regression, which is finding out that a change made it worse before your users do.
+
+3
+00:00:13.750 --> 00:00:16.234
+Start with what you need to see.
+
+4
+00:00:16.284 --> 00:00:33.248
+For every run: the full trace, with calls, arguments, results, tokens and timing; the outcome, which can be pass, fail, unknown or escalated to a person; and the version of everything that was involved, because the model, the prompt, the tools and the skills all change independently.
+
+5
+00:00:33.298 --> 00:00:44.469
+For every day: volume, pass rate, cost per task and latency; gate approvals and denials; and the failure categories from your error analysis, counted automatically where a rule can detect them.
+
+6
+00:00:44.519 --> 00:00:50.261
+In LangSmith all of this comes from the same tracing you have used since week one.
+
+7
+00:00:50.311 --> 00:00:53.881
+The work is deciding which views the owner looks at.
+
+8
+00:00:54.631 --> 00:00:58.551
+Agents regress for reasons that have nothing to do with your code.
+
+9
+00:00:58.601 --> 00:01:02.522
+The provider updates the model behind the same name, and behaviour shifts.
+
+10
+00:01:02.572 --> 00:01:06.161
+Someone improves the prompt for one case and breaks three others.
+
+11
+00:01:06.211 --> 00:01:08.146
+A tool changes its output format.
+
+12
+00:01:08.196 --> 00:01:10.793
+The documents change, so retrieval returns different passages.
+
+13
+00:01:10.843 --> 00:01:15.095
+Or users start asking for something new that your golden set never covered.
+
+14
+00:01:15.145 --> 00:01:21.050
+Each of these has happened to every team that has run an agent for more than a month.
+
+15
+00:01:21.800 --> 00:01:25.959
+The defence is the regression run, and you already own the parts.
+
+16
+00:01:26.009 --> 00:01:38.935
+Before any change goes live, a new prompt, a new model version, a new tool, re-indexed documents, run the golden set k times and compare the pass rate and the cost with the last known good result.
+
+17
+00:01:38.985 --> 00:01:42.442
+Same or better: ship it, and record the new baseline.
+
+18
+00:01:42.492 --> 00:01:46.651
+Worse: investigate, with error analysis, before anyone outside the team sees it.
+
+19
+00:01:46.701 --> 00:01:54.016
+The whole run should be a single command, or a single button, or nobody will do it on a Friday afternoon.
+
+20
+00:01:54.766 --> 00:01:57.738
+The golden set only covers what you thought of.
+
+21
+00:01:57.788 --> 00:01:59.416
+For everything else, two habits.
+
+22
+00:01:59.466 --> 00:02:09.488
+Sampling: a fixed share of real traces is read every week by the reviewer named in your memo, labelled, and added to the golden set when it reveals something new.
+
+23
+00:02:09.538 --> 00:02:19.896
+Alerts: pass rate below a threshold, cost above a threshold, a tool called more than some number of times in a single run, or a gate denied twice in a row.
+
+24
+00:02:19.946 --> 00:02:23.925
+Alerts are how an unattended agent earns its position on the dial.
+
+25
+00:02:23.975 --> 00:02:27.618
+Without them the far right of the dial is not autonomy.
+
+26
+00:02:27.668 --> 00:02:28.625
+It is neglect.
+
+27
+00:02:29.375 --> 00:02:36.188
+In lab six you build the owner's dashboard with volume, pass rate, cost per task, latency and gate activity.
+
+28
+00:02:36.238 --> 00:02:43.412
+You make one deliberate change to your agent, maybe a model swap, and run the regression, reporting before and after.
+
+29
+00:02:43.462 --> 00:02:47.385
+And you define two alerts and show one of them firing.
+
+30
+00:02:47.435 --> 00:02:50.998
+Next video: the decision an executive actually has to make.
+
+31
+00:02:51.048 --> 00:02:53.165
+Build it, buy it, or wait.

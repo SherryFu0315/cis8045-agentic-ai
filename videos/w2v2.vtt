@@ -1,0 +1,229 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.378
+This video is about MCP, the Model Context Protocol.
+
+2
+00:00:03.428 --> 00:00:07.742
+The last video explained how one program gives one model one set of tools.
+
+3
+00:00:07.792 --> 00:00:11.482
+MCP is how the whole industry agreed to share tools.
+
+4
+00:00:11.532 --> 00:00:21.768
+You will add an MCP server to your agent in lab two, so the aim here is to understand what it is, what it is not, and what it costs you.
+
+5
+00:00:22.518 --> 00:00:31.748
+MCP is an open standard for connecting an AI application to outside systems: files, databases, search, ticketing, anything with an interface.
+
+6
+00:00:31.798 --> 00:00:34.169
+Anthropic released it in November 2024.
+
+7
+00:00:34.219 --> 00:00:42.643
+In March 2025 OpenAI adopted it, Google followed, and by now the main agent frameworks and coding tools all speak it.
+
+8
+00:00:42.693 --> 00:00:47.485
+The project's own analogy is a USB-C port: one connector, many devices.
+
+9
+00:00:47.535 --> 00:00:52.326
+Before MCP, every tool integration was written for one application.
+
+10
+00:00:52.376 --> 00:00:59.186
+If you had built a Jira tool for one agent framework, it did not work in another.
+
+11
+00:00:59.236 --> 00:01:03.221
+MCP moves the integration to the tool's side.
+
+12
+00:01:03.271 --> 00:01:06.852
+A Jira server written once works in any client.
+
+13
+00:01:07.602 --> 00:01:08.953
+Three words you need.
+
+14
+00:01:09.003 --> 00:01:14.208
+The host is your agent application, the thing that owns the model and the loop.
+
+15
+00:01:14.258 --> 00:01:17.360
+Inside the host runs an MCP client.
+
+16
+00:01:17.410 --> 00:01:21.214
+Each outside system is exposed by an MCP server.
+
+17
+00:01:21.264 --> 00:01:25.417
+When the host starts, the client asks each server what it offers.
+
+18
+00:01:25.467 --> 00:01:36.276
+Servers offer three kinds of things: tools, which the model can call; resources, which are data the host can read, such as files or records; and prompts, which are reusable instructions.
+
+19
+00:01:36.326 --> 00:01:46.435
+The client turns the servers' tools into tool schemas, the model chooses one exactly as in the last video, and the client makes the call and returns the result.
+
+20
+00:01:46.485 --> 00:01:49.587
+So from the model's point of view nothing changed.
+
+21
+00:01:49.637 --> 00:01:52.740
+It still sees tool schemas and returns tool calls.
+
+22
+00:01:52.790 --> 00:01:56.944
+What changed is where the tools come from and who maintains them.
+
+23
+00:01:57.693 --> 00:01:59.324
+Servers come in two shapes.
+
+24
+00:01:59.374 --> 00:02:05.374
+A local server runs on the same machine as the host and talks over standard input and output.
+
+25
+00:02:05.424 --> 00:02:09.407
+That is how a coding agent on your laptop reaches your files.
+
+26
+00:02:09.457 --> 00:02:16.465
+A remote server runs as a web service, talks over HTTP, and uses OAuth to sign users in.
+
+27
+00:02:16.515 --> 00:02:24.867
+That is how a company exposes one system, say its ticket queue, to every agent in the building through one server with one access policy.
+
+28
+00:02:24.917 --> 00:02:33.941
+For your project, a remote server is the shape to think about, because a service that depends on a file on someone's laptop is not a service.
+
+29
+00:02:34.691 --> 00:02:38.371
+Now the limits, and they are the reason week five exists.
+
+30
+00:02:38.421 --> 00:02:41.083
+MCP does not make tools safe.
+
+31
+00:02:41.133 --> 00:02:49.559
+A server can expose a tool that deletes things behind a friendly name, and your client will pass it to the model like any other.
+
+32
+00:02:49.609 --> 00:02:51.932
+MCP does not vet servers.
+
+33
+00:02:51.982 --> 00:02:57.018
+Anyone can publish one, and a server you install is code running with your permissions.
+
+34
+00:02:57.068 --> 00:02:59.730
+MCP does not shrink the context.
+
+35
+00:02:59.780 --> 00:03:09.562
+Every server you connect adds its schemas to the window on every call, and twenty servers can mean hundreds of tool descriptions before the user has said a word.
+
+36
+00:03:09.612 --> 00:03:11.935
+And MCP does not choose.
+
+37
+00:03:11.985 --> 00:03:17.360
+The model still picks the tool, so a confusing server makes the agent worse, not better.
+
+38
+00:03:17.410 --> 00:03:29.904
+In May 2025 researchers showed that a coding agent connected to GitHub's own MCP server could be steered, by a malicious issue in a public repository, into reading a private repository and publishing its contents.
+
+39
+00:03:29.954 --> 00:03:31.939
+Nothing in the protocol was broken.
+
+40
+00:03:31.989 --> 00:03:36.346
+The agent had the tools, and it followed instructions it found in data.
+
+41
+00:03:36.396 --> 00:03:37.363
+Remember that case.
+
+42
+00:03:37.413 --> 00:03:40.076
+We will take it apart in week five.
+
+43
+00:03:40.825 --> 00:03:46.152
+So here is a checklist for lab two, when you add an MCP server to your agent.
+
+44
+00:03:46.202 --> 00:03:50.396
+Who maintains it, and is it the system owner's official server or someone's weekend project?
+
+45
+00:03:50.446 --> 00:03:52.943
+Which of its tools does your agent actually need?
+
+46
+00:03:52.993 --> 00:03:55.773
+Most clients let you expose a subset, and you should.
+
+47
+00:03:55.823 --> 00:03:57.470
+Does it read, write, or both?
+
+48
+00:03:57.520 --> 00:03:58.602
+Writes get a gate.
+
+49
+00:03:58.652 --> 00:04:01.432
+How many tokens do its schemas add to every call?
+
+50
+00:04:01.482 --> 00:04:02.847
+Measure it in the trace.
+
+51
+00:04:02.897 --> 00:04:06.242
+And can you run it where your data is allowed to be?
+
+52
+00:04:06.992 --> 00:04:07.944
+To sum up.
+
+53
+00:04:07.994 --> 00:04:12.952
+MCP is a standard for where tools come from, and it has won.
+
+54
+00:04:13.002 --> 00:04:16.291
+Expect every system your organisation buys to ship a server.
+
+55
+00:04:16.341 --> 00:04:23.302
+It does not decide whether those tools are safe, how many you should expose, or what the model does with them.
+
+56
+00:04:23.352 --> 00:04:24.972
+That is still your harness.
+
+57
+00:04:25.022 --> 00:04:31.315
+Next video: the autonomy dial, which is how we talk about how much the harness lets the model decide.
