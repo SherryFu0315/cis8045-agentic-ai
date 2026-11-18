@@ -28,7 +28,14 @@ th{text-align:left;font-weight:700;border-bottom:2px solid var(--ink);padding:8p
 td{border-bottom:1px solid var(--line);padding:12px 10px 12px 0;vertical-align:top}
 table.plain td:first-child,table.plain th:first-child{width:9em}
 .sched td.wk{width:4.5em;color:var(--muted)}
-.sched td.theme{font-weight:700;width:12em}
+.sched td.theme{width:31%}
+.sched td.theme>a{font-weight:700}
+.sched td:nth-child(3){width:22%}
+.sched td:nth-child(4){width:27%}
+.sched ul{margin:6px 0 0;padding-left:1.05em}
+.sched td>ul:first-child{margin-top:0}
+.sched li{margin:0 0 4px}
+.sched td.theme ul{margin-top:8px}
 .sched td p{margin:0 0 6px;max-width:none}
 video{display:block;width:100%;aspect-ratio:16/9;background:#000;margin:8px 0 10px}
 details{margin:0 0 22px}
@@ -42,6 +49,7 @@ footer{border-top:1px solid var(--line);margin-top:56px;padding:20px 0 44px;colo
   .sched thead{display:none}
   .sched tr{display:block;border-bottom:1px solid var(--line);padding:14px 0}
   .sched td,.sched td.wk,.sched td.theme{display:block;border:0;padding:3px 0;width:auto}
+  .sched td:nth-child(3),.sched td:nth-child(4){width:auto}
   .sched td::before{content:attr(data-l);display:block;color:var(--muted);font-size:var(--fs-xs);font-weight:600}
   .sched td.wk{display:none}
   .sched td.theme::before{content:"Week " attr(data-w)}
