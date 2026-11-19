@@ -48,13 +48,13 @@
 <h2 id="mcp">MCP: where tools come from, and what it does not do</h2>
 <p>MCP, the Model Context Protocol, is how the industry agreed to share tools: an open standard for connecting an AI application to outside systems. Anthropic released it in November 2024, OpenAI adopted it in March 2025, and Google followed. The project's own analogy is a USB-C port (<a href="https://modelcontextprotocol.io/">modelcontextprotocol.io</a>). A Jira server written once now works in any client.</p>
 <figure><img src="assets/shots/mcp.png" alt="The Model Context Protocol site: What is the Model Context Protocol (MCP)?" loading="lazy"><figcaption><a href="https://modelcontextprotocol.io/">Model Context Protocol</a>, the project site.</figcaption></figure>
-<p>Three words carry the design. The host is your agent application, which owns the model and the loop. Inside it runs an MCP client. Each outside system is exposed by an MCP server. When the host starts, the client asks each server what it offers: tools the model can call, resources the host can read, and prompts, which are reusable instructions. The client turns the servers' tools into tool schemas, the model chooses one, and the client makes the call. A server can run on your laptop or as a web service over HTTP, and a service that depends on a file on someone's laptop is not a service.</p>
+<p>Three words carry the design. The host is your agent application, which owns the model and the loop. Inside it runs an MCP client. Each outside system is exposed by an MCP server. When the host starts, the client asks each server what it offers: tools the model can call, resources the host can read, and prompts, which are reusable instructions. A server can run on your laptop or as a web service over HTTP, and a service that depends on a file on someone's laptop is not a service.</p>
 <figure>
 <svg viewBox="0 0 1680 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MCP host, client and server. The host is your agent app and holds the model and an MCP client. The client lists the tools of each MCP server, here a GitHub server and a database server, each offering tools, resources and prompts. The model picks a tool and the client calls it."><defs><marker id="b" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L10,5 L0,10 z" fill="#0039a6"/></marker></defs><rect x="4" y="60" width="720" height="460" rx="10" fill="none" stroke="#5a6069" stroke-width="4" stroke-dasharray="18 14"/><text x="32" y="124" font-size="56" fill="#5a6069">Host: your agent app</text><g font-size="60" fill="#16181d" text-anchor="middle"><rect x="40" y="200" width="280" height="160" rx="6" fill="none" stroke="#0039a6" stroke-width="6"/><text x="180" y="296" font-weight="700" fill="#0039a6">Model</text><rect x="400" y="200" width="290" height="160" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="545" y="296">MCP client</text><rect x="940" y="80" width="740" height="180" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="1310" y="152">MCP server · GitHub</text><text x="1310" y="222" font-size="56" fill="#5a6069">tools, resources, prompts</text><rect x="940" y="340" width="740" height="180" rx="6" fill="none" stroke="#16181d" stroke-width="4"/><text x="1310" y="412">MCP server · database</text><text x="1310" y="482" font-size="56" fill="#5a6069">tools, resources, prompts</text></g><line x1="320" y1="280" x2="400" y2="280" stroke="#5a6069" stroke-width="5"/><g stroke="#0039a6" stroke-width="5" fill="none" marker-end="url(#b)"><line x1="690" y1="250" x2="930" y2="180"/><line x1="690" y1="310" x2="930" y2="420"/></g><text x="840" y="610" font-size="56" fill="#16181d" text-anchor="middle">Client lists the tools; model picks; client calls.</text></svg>
 <figcaption>From the model's point of view nothing changed: it still sees tool schemas and returns tool calls. Someone else maintains the tools.</figcaption>
 </figure>
-<p>Now the limits. MCP does not make tools safe: a server can expose a tool that deletes things behind a friendly name. It does not vet servers: anyone can publish one, and a server you install is code running with your permissions, inside your trust boundary. It does not shrink the context: every connected server adds its schemas to the window on every call, and twenty servers can mean hundreds of tool descriptions. And it does not choose: the model still picks the tool, so a confusing server makes the agent worse.</p>
-<p>In May 2025 Invariant Labs showed that a coding agent connected to GitHub's own MCP server could be steered, by a malicious issue in a public repository, into reading a private repository and publishing its contents (<a href="https://invariantlabs.ai/blog/mcp-github-vulnerability">GitHub MCP Exploited</a>). They called it a toxic agent flow. Nothing in the protocol was broken. The agent had the tools and followed instructions it found in data. Week 5 takes the case apart.</p>
+<p>Now the limits. MCP does not make tools safe: a server can expose a tool that deletes things behind a friendly name. It does not vet servers: anyone can publish one, and a server you install is code running with your permissions, inside your trust boundary. It does not shrink the context: every connected server adds its schemas to the window on every call. And it does not choose: the model still picks the tool, so a confusing server makes the agent worse.</p>
+<p>In May 2025 Invariant Labs showed that a coding agent connected to GitHub's own MCP server could be steered, by a malicious issue in a public repository, into reading a private repository and publishing its contents (<a href="https://invariantlabs.ai/blog/mcp-github-vulnerability">GitHub MCP Exploited</a>). Nothing in the protocol was broken. The agent had the tools and followed instructions it found in data. Week 5 takes the case apart.</p>
 <p>Ask the room: a ticketing system you buy ships an MCP server with forty tools. Which five does your agent need, who decides, and what can the other thirty-five touch?</p>
 
 <h2 id="dial">The autonomy dial, and how a gate is built</h2>
@@ -74,7 +74,8 @@
 </tbody>
 </table>
 <p>Two of the three conditions on the right require measurement, which is why week 4 exists. In the proposal, state the position per tool rather than for the agent as a whole: reading the calendar can be Unattended while sending the invitation is Gated.</p>
-<p>Ask the room: for the job your team chose, which action would you gate first, who answers the gate, and how long can they take before the service is stuck?</p>
+<p>When the order of steps matters, the state lives in code. A guide, a checklist, a record: the model should not be the thing that remembers where the user is. The approved steps are data, a small object in the harness holds the position, and the model reaches a step only through a tool that refuses a skip, a repeat, or any step after the problem is resolved, and says what to do instead. The model relays the step it was handed, classifies the reply, and decides when to hand off. A record gets the same treatment: a validator refuses an incomplete one before the gate and returns what is missing. Every model skips and repeats steps. The Lab 2 starter has both patterns.</p>
+<p>Ask the room: for the job your team chose, which action would you gate first, who answers the gate, and how long can they take before the service is stuck? Where does the job have an order, and who notices a skipped step today?</p>
 
 <h2 id="serve">Serving the agent so other software can call it</h2>
 <p>Everything so far runs when a person types a task. A service answers when another program calls it: a ticketing system, a scheduler, a web form. It is the first <a href="project.html">project</a> deliverable.</p>
@@ -91,7 +92,7 @@
 <div>
 <h3>Code path</h3>
 <ol>
-<li>Grow the week 1 loop into a harness: persistent state, a step and cost budget, a definition of done, an approval gate on the write tool, and a trace per run.</li>
+<li>Grow the week 1 loop into a harness: persistent state, a step and cost budget, a definition of done, an approval gate on the write tool, and a trace per run. If the job has an order or a record to complete, start from the starter's sequence or record template and run its self-test first, which needs no model.</li>
 <li>Write two tool schemas for your project's agent. Another team must say from the schema alone what each does and when to use it. Give the write tool a limit in code.</li>
 <li>Port the harness to LangGraph: the loop becomes a graph and the gate an interrupt on the node that calls the write tool.</li>
 <li>Expose the graph as an endpoint another program can POST to. Call it from a second program and save the request and response, including the paused run.</li>
@@ -104,7 +105,7 @@
 <ol>
 <li>In <a href="https://docs.langchain.com/langsmith/fleet">Fleet</a>, open the week 1 agent. Set the draft-reply tool to require approval, and write instructions that say what done looks like.</li>
 <li>Write two tool schemas, the name and description Fleet shows the model, for another team to read the same way.</li>
-<li>Run the Lab 1 tasks, approving at least one action at the gate and rejecting at least one. Find the pause in the trace view.</li>
+<li>Run the Lab 1 tasks, approving at least one action at the gate and rejecting at least one. Find the pause in the trace view. If the job has an order, paste a three-step guide into the instructions, run that task five times, and count the runs where the agent skipped, repeated or reworded a step. Fleet cannot hold the order in code.</li>
 <li>Call the agent from the small bridge application from <a href="https://xinyufu.org/cis4394-agentic-ai/week2/">CIS 4394, week 2</a>, so another program makes the request. Save the call and the reply.</li>
 <li>Add one MCP server. Answer the same checklist first, expose only the tools you need, and read in the trace how many tokens its schemas added.</li>
 <li>Read one run end to end and mark the invented arguments and the pause.</li>
@@ -114,6 +115,7 @@
 <p>Output sheet, one page per team, handed in at 7:50:</p>
 <ul>
 <li>The tool list: each tool, read or write, its limit, and whether it is gated.</li>
+<li>For a sequence or a record: the refusals the self-test printed, or the count of skipped steps in Fleet.</li>
 <li>One trace of a gate pausing an action, with what the person saw and decided.</li>
 <li>The endpoint or bridge call and its response.</li>
 <li>Two sentences: what the MCP server added, and what it could touch.</li>
@@ -142,7 +144,7 @@
 <h2 id="synthesis">Synthesis</h2>
 <ul>
 <li>The model writes the request and your code runs it. Every control lives in that gap.</li>
-<li>The schema is the interface. A tool is a permission, and limits on a write tool belong in code.</li>
+<li>The schema is the interface. A tool is a permission, and limits on a write tool belong in code, and so does the order of steps.</li>
 <li>MCP standardizes where tools come from. Whether they are safe is still your harness.</li>
 <li>Autonomy is a dial set per tool. A gate pauses the loop, saves its state and records the decision in the trace. You cannot earn a position without numbers.</li>
 </ul>
