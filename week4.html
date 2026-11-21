@@ -50,7 +50,7 @@
 <p>When the service is a conversation, the unit is the whole conversation, and single questions hide most failures. The user's second message depends on the agent's first, so the case needs a scripted user: an opening, answers to a clarifying question, what happened after each step, and the step at which they report the fix or a stop condition. The checks read the trajectory: steps in order, none repeated, one per turn, the prerequisite first, no instruction a tool did not hand over, the right ending. Report pass^k over whole conversations and cost per successful conversation, since every turn re-sends the turns before it.</p>
 
 <h2 id="errors">Error analysis: twenty traces, one sentence each, then count</h2>
-<p>Andrew Ng wrote a two-part letter in October 2025. The teams that improve agents fastest are the ones that read their failures, and the teams that stall are the ones that guess at fixes from the final output. The final output tells you that something went wrong. Only the trace tells you where: which tool call, which argument, which retrieved passage, which instruction.</p>
+<p>Andrew Ng wrote a two-part letter in October 2025. The teams that improve agents fastest read their failures, and the teams that stall guess at fixes from the final output. The final output tells you that something went wrong. Only the trace tells you where: which tool call, which argument, which retrieved passage, which instruction.</p>
 <figure><img src="assets/shots/ng_error_analysis.png" alt="The Batch: Andrew Ng's letter, Improve Agentic Performance with Evals and Error Analysis, Part 1" loading="lazy"><figcaption><a href="https://www.deeplearning.ai/the-batch/improve-agentic-performance-with-evals-and-error-analysis-part-1">DeepLearning.AI, The Batch</a>, Andrew Ng, October 15, 2025.</figcaption></figure>
 <p>The procedure is short. Pull twenty failed traces, chosen at random rather than the ones that look interesting. For each one, read from the top until you find the first step where it went wrong, and write one sentence: what happened and why. Do not fix anything yet. When you have twenty sentences, group them. Five to eight categories usually appear: wrong tool, invented argument, retrieved the wrong passage, ignored an instruction, stopped too early, kept going too long. Count them. Fix the biggest category first, because one fix there moves the pass rate more than ten fixes elsewhere. Re-run the golden set, and do it again.</p>
 <p>In research terms: open coding, then a taxonomy, then counts, then priority.</p>
@@ -75,7 +75,7 @@
 <figcaption>The calibration loop.</figcaption>
 </figure>
 <p>A judge nobody calibrated is an opinion with a cost per call. So the report includes the rubric verbatim, the agreement with the human labels and on how many cases, the kinds of failure the judge tends to miss, and which model judged and whether it shares a family with the agent.</p>
-<p>Rule checks come first and the judge second. An uncalibrated judge will pass a summary that invented steps and fail a correct refusal. A rule catches both. Keep the judge for what a rule cannot read.</p>
+<p>Rule checks come first. An uncalibrated judge will pass a summary that invented steps and fail a correct refusal. A rule catches both. Keep the judge for what a rule cannot read.</p>
 
 <h2 id="gdpx">The GDPx exercise: one task, four harnesses</h2>
 <p>In class you also read traces that are not yours. <a href="https://gdpx.semianalysis.com/">GDPx</a> is a benchmark released by SemiAnalysis in November 2026: 206 tasks written by partner firms in eleven domains, each run by several frontier models with their own harnesses, and graded by the firms. For one task per partner, every run is public, including the full trace. As of November 2026 the best model scored about 16 percent.</p>
@@ -88,7 +88,7 @@
 <p>One team opens the evening with one trace from its agent: what it did, step by step, and what it taught them. Ten minutes, the actual trace on the screen, never slides about the trace. The room's job as it watches: find the first wrong step rather than the last one, and say which of the error-analysis categories it belongs to.</p>
 
 <h2 id="lab">Lab 4: Evaluate</h2>
-<p>Goal: ten golden cases run three times each, an error analysis of twenty traces, and a judge checked against your own labels. Starter files are posted on iCollege before class. One output sheet per team at 7:50.</p>
+<p>Goal: ten golden cases run three times each, an error analysis of twenty traces, and a judge checked against your own labels. Starter files are posted on iCollege before class. One output sheet per team at 7:50. Sponsor teams take the per-stage retrieval measurement, statistics for flags and test-data segments in the studio as their project needs.</p>
 <div class="paths">
 <div>
 <h3>Code path</h3>

@@ -34,11 +34,24 @@
 <h2>Two build paths</h2>
 <p>The code path uses Python, LangGraph and LangSmith. Coding agents such as Claude Code or Codex are allowed, and the builder should expect a short oral check in which I pick a trace and ask what the code did and why. The no-code path uses LangSmith Fleet plus the small bridge application from CIS 4394, which lets another program call a Fleet agent. Both paths produce the same seven deliverables and are graded on the same rubric.</p>
 
+<h2>Working from a sponsor brief</h2>
+<p>A sponsor brief usually asks for more than seven weeks can hold. In week 1, a team with a sponsor writes the sponsor a one-page scoping letter: the phase-one scope, what done means, the named owner and approver on the sponsor's side, the manual baseline in minutes per task, the model class the team will use, and what is deferred. The usual moves are a snapshot instead of a live integration, an approved export as text or PDF instead of a live feed, five to eight structured cases instead of the whole catalog, the evaluation capability instead of the whole product, and a dataset package plus a gated assistant instead of dashboards and speech. The discovery kit, with an interview guide and a template for the letter, is posted with the week 1 starter files.</p>
+<p>Sponsor briefs also ask for pieces the seven themes do not cover. Each is a short segment, under an hour, with its own starter, taught in the studio to the teams whose project needs it. The rest of the class is not held for it.</p>
+<ul>
+<li>Week 2: an integration layer around the loop, a small FastAPI service with a per-request identity, parameterized reads over a database export, and a mocked external system. A demo page in thirty lines of Streamlit. A worked example from a written guide to a step schema, and a clarifying-question policy.</li>
+<li>Week 3: documents in and out, reading PDF, Word and Excel sources, filling a Word or Excel template, and a version field so superseded documents drop out of retrieval. One vector database, with an embedding-model swap, a re-index and a tenant-isolation test.</li>
+<li>Week 4: retrieval measured stage by stage, with labeling guidelines and an agreement check between two labelers. Statistics for flags, with no learned model. A synthetic dataset with saved ground truth, a data dictionary, and one unit test per stage.</li>
+<li>Week 6: a release gate, where the regression script runs on every push, reports p50 and p95 and fails the build on a regression. Traces a sponsor can read, with tags per tenant or product line, a dashboard segmented by tag, alerts, and redaction before anything is logged.</li>
+<li>Week 7: a five-user usability test in the clinic.</li>
+<li>On request: a speech-to-text check, word error rate on twenty scripted recordings.</li>
+</ul>
+<p>What stays outside the course even with the segments: a real-time voice channel, a production front end, cloud deployment and availability engineering, trained machine learning models, live connections to production systems, enterprise access control on traces, and labeling at scale. The letter names each as deferred, with the phase-one substitute.</p>
+
 <h2>Milestones</h2>
 <table class="plain">
 <thead><tr><th>After week</th><th>Deliverable</th></tr></thead>
 <tbody>
-<tr><td>1</td><td>Team roster and opportunity audit: the job, the user, the tasks, and how much autonomy the agent should have.</td></tr>
+<tr><td>1</td><td>Team roster and opportunity audit: the job, the user, the tasks, and how much autonomy the agent should have. With a sponsor, the scoping letter.</td></tr>
 <tr><td>2</td><td>Proposal: architecture one-pager, tool list, autonomy level, and the data pack.</td></tr>
 <tr><td>3</td><td>Knowledge slice working, with a retrieval report.</td></tr>
 <tr><td>4</td><td>Evaluation report, first version.</td></tr>

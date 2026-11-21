@@ -74,7 +74,7 @@
 </tbody>
 </table>
 <p>Two of the three conditions on the right require measurement, which is why week 4 exists. In the proposal, state the position per tool rather than for the agent as a whole: reading the calendar can be Unattended while sending the invitation is Gated.</p>
-<p>When the order of steps matters, the state lives in code. A guide, a checklist, a record: the model should not be the thing that remembers where the user is. The approved steps are data, a small object in the harness holds the position, and the model reaches a step only through a tool that refuses a skip, a repeat, or any step after the problem is resolved, and says what to do instead. The model relays the step it was handed, classifies the reply, and decides when to hand off. A record gets the same treatment: a validator refuses an incomplete one before the gate and returns what is missing. Every model skips and repeats steps. The Lab 2 starter has both patterns.</p>
+<p>When the order of steps matters, the state lives in code. A guide, a checklist, a record: the model should not be the thing that remembers where the user is. The approved steps are data, the harness holds the position, and the model reaches a step only through a tool that refuses a skip, a repeat, or any step after the problem is resolved. A record gets the same treatment: a validator refuses an incomplete one before the gate. Every model skips and repeats steps. The Lab 2 starter has both patterns.</p>
 <p>Ask the room: for the job your team chose, which action would you gate first, who answers the gate, and how long can they take before the service is stuck? Where does the job have an order, and who notices a skipped step today?</p>
 
 <h2 id="serve">Serving the agent so other software can call it</h2>
@@ -87,7 +87,7 @@
 <p>The first team presents tonight: one trace from Lab 1, ten minutes. This week, look for three things. Which tool the model chose at each step and which arguments it filled in, especially one that appears nowhere in the task, because the most common tool failure is the right tool with an invented argument. What came back, and whether it was what the model needed next. And where a gate would have paused the run, and what the person at the gate would have seen.</p>
 
 <h2 id="lab">Lab 2: Tools and harness</h2>
-<p>Goal: turn the Lab 1 loop into a harness with a gate, let another program call it, and add a tool source you did not write. Starter files are posted on iCollege before class.</p>
+<p>Goal: turn the Lab 1 loop into a harness with a gate, let another program call it, and add a tool source you did not write. Starter files are posted on iCollege before class. Sponsor teams that need a database read, a mocked external system or a demo page take the integration segment in the studio.</p>
 <div class="paths">
 <div>
 <h3>Code path</h3>
